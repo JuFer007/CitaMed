@@ -17,7 +17,7 @@ public class HistorialMedico {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToMany
+    @OneToOne
     private Paciente paciente;
 
     @OneToMany(mappedBy = "historial")

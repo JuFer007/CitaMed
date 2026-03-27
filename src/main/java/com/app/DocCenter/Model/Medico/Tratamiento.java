@@ -19,7 +19,7 @@ public class Tratamiento {
     private Long id;
     private String indicaciones;
 
-    @OneToMany
+    @OneToOne
     private ConsultaMedica consulta;
 
     @OneToMany(mappedBy = "tratamiento")
