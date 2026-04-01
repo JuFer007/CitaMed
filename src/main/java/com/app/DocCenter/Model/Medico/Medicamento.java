@@ -19,7 +19,10 @@ public class Medicamento {
     private String nombre;
     private String dosis;
     private String frecuencia;
+    private int duracionDias;
+    private String instrucciones;
 
     @ManyToOne
+    @JoinColumn(name = "tratamiento_id", nullable = false)
     private Tratamiento tratamiento;
 }

@@ -17,11 +17,14 @@ public class Tratamiento {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     private String indicaciones;
+    private int duracionDias;
 
     @OneToOne
+    @JoinColumn(name = "consulta_id", nullable = false)
     private ConsultaMedica consulta;
 
-    @OneToMany(mappedBy = "tratamiento")
+    @OneToMany(mappedBy = "tratamiento", cascade = CascadeType.ALL)
     private List<Medicamento> medicamentos;
 }

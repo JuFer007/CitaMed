@@ -1,18 +1,8 @@
-package com.app.DocCenter.Model.Personas;
-import jakarta.persistence.MappedSuperclass;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+package com.app.DocCenter.DTO;
+import com.app.DocCenter.Enums.Rol;
 import java.time.LocalDate;
 
-@MappedSuperclass
-@Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
-
-public class Persona {
+public class EmpleadoDTO {
     private String nombre;
     private String apellidoPaterno;
     private String apellidoMaterno;
@@ -22,4 +12,10 @@ public class Persona {
     private String email;
     private LocalDate fechaNacimiento;
     private String genero;
+    private String cargo;
+    private double salario;
+    private LocalDate fechaIngreso;
+    private String userName;
+    private String password;
+    private Rol rol;
 }

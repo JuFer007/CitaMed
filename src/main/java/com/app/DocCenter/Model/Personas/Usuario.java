@@ -16,10 +16,12 @@ public class Usuario {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     private String userName;
     private String password;
 
     @Enumerated(EnumType.STRING)
     private Rol rol;
+
     private boolean activo;
 }

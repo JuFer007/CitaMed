@@ -1,18 +1,11 @@
-package com.app.DocCenter.Model.Personas;
-import jakarta.persistence.MappedSuperclass;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+package com.app.DocCenter.DTO;
+import com.app.DocCenter.Enums.GrupoSanguineo;
+import lombok.Data;
 import java.time.LocalDate;
 
-@MappedSuperclass
-@Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
+@Data
 
-public class Persona {
+public class PacienteDTO {
     private String nombre;
     private String apellidoPaterno;
     private String apellidoMaterno;
@@ -22,4 +15,6 @@ public class Persona {
     private String email;
     private LocalDate fechaNacimiento;
     private String genero;
+    private GrupoSanguineo grupoSanguineo;
+
 }

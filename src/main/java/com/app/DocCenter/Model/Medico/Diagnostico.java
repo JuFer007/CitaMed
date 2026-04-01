@@ -16,9 +16,12 @@ public class Diagnostico {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    private String codigoCIE10;
     private String enfermedad;
     private String descripcion;
 
     @ManyToOne
+    @JoinColumn(name = "consulta_id", nullable = false)
     private ConsultaMedica consulta;
 }

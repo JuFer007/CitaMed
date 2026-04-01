@@ -17,6 +17,7 @@ public class Area {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String nombre;
+    private String descripcion;
 
     @OneToMany(mappedBy = "area")
     private List<Consultorio> consultorios;

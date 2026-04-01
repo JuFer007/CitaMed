@@ -22,12 +22,16 @@ public class HorarioMedico {
 
     @Enumerated(EnumType.STRING)
     private DiaSemana dia;
+
     private LocalTime horaInicio;
     private LocalTime horaFin;
+    private boolean activo;
 
     @ManyToOne
+    @JoinColumn(name = "medico_id", nullable = false)
     private Medico medico;
 
     @ManyToOne
+    @JoinColumn(name = "consultorio_id", nullable = false)
     private Consultorio consultorio;
 }

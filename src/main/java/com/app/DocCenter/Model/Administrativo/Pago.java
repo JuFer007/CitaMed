@@ -23,6 +23,7 @@ public class Pago {
     @OneToOne
     @JoinColumn(name = "cita_id", nullable = false)
     private Cita cita;
+
     private double monto;
 
     @Enumerated(EnumType.STRING)
@@ -30,6 +31,7 @@ public class Pago {
 
     @Enumerated(EnumType.STRING)
     private EstadoPago estado;
+
     private LocalDateTime fechaPago;
     private String comprobante;
 }

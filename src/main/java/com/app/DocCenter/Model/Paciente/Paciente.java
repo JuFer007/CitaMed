@@ -14,13 +14,17 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 
-public class Paciente extends Persona {
+public class Paciente {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Embedded
+    private Persona persona;
+
+    @Enumerated(EnumType.STRING)
     private GrupoSanguineo grupoSanguineo;
 
-    @OneToMany(mappedBy = "paciente")
-    private List<PacienteAlergia> alergias;
+    @OneToOne(mappedBy = "paciente", cascade = CascadeType.ALL)
+    private HistorialMedico historialMedico;
 }

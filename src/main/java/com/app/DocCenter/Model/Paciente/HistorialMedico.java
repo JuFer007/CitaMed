@@ -18,9 +18,9 @@ public class HistorialMedico {
     private Long id;
 
     @OneToOne
+    @JoinColumn(name = "paciente_id", nullable = false)
     private Paciente paciente;
 
     @OneToMany(mappedBy = "historial")
     private List<ConsultaMedica> consultas;
-
 }

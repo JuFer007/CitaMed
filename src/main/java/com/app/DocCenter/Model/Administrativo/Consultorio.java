@@ -16,8 +16,10 @@ public class Consultorio {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String numero;
+    private String descripcion;
+    private boolean disponible;
 
     @ManyToOne
+    @JoinColumn(name = "area_id", nullable = false)
     private Area area;
-    private boolean disponible;
 }
