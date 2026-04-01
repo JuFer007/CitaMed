@@ -29,7 +29,6 @@ public class Cita {
 
     @ManyToOne
     private Consultorio consultorio;
-
     private LocalDateTime fechaHora;
 
     @Enumerated(EnumType.STRING)

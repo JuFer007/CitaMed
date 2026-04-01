@@ -5,5 +5,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 
-public interface HistorialMedicoRepository extends JpaRepository<Long, HistorialMedico> {
+public interface HistorialMedicoRepository extends JpaRepository<HistorialMedico, Long> {
 }
