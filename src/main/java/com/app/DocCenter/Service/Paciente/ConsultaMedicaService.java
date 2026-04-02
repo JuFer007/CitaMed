@@ -1,4 +1,5 @@
 package com.app.DocCenter.Service.Paciente;
+import com.app.DocCenter.DTO.ConsultaMedicaDTO;
 import com.app.DocCenter.Enums.EstadoCita;
 import com.app.DocCenter.Model.Agenda.Cita;
 import com.app.DocCenter.Model.Paciente.ConsultaMedica;

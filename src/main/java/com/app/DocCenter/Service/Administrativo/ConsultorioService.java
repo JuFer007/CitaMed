@@ -1,4 +1,5 @@
 package com.app.DocCenter.Service.Administrativo;
+import com.app.DocCenter.DTO.ConsultorioDTO;
 import com.app.DocCenter.Model.Administrativo.Area;
 import com.app.DocCenter.Model.Administrativo.Consultorio;
 import com.app.DocCenter.Repository.Administrativo.AreaRepository;

@@ -33,8 +33,8 @@ public class PersonaService {
         if (exists) {
             Persona personaExistente = personaRepository.findByDni(persona.getDni());
             personaExistente.setNombre(persona.getNombre());
-            personaExistente.setApellidoM(persona.getApellidoM());
-            personaExistente.setApellidoP(persona.getApellidoP());
+            personaExistente.setApellidoMaterno(persona.getApellidoMaterno());
+            personaExistente.setApellidoPaterno(persona.getApellidoPaterno());
             personaExistente.setDireccion(persona.getDireccion());
             personaExistente.setTelefono(persona.getTelefono());
             personaRepository.save(personaExistente);

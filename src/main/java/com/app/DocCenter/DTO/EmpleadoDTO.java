@@ -1,7 +1,10 @@
 package com.app.DocCenter.DTO;
 import com.app.DocCenter.Enums.Rol;
+import lombok.Data;
+
 import java.time.LocalDate;
 
+@Data
 public class EmpleadoDTO {
     private String nombre;
     private String apellidoPaterno;

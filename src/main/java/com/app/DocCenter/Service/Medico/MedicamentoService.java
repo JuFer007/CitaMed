@@ -1,4 +1,5 @@
 package com.app.DocCenter.Service.Medico;
+import com.app.DocCenter.DTO.MedicamentoDTO;
 import com.app.DocCenter.Model.Medico.Medicamento;
 import com.app.DocCenter.Model.Medico.Tratamiento;
 import com.app.DocCenter.Repository.Medico.MedicamentoRepository;

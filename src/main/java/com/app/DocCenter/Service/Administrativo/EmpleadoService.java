@@ -1,4 +1,5 @@
 package com.app.DocCenter.Service.Administrativo;
+import com.app.DocCenter.DTO.EmpleadoDTO;
 import com.app.DocCenter.Model.Administrativo.Empleado;
 import com.app.DocCenter.Model.Personas.Persona;
 import com.app.DocCenter.Model.Personas.Usuario;
@@ -38,7 +39,7 @@ public class EmpleadoService {
 
         Usuario usuario = new Usuario();
         usuario.setUserName(dto.getUserName());
-        usuario.setPassword(passwordEncoder.encode(dto.getPassword()));
+        //usuario.setPassword(passwordEncoder.encode(dto.getPassword()));
         usuario.setRol(dto.getRol());
         usuario.setActivo(true);
         usuarioRepository.save(usuario);
