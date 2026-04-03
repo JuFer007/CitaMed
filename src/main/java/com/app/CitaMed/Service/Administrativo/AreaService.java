@@ -1,6 +1,6 @@
-package com.app.DocCenter.Service.Administrativo;
-import com.app.DocCenter.Model.Administrativo.Area;
-import com.app.DocCenter.Repository.Administrativo.AreaRepository;
+package com.app.CitaMed.Service.Administrativo;
+import com.app.CitaMed.Model.Administrativo.Area;
+import com.app.CitaMed.Repository.Administrativo.AreaRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import java.util.List;

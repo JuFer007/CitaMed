@@ -1,5 +1,5 @@
-package com.app.DocCenter.DTO;
-import com.app.DocCenter.Enums.MetodoPago;
+package com.app.CitaMed.DTO;
+import com.app.CitaMed.Enums.MetodoPago;
 import lombok.Data;
 
 @Data

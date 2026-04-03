@@ -1,7 +1,7 @@
-package com.app.DocCenter.Service.Administrativo;
-import com.app.DocCenter.Enums.Rol;
-import com.app.DocCenter.Model.Administrativo.Usuario;
-import com.app.DocCenter.Repository.Administrativo.UsuarioRepository;
+package com.app.CitaMed.Service.Administrativo;
+import com.app.CitaMed.Enums.Rol;
+import com.app.CitaMed.Model.Administrativo.Usuario;
+import com.app.CitaMed.Repository.Administrativo.UsuarioRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import java.util.List;

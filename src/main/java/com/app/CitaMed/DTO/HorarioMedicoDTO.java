@@ -1,5 +1,5 @@
-package com.app.DocCenter.DTO;
-import com.app.DocCenter.Enums.DiaSemana;
+package com.app.CitaMed.DTO;
+import com.app.CitaMed.Enums.DiaSemana;
 import lombok.Data;
 import java.time.LocalTime;
 

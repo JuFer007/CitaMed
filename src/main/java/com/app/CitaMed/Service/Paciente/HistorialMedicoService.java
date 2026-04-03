@@ -1,6 +1,6 @@
-package com.app.DocCenter.Service.Paciente;
-import com.app.DocCenter.Model.Paciente.HistorialMedico;
-import com.app.DocCenter.Repository.Paciente.HistorialMedicoRepository;
+package com.app.CitaMed.Service.Paciente;
+import com.app.CitaMed.Model.Paciente.HistorialMedico;
+import com.app.CitaMed.Repository.Paciente.HistorialMedicoRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

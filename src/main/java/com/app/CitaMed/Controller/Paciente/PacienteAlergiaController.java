@@ -1,4 +1,4 @@
-package com.app.DocCenter.Controller.Paciente;
+package com.app.CitaMed.Controller.Paciente;
 
 public class PacienteAlergiaController {
 }

@@ -1,7 +1,7 @@
-package com.app.DocCenter.Model.Medico;
-import com.app.DocCenter.Enums.Genero;
-import com.app.DocCenter.Model.Agenda.HorarioMedico;
-import com.app.DocCenter.Model.Administrativo.Usuario;
+package com.app.CitaMed.Model.Medico;
+import com.app.CitaMed.Enums.Genero;
+import com.app.CitaMed.Model.Agenda.HorarioMedico;
+import com.app.CitaMed.Model.Administrativo.Usuario;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;

@@ -1,9 +1,9 @@
-package com.app.DocCenter.Service.Administrativo;
-import com.app.DocCenter.DTO.EmpleadoDTO;
-import com.app.DocCenter.Model.Administrativo.Empleado;
-import com.app.DocCenter.Model.Administrativo.Usuario;
-import com.app.DocCenter.Repository.Administrativo.EmpleadoRepository;
-import com.app.DocCenter.Repository.Administrativo.UsuarioRepository;
+package com.app.CitaMed.Service.Administrativo;
+import com.app.CitaMed.DTO.EmpleadoDTO;
+import com.app.CitaMed.Model.Administrativo.Empleado;
+import com.app.CitaMed.Model.Administrativo.Usuario;
+import com.app.CitaMed.Repository.Administrativo.EmpleadoRepository;
+import com.app.CitaMed.Repository.Administrativo.UsuarioRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import java.util.List;

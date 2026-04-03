@@ -1,5 +1,5 @@
-package com.app.DocCenter.Repository.Medico;
-import com.app.DocCenter.Model.Medico.Medico;
+package com.app.CitaMed.Repository.Medico;
+import com.app.CitaMed.Model.Medico.Medico;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import java.util.List;

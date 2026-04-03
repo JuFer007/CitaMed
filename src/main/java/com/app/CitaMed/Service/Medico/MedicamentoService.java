@@ -1,9 +1,9 @@
-package com.app.DocCenter.Service.Medico;
-import com.app.DocCenter.DTO.MedicamentoDTO;
-import com.app.DocCenter.Model.Medico.Medicamento;
-import com.app.DocCenter.Model.Medico.Tratamiento;
-import com.app.DocCenter.Repository.Medico.MedicamentoRepository;
-import com.app.DocCenter.Repository.Medico.TratamientoRepository;
+package com.app.CitaMed.Service.Medico;
+import com.app.CitaMed.DTO.MedicamentoDTO;
+import com.app.CitaMed.Model.Medico.Medicamento;
+import com.app.CitaMed.Model.Medico.Tratamiento;
+import com.app.CitaMed.Repository.Medico.MedicamentoRepository;
+import com.app.CitaMed.Repository.Medico.TratamientoRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

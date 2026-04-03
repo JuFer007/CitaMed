@@ -1,5 +1,5 @@
-package com.app.DocCenter.DTO;
-import com.app.DocCenter.Enums.Genero;
+package com.app.CitaMed.DTO;
+import com.app.CitaMed.Enums.Genero;
 import lombok.Data;
 import java.time.LocalDate;
 

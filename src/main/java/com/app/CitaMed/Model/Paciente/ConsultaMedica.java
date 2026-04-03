@@ -1,7 +1,7 @@
-package com.app.DocCenter.Model.Paciente;
-import com.app.DocCenter.Model.Agenda.Cita;
-import com.app.DocCenter.Model.Medico.Diagnostico;
-import com.app.DocCenter.Model.Medico.Tratamiento;
+package com.app.CitaMed.Model.Paciente;
+import com.app.CitaMed.Model.Agenda.Cita;
+import com.app.CitaMed.Model.Medico.Diagnostico;
+import com.app.CitaMed.Model.Medico.Tratamiento;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;

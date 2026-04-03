@@ -1,4 +1,4 @@
-package com.app.DocCenter.Controller.Medico;
+package com.app.CitaMed.Controller.Medico;
 
 public class MedicamentoController {
 }

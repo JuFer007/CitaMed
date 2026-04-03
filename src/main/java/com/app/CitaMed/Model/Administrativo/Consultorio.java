@@ -1,4 +1,4 @@
-package com.app.DocCenter.Model.Administrativo;
+package com.app.CitaMed.Model.Administrativo;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;

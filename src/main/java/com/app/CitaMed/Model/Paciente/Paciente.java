@@ -1,6 +1,6 @@
-package com.app.DocCenter.Model.Paciente;
-import com.app.DocCenter.Enums.Genero;
-import com.app.DocCenter.Enums.GrupoSanguineo;
+package com.app.CitaMed.Model.Paciente;
+import com.app.CitaMed.Enums.Genero;
+import com.app.CitaMed.Enums.GrupoSanguineo;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;

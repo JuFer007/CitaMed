@@ -1,9 +1,9 @@
-package com.app.DocCenter.Service.Administrativo;
-import com.app.DocCenter.DTO.ConsultorioDTO;
-import com.app.DocCenter.Model.Administrativo.Area;
-import com.app.DocCenter.Model.Administrativo.Consultorio;
-import com.app.DocCenter.Repository.Administrativo.AreaRepository;
-import com.app.DocCenter.Repository.Administrativo.ConsultorioRepository;
+package com.app.CitaMed.Service.Administrativo;
+import com.app.CitaMed.DTO.ConsultorioDTO;
+import com.app.CitaMed.Model.Administrativo.Area;
+import com.app.CitaMed.Model.Administrativo.Consultorio;
+import com.app.CitaMed.Repository.Administrativo.AreaRepository;
+import com.app.CitaMed.Repository.Administrativo.ConsultorioRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import java.util.List;

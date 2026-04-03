@@ -1,6 +1,6 @@
-package com.app.DocCenter.Service.Medico;
-import com.app.DocCenter.Model.Medico.Especialidad;
-import com.app.DocCenter.Repository.Medico.EspecialidadRepository;
+package com.app.CitaMed.Service.Medico;
+import com.app.CitaMed.Model.Medico.Especialidad;
+import com.app.CitaMed.Repository.Medico.EspecialidadRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import java.util.List;

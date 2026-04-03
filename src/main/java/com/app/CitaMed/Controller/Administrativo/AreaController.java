@@ -1,4 +1,4 @@
-package com.app.DocCenter.Controller.Administrativo;
+package com.app.CitaMed.Controller.Administrativo;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RestController;
 

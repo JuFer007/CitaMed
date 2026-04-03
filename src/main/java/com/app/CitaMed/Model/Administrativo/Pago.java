@@ -1,12 +1,11 @@
-package com.app.DocCenter.Model.Administrativo;
-import com.app.DocCenter.Enums.EstadoPago;
-import com.app.DocCenter.Enums.MetodoPago;
-import com.app.DocCenter.Model.Agenda.Cita;
+package com.app.CitaMed.Model.Administrativo;
+import com.app.CitaMed.Enums.EstadoPago;
+import com.app.CitaMed.Enums.MetodoPago;
+import com.app.CitaMed.Model.Agenda.Cita;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PastOrPresent;
 import jakarta.validation.constraints.Positive;
-import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

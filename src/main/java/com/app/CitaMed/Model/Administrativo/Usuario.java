@@ -1,5 +1,5 @@
-package com.app.DocCenter.Model.Administrativo;
-import com.app.DocCenter.Enums.Rol;
+package com.app.CitaMed.Model.Administrativo;
+import com.app.CitaMed.Enums.Rol;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;

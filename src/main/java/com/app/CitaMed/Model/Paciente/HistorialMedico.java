@@ -1,4 +1,4 @@
-package com.app.DocCenter.Model.Paciente;
+package com.app.CitaMed.Model.Paciente;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;

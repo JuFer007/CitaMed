@@ -1,10 +1,10 @@
-package com.app.DocCenter.Model.Agenda;
-import com.app.DocCenter.Enums.EstadoCita;
-import com.app.DocCenter.Model.Administrativo.Consultorio;
-import com.app.DocCenter.Model.Administrativo.Pago;
-import com.app.DocCenter.Model.Medico.Medico;
-import com.app.DocCenter.Model.Paciente.ConsultaMedica;
-import com.app.DocCenter.Model.Paciente.Paciente;
+package com.app.CitaMed.Model.Agenda;
+import com.app.CitaMed.Enums.EstadoCita;
+import com.app.CitaMed.Model.Administrativo.Consultorio;
+import com.app.CitaMed.Model.Administrativo.Pago;
+import com.app.CitaMed.Model.Medico.Medico;
+import com.app.CitaMed.Model.Paciente.ConsultaMedica;
+import com.app.CitaMed.Model.Paciente.Paciente;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Future;
 import jakarta.validation.constraints.NotBlank;

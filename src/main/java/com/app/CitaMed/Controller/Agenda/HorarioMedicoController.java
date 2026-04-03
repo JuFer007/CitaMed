@@ -1,4 +1,4 @@
-package com.app.DocCenter.Controller.Agenda;
+package com.app.CitaMed.Controller.Agenda;
 
 public class HorarioMedicoController {
 }

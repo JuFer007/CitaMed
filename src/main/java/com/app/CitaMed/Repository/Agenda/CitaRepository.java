@@ -1,6 +1,6 @@
-package com.app.DocCenter.Repository.Agenda;
-import com.app.DocCenter.Enums.EstadoCita;
-import com.app.DocCenter.Model.Agenda.Cita;
+package com.app.CitaMed.Repository.Agenda;
+import com.app.CitaMed.Enums.EstadoCita;
+import com.app.CitaMed.Model.Agenda.Cita;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import java.time.LocalDateTime;

@@ -1,4 +1,4 @@
-package com.app.DocCenter.DTO;
+package com.app.CitaMed.DTO;
 import lombok.Data;
 import java.time.LocalDateTime;
 

@@ -1,5 +1,5 @@
-package com.app.DocCenter.Model.Administrativo;
-import com.app.DocCenter.Enums.Genero;
+package com.app.CitaMed.Model.Administrativo;
+import com.app.CitaMed.Enums.Genero;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;

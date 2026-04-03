@@ -1,9 +1,9 @@
-package com.app.DocCenter.Service.Paciente;
-import com.app.DocCenter.DTO.PacienteDTO;
-import com.app.DocCenter.Model.Paciente.HistorialMedico;
-import com.app.DocCenter.Model.Paciente.Paciente;
-import com.app.DocCenter.Repository.Paciente.HistorialMedicoRepository;
-import com.app.DocCenter.Repository.Paciente.PacienteRepository;
+package com.app.CitaMed.Service.Paciente;
+import com.app.CitaMed.DTO.PacienteDTO;
+import com.app.CitaMed.Model.Paciente.HistorialMedico;
+import com.app.CitaMed.Model.Paciente.Paciente;
+import com.app.CitaMed.Repository.Paciente.HistorialMedicoRepository;
+import com.app.CitaMed.Repository.Paciente.PacienteRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import java.util.List;

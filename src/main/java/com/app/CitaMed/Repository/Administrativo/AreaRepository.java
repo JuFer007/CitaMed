@@ -1,5 +1,5 @@
-package com.app.DocCenter.Repository.Administrativo;
-import com.app.DocCenter.Model.Administrativo.Area;
+package com.app.CitaMed.Repository.Administrativo;
+import com.app.CitaMed.Model.Administrativo.Area;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
