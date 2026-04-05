@@ -2,6 +2,7 @@ package com.app.CitaMed.Model.Paciente;
 import com.app.CitaMed.Model.Agenda.Cita;
 import com.app.CitaMed.Model.Medico.Diagnostico;
 import com.app.CitaMed.Model.Medico.Tratamiento;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
@@ -27,11 +28,13 @@ public class ConsultaMedica {
 
     @NotNull(message = "Debe existir una cita asociada")
     @OneToOne
+    @JsonIgnore
     @JoinColumn(name = "cita_id", nullable = false)
     private Cita cita;
 
     @NotNull(message = "Debe existir un historial médico")
     @ManyToOne
+    @JsonIgnore
     @JoinColumn(name = "historial_id", nullable = false)
     private HistorialMedico historial;
 
@@ -50,9 +53,11 @@ public class ConsultaMedica {
     @Pattern(regexp = "^\\d{2}(\\.\\d)?$", message = "La temperatura debe tener formato válido (ej: 36.5)")
     private String temperatura;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "consulta", cascade = CascadeType.ALL)
     private List<Diagnostico> diagnosticos;
 
+    @JsonIgnore
     @OneToOne(mappedBy = "consulta", cascade = CascadeType.ALL)
     private Tratamiento tratamiento;
 }

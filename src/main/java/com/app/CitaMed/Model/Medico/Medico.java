@@ -2,6 +2,7 @@ package com.app.CitaMed.Model.Medico;
 import com.app.CitaMed.Enums.Genero;
 import com.app.CitaMed.Model.Agenda.HorarioMedico;
 import com.app.CitaMed.Model.Administrativo.Usuario;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
@@ -69,13 +70,16 @@ public class Medico {
 
     @NotNull(message = "Debe seleccionar una especialidad")
     @ManyToOne
+    @JsonIgnore
     @JoinColumn(name = "especialidad_id", nullable = false)
     private Especialidad especialidad;
 
     @OneToOne(cascade = CascadeType.ALL)
+    @JsonIgnore
     @JoinColumn(name = "usuario_id")
     private Usuario usuario;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "medico", cascade = CascadeType.ALL)
     private List<HorarioMedico> horarios;
 }

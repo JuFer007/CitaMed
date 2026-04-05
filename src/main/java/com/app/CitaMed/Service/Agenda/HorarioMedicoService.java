@@ -52,4 +52,8 @@ public class HorarioMedicoService {
         horarioMedicoRepository.save(horario);
         return horario.isActivo() ? "Horario activado" : "Horario desactivado";
     }
+
+    public List<HorarioMedico> findAll() {
+        return horarioMedicoRepository.findAll();
+    }
 }

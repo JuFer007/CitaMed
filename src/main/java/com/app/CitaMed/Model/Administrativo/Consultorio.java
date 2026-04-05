@@ -1,4 +1,5 @@
 package com.app.CitaMed.Model.Administrativo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -28,6 +29,7 @@ public class Consultorio {
 
     @NotNull(message = "Debe seleccionar un área")
     @ManyToOne
+    @JsonIgnore
     @JoinColumn(name = "area_id", nullable = false)
     private Area area;
 }

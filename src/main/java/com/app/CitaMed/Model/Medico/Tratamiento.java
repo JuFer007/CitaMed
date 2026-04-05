@@ -1,5 +1,6 @@
 package com.app.CitaMed.Model.Medico;
 import com.app.CitaMed.Model.Paciente.ConsultaMedica;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -32,9 +33,11 @@ public class Tratamiento {
 
     @NotNull(message = "Debe existir una consulta médica asociada")
     @OneToOne
+    @JsonIgnore
     @JoinColumn(name = "consulta_id", nullable = false)
     private ConsultaMedica consulta;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "tratamiento", cascade = CascadeType.ALL)
     private List<Medicamento> medicamentos;
 }
