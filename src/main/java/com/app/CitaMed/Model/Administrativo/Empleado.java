@@ -1,6 +1,5 @@
 package com.app.CitaMed.Model.Administrativo;
 import com.app.CitaMed.Enums.Genero;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
@@ -74,6 +73,5 @@ public class Empleado {
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "usuario_id")
-    @JsonIgnore
     private Usuario usuario;
 }

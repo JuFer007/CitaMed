@@ -1,5 +1,4 @@
 package com.app.CitaMed.Model.Medico;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -42,7 +41,6 @@ public class Medicamento {
 
     @NotNull(message = "Debe existir un tratamiento asociado")
     @ManyToOne
-    @JsonIgnore
     @JoinColumn(name = "tratamiento_id", nullable = false)
     private Tratamiento tratamiento;
 }

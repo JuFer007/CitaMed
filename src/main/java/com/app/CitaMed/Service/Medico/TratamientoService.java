@@ -7,8 +7,6 @@ import com.app.CitaMed.Repository.Paciente.ConsultaMedicaRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-
 @Service
 @RequiredArgsConstructor
 
@@ -42,9 +40,5 @@ public class TratamientoService {
         tratamiento.setDuracionDias(dto.getDuracionDias());
         tratamientoRepository.save(tratamiento);
         return "Tratamiento actualizado correctamente";
-    }
-
-    public List<Tratamiento> findAll() {
-        return tratamientoRepository.findAll();
     }
 }

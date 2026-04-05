@@ -2,7 +2,6 @@ package com.app.CitaMed.Model.Administrativo;
 import com.app.CitaMed.Enums.EstadoPago;
 import com.app.CitaMed.Enums.MetodoPago;
 import com.app.CitaMed.Model.Agenda.Cita;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PastOrPresent;
@@ -27,7 +26,6 @@ public class Pago {
 
     @NotNull(message = "La cita es obligatoria")
     @OneToOne
-    @JsonIgnore
     @JoinColumn(name = "cita_id", nullable = false, unique = true)
     private Cita cita;
 

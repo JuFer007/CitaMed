@@ -37,8 +37,4 @@ public class DiagnosticoService {
         diagnosticoRepository.deleteById(id);
         return "Diagnóstico eliminado correctamente";
     }
-
-    public List<Diagnostico> findAll() {
-        return diagnosticoRepository.findAll();
-    }
 }

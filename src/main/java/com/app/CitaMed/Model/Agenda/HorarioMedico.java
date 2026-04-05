@@ -2,7 +2,6 @@ package com.app.CitaMed.Model.Agenda;
 import com.app.CitaMed.Enums.DiaSemana;
 import com.app.CitaMed.Model.Administrativo.Consultorio;
 import com.app.CitaMed.Model.Medico.Medico;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -37,13 +36,11 @@ public class HorarioMedico {
 
     @NotNull(message = "Debe seleccionar un médico")
     @ManyToOne
-    @JsonIgnore
     @JoinColumn(name = "medico_id", nullable = false)
     private Medico medico;
 
     @NotNull(message = "Debe seleccionar un consultorio")
     @ManyToOne
-    @JsonIgnore
     @JoinColumn(name = "consultorio_id", nullable = false)
     private Consultorio consultorio;
 }
