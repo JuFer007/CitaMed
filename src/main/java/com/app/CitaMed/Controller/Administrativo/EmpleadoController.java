@@ -1,25 +1,60 @@
 package com.app.CitaMed.Controller.Administrativo;
-
+import com.app.CitaMed.DTO.EmpleadoDTO;
 import com.app.CitaMed.Model.Administrativo.Empleado;
 import com.app.CitaMed.Service.Administrativo.EmpleadoService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
 
 @RestController
 @CrossOrigin(origins = "*")
-@RequestMapping("/api/empleados")
+@RequestMapping("/api/empleado")
+@RequiredArgsConstructor
 
 public class EmpleadoController {
-    @Autowired
-    private EmpleadoService empleadoService;
+    private final EmpleadoService empleadoService;
 
     @GetMapping
     public ResponseEntity<List<Empleado>> findAll() {
         return ResponseEntity.ok(empleadoService.findAll());
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<Empleado> findById(@PathVariable Long id) {
+        Empleado e = empleadoService.findById(id);
+        if (e == null) return ResponseEntity.notFound().build();
+        return ResponseEntity.ok(e);
+    }
+
+    @GetMapping("/activos")
+    public ResponseEntity<List<Empleado>> findActivos() {
+        return ResponseEntity.ok(empleadoService.findActivos());
+    }
+
+    @PostMapping
+    public ResponseEntity<String> save(@RequestBody EmpleadoDTO dto) {
+        String resultado = empleadoService.save(dto);
+        if (!resultado.equals("Empleado registrado correctamente"))
+            return ResponseEntity.badRequest().body(resultado);
+        return ResponseEntity.status(HttpStatus.CREATED).body(resultado);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<String> update(@PathVariable Long id, @RequestBody EmpleadoDTO dto) {
+        String resultado = empleadoService.update(id, dto);
+        if (resultado.equals("Empleado no encontrado"))
+            return ResponseEntity.notFound().build();
+        return ResponseEntity.ok(resultado);
+    }
+
+    @PatchMapping("/{id}/estado")
+    public ResponseEntity<String> toggleActivo(@PathVariable Long id) {
+        String resultado = empleadoService.toggleActivo(id);
+        if (resultado.equals("Empleado no encontrado"))
+            return ResponseEntity.notFound().build();
+        return ResponseEntity.ok(resultado);
     }
 }

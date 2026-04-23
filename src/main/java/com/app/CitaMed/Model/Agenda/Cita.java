@@ -5,6 +5,7 @@ import com.app.CitaMed.Model.Administrativo.Pago;
 import com.app.CitaMed.Model.Medico.Medico;
 import com.app.CitaMed.Model.Paciente.ConsultaMedica;
 import com.app.CitaMed.Model.Paciente.Paciente;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Future;
 import jakarta.validation.constraints.NotBlank;
@@ -30,16 +31,19 @@ public class Cita {
 
     @NotNull(message = "Debe seleccionar un paciente")
     @ManyToOne
+    @JsonIgnore
     @JoinColumn(name = "paciente_id", nullable = false)
     private Paciente paciente;
 
     @NotNull(message = "Debe seleccionar un médico")
     @ManyToOne
+    @JsonIgnore
     @JoinColumn(name = "medico_id", nullable = false)
     private Medico medico;
 
     @NotNull(message = "Debe seleccionar un consultorio")
     @ManyToOne
+    @JsonIgnore
     @JoinColumn(name = "consultorio_id", nullable = false)
     private Consultorio consultorio;
 
@@ -55,9 +59,11 @@ public class Cita {
     @Enumerated(EnumType.STRING)
     private EstadoCita estado;
 
+    @JsonIgnore
     @OneToOne(mappedBy = "cita", cascade = CascadeType.ALL)
     private Pago pago;
 
+    @JsonIgnore
     @OneToOne(mappedBy = "cita", cascade = CascadeType.ALL)
     private ConsultaMedica consultaMedica;
 }

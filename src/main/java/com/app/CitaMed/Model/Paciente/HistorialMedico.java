@@ -1,4 +1,5 @@
 package com.app.CitaMed.Model.Paciente;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -21,9 +22,11 @@ public class HistorialMedico {
 
     @NotNull(message = "El historial debe pertenecer a un paciente")
     @OneToOne
+    @JsonIgnore
     @JoinColumn(name = "paciente_id", nullable = false, unique = true)
     private Paciente paciente;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "historial")
     private List<ConsultaMedica> consultas;
 }

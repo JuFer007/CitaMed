@@ -41,4 +41,8 @@ public class MedicamentoService {
         medicamentoRepository.deleteById(id);
         return "Medicamento eliminado correctamente";
     }
+
+    public List<Medicamento> findAll() {
+        return medicamentoRepository.findAll();
+    }
 }
