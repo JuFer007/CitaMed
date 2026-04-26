@@ -35,11 +35,10 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .csrf(csrf -> csrf.disable()) // Crucial para que funcionen los POST desde fuera
+                .csrf(csrf -> csrf.disable())
                 .cors(Customizer.withDefaults())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
-                        // Asegúrate de que esta ruta coincida con tu Controller
                         .requestMatchers("/api/auth/**").permitAll()
                         .anyRequest().authenticated()
                 )
