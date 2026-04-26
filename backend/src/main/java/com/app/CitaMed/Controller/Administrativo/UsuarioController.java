@@ -23,9 +23,9 @@ public class UsuarioController {
 
     @GetMapping("/username/{userName}")
     public ResponseEntity<Usuario> findByUserName(@PathVariable String userName) {
-        Usuario usuario = usuarioService.findByUserName(userName);
-        if (usuario == null) return ResponseEntity.notFound().build();
-        return ResponseEntity.ok(usuario);
+        return usuarioService.findByUsuario(userName)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
     }
 
     @PostMapping

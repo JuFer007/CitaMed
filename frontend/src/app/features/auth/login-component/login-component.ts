@@ -1,20 +1,22 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
-import { AuthService } from '../../../core/services/auth-service'; // Ajusta la ruta
-import { LoaderService } from '../../../core/services/loader-service'; // Ajusta la ruta
+import { Router, RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { AuthService } from '../../../core/services/auth-service';
+import { LoaderService } from '../../../core/services/loader-service';
+
 
 @Component({
   selector: 'app-login-component',
   standalone: true,
-  imports: [ReactiveFormsModule, CommonModule],
+  imports: [ReactiveFormsModule, CommonModule, RouterLink],
   templateUrl: './login-component.html',
 
 })
 export class LoginComponent implements OnInit {
   loginForm!: FormGroup;
-  errorMessage: string = ''; // Para mostrar errores del backend
+  errorMessage: string = '';
+  verPassword: boolean = false;
 
   constructor(
     private fb: FormBuilder,
@@ -32,17 +34,15 @@ export class LoginComponent implements OnInit {
 
   onSubmit(): void {
     if (this.loginForm.valid) {
-      this.loaderService.show(); // Activamos el pez nadando
+      this.loaderService.show();
       this.errorMessage = '';
 
       const { usuario, clave } = this.loginForm.value;
 
-      this.authService.login({ usuario, clave }).subscribe({
+      this.authService.login(usuario, clave).subscribe({
         next: (response) => {
-          // Si el login es exitoso en Spring Boot (redirige a /)
-          this.router.navigate(['/admin']).then(() => {
-            this.loaderService.hide();
-          });
+          this.loaderService.hide();
+          this.router.navigate(['/admin']);
         },
         error: (err) => {
           this.loaderService.hide();
@@ -51,5 +51,9 @@ export class LoginComponent implements OnInit {
         }
       });
     }
+  }
+
+  togglePassword(): void {
+    this.verPassword = !this.verPassword;
   }
 }

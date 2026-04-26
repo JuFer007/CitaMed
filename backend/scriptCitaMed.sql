@@ -1,4 +1,4 @@
-create database CitaMed;
+-- create database CitaMed;
 
 use CitaMed;
 
@@ -11,31 +11,31 @@ use CitaMed;
 -- 1. USUARIOS (25)
 -- ========================
 INSERT INTO Usuarios (user_name, password, rol, activo) VALUES
-('admin01', '$2a$10$hashAdmin01', 'ADMIN', true),
-('recep01', '$2a$10$hashRecep01', 'RECEPCIONISTA', true),
-('recep02', '$2a$10$hashRecep02', 'RECEPCIONISTA', true),
-('med.garcia', '$2a$10$hashMed01', 'MEDICO', true),
-('med.torres', '$2a$10$hashMed02', 'MEDICO', true),
-('med.ramirez', '$2a$10$hashMed03', 'MEDICO', true),
-('med.flores', '$2a$10$hashMed04', 'MEDICO', true),
-('med.castro', '$2a$10$hashMed05', 'MEDICO', true),
-('med.herrera', '$2a$10$hashMed06', 'MEDICO', true),
-('med.vega', '$2a$10$hashMed07', 'MEDICO', true),
-('med.mora', '$2a$10$hashMed08', 'MEDICO', true),
-('med.rivas', '$2a$10$hashMed09', 'MEDICO', true),
-('med.pinto', '$2a$10$hashMed10', 'MEDICO', true),
-('enf.lopez', '$2a$10$hashEnf01', 'ENFERMERO', true),
-('enf.perez', '$2a$10$hashEnf02', 'ENFERMERO', true),
-('enf.ruiz', '$2a$10$hashEnf03', 'ENFERMERO', true),
-('enf.diaz', '$2a$10$hashEnf04', 'ENFERMERO', true),
-('enf.ortiz', '$2a$10$hashEnf05', 'ENFERMERO', true),
-('limpieza.nunez', '$2a$10$hashLimp01', 'LIMPIEZA', true),
-('limpieza.salinas', '$2a$10$hashLimp02', 'LIMPIEZA', true),
-('limpieza.mendoza', '$2a$10$hashLimp03', 'LIMPIEZA', true),
-('limpieza.fuentes', '$2a$10$hashLimp04', 'LIMPIEZA', true),
-('admin02', '$2a$10$hashAdmin02', 'ADMIN', true),
-('recep03', '$2a$10$hashRecep03', 'RECEPCIONISTA', false),
-('med.aguilar', '$2a$10$hashMed11', 'MEDICO', true);
+('admin01', '$2a$10$800I/8HGwCkjx0iApGb/kevpKOnZ1jp2UjTTWCg9CKaUNKdFhoywa', 'ADMIN', true),
+('recep01', '$2a$10$800I/8HGwCkjx0iApGb/kevpKOnZ1jp2UjTTWCg9CKaUNKdFhoywa', 'RECEPCIONISTA', true),
+('recep02', '$2a$10$800I/8HGwCkjx0iApGb/kevpKOnZ1jp2UjTTWCg9CKaUNKdFhoywa', 'RECEPCIONISTA', true),
+('med.garcia', '$2a$10$800I/8HGwCkjx0iApGb/kevpKOnZ1jp2UjTTWCg9CKaUNKdFhoywa', 'MEDICO', true),
+('med.torres', '$2a$10$800I/8HGwCkjx0iApGb/kevpKOnZ1jp2UjTTWCg9CKaUNKdFhoywa', 'MEDICO', true),
+('med.ramirez', '$2a$10$800I/8HGwCkjx0iApGb/kevpKOnZ1jp2UjTTWCg9CKaUNKdFhoywa', 'MEDICO', true),
+('med.flores', '$2a$10$800I/8HGwCkjx0iApGb/kevpKOnZ1jp2UjTTWCg9CKaUNKdFhoywa', 'MEDICO', true),
+('med.castro', '$2a$10$800I/8HGwCkjx0iApGb/kevpKOnZ1jp2UjTTWCg9CKaUNKdFhoywa', 'MEDICO', true),
+('med.herrera', '$2a$10$800I/8HGwCkjx0iApGb/kevpKOnZ1jp2UjTTWCg9CKaUNKdFhoywa', 'MEDICO', true),
+('med.vega', '$2a$10$800I/8HGwCkjx0iApGb/kevpKOnZ1jp2UjTTWCg9CKaUNKdFhoywa', 'MEDICO', true),
+('med.mora', '$2a$10$800I/8HGwCkjx0iApGb/kevpKOnZ1jp2UjTTWCg9CKaUNKdFhoywa', 'MEDICO', true),
+('med.rivas', '$2a$10$800I/8HGwCkjx0iApGb/kevpKOnZ1jp2UjTTWCg9CKaUNKdFhoywa', 'MEDICO', true),
+('med.pinto', '$2a$10$800I/8HGwCkjx0iApGb/kevpKOnZ1jp2UjTTWCg9CKaUNKdFhoywa', 'MEDICO', true),
+('enf.lopez', '$2a$10$800I/8HGwCkjx0iApGb/kevpKOnZ1jp2UjTTWCg9CKaUNKdFhoywa', 'ENFERMERO', true),
+('enf.perez', '$2a$10$800I/8HGwCkjx0iApGb/kevpKOnZ1jp2UjTTWCg9CKaUNKdFhoywa', 'ENFERMERO', true),
+('enf.ruiz', '$2a$10$800I/8HGwCkjx0iApGb/kevpKOnZ1jp2UjTTWCg9CKaUNKdFhoywa', 'ENFERMERO', true),
+('enf.diaz', '$2a$10$800I/8HGwCkjx0iApGb/kevpKOnZ1jp2UjTTWCg9CKaUNKdFhoywa', 'ENFERMERO', true),
+('enf.ortiz', '$2a$10$800I/8HGwCkjx0iApGb/kevpKOnZ1jp2UjTTWCg9CKaUNKdFhoywa', 'ENFERMERO', true),
+('limpieza.nunez', '$2a$10$800I/8HGwCkjx0iApGb/kevpKOnZ1jp2UjTTWCg9CKaUNKdFhoywa', 'LIMPIEZA', true),
+('limpieza.salinas', '$2a$10$800I/8HGwCkjx0iApGb/kevpKOnZ1jp2UjTTWCg9CKaUNKdFhoywa', 'LIMPIEZA', true),
+('limpieza.mendoza', '$2a$10$800I/8HGwCkjx0iApGb/kevpKOnZ1jp2UjTTWCg9CKaUNKdFhoywa', 'LIMPIEZA', true),
+('limpieza.fuentes', '$2a$10$800I/8HGwCkjx0iApGb/kevpKOnZ1jp2UjTTWCg9CKaUNKdFhoywa', 'LIMPIEZA', true),
+('admin02', '$2a$10$800I/8HGwCkjx0iApGb/kevpKOnZ1jp2UjTTWCg9CKaUNKdFhoywa', 'ADMIN', true),
+('recep03', '$2a$10$800I/8HGwCkjx0iApGb/kevpKOnZ1jp2UjTTWCg9CKaUNKdFhoywa', 'RECEPCIONISTA', false),
+('med.aguilar', '$2a$10$800I/8HGwCkjx0iApGb/kevpKOnZ1jp2UjTTWCg9CKaUNKdFhoywa', 'MEDICO', true);
 
 -- ========================
 -- 2. AREAS (6)
