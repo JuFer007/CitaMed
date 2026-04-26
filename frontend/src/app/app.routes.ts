@@ -3,7 +3,7 @@ import { LoginComponent } from './features/auth/login-component/login-component'
 import { HomeComponent } from './features/home/home-component';
 import { ProductosPage } from './features/home/productos-page/productos-page';
 import { ServiciosPage } from './features/home/servicios-page/servicios-page';
-import { DashboardLayout } from './features/admin/dashboard-layout/dashboard-layout';
+import { DashboardLayout } from './layout/dashboard-layout/dashboard-layout';
 import { UsuarioComponent } from './features/admin/usuario-component/usuario-component';
 import { DashboardComponent } from './features/admin/dashboard-component/dashboard-component';
 import { VentasComponent } from './features/admin/ventas-component/ventas-component';
@@ -13,7 +13,7 @@ export const routes: Routes = [
   {
     path: 'inicio',
     component: HomeComponent,
-    title: 'Acuamont - Bienvenidos',
+    title: 'Citamed - Bienvenidos',
   },
   {
     path: 'login',

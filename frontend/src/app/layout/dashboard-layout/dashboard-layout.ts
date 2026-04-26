@@ -2,7 +2,7 @@ import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { RouterOutlet, Router, NavigationEnd, ActivatedRoute, RouterLink, RouterLinkActive } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { filter, map, mergeMap } from 'rxjs/operators';
-import { AuthService } from '../../../core/services/auth-service';
+import { AuthService } from '../../core/services/auth-service';
 
 @Component({
   selector: 'app-dashboard-layout',
@@ -12,6 +12,8 @@ import { AuthService } from '../../../core/services/auth-service';
 })
 export class DashboardLayout implements OnInit {
   titulo: string = 'Panel Administrativo';
+  usuarioLogueado = 'admin';
+  rolUsuario = 'Administrador';
 
   constructor(
     private router: Router,

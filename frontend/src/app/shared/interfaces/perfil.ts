@@ -6,12 +6,10 @@ export interface Perfil {
 
 export interface Usuario {
     id?: number;
-    nombre: string;
-    usuario: string;
-    clave?: string;
-    correo: string;
-    estado: number;
-    perfil: Perfil;
+    userName: string;
+    password?: string;
+    rol: string;
+    activo: boolean;
 }
 
 export interface LoginResponse {
