@@ -1,8 +1,6 @@
 import { Routes } from '@angular/router';
 import { LoginComponent } from './features/auth/login-component/login-component';
 import { HomeComponent } from './features/home/home-component';
-import { ProductosPage } from './features/home/productos-page/productos-page';
-import { ServiciosPage } from './features/home/servicios-page/servicios-page';
 import { DashboardLayout } from './layout/dashboard-layout/dashboard-layout';
 import { UsuarioComponent } from './features/admin/usuario-component/usuario-component';
 import { DashboardComponent } from './features/admin/dashboard-component/dashboard-component';
@@ -19,16 +17,6 @@ export const routes: Routes = [
     path: 'login',
     component: LoginComponent,
     title: 'Iniciar Sesión',
-  },
-  {
-    path: 'ver-productos',
-    component: ProductosPage,
-    title: 'Productos',
-  },
-  {
-    path: 'ver-servicios',
-    component: ServiciosPage,
-    title: 'Servicios',
   },
   {
     path: 'admin',
