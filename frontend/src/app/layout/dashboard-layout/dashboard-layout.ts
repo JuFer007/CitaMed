@@ -12,8 +12,9 @@ import { AuthService } from '../../core/services/auth-service';
 })
 export class DashboardLayout implements OnInit {
   titulo: string = 'Panel Administrativo';
-  usuarioLogueado = 'admin';
-  rolUsuario = 'Administrador';
+  nombre: string = '';
+  rol: string = '';
+  inicial: string = '';
 
   constructor(
     private router: Router,
@@ -37,6 +38,7 @@ export class DashboardLayout implements OnInit {
     });
 
     this.actualizarTituloManual();
+    this.cargarDatosUsuario();
   }
 
   private actualizarTituloManual(): void {
@@ -50,5 +52,12 @@ export class DashboardLayout implements OnInit {
 
   cerrarSesion(): void {
     this.authService.logout();
+  }
+
+  private cargarDatosUsuario(): void {
+    this.nombre = this.authService.getNombre() || 'Usuario';
+    this.rol = this.authService.getPerfil() || 'Sin Rol';
+    this.inicial = this.nombre.charAt(0).toUpperCase();
+    this.cdr.detectChanges();
   }
 }
