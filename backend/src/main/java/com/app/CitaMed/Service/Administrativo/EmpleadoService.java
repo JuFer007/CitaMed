@@ -51,7 +51,6 @@ public class EmpleadoService {
         empleado.setEmail(dto.getEmail());
         empleado.setFechaNacimiento(dto.getFechaNacimiento());
         empleado.setGenero(dto.getGenero());
-        empleado.setCargo(dto.getCargo());
         empleado.setSalario(dto.getSalario());
         empleado.setFechaIngreso(dto.getFechaIngreso());
         empleado.setUsuario(usuario);
@@ -70,7 +69,6 @@ public class EmpleadoService {
         empleado.setTelefono(dto.getTelefono());
         empleado.setDireccion(dto.getDireccion());
         empleado.setEmail(dto.getEmail());
-        empleado.setCargo(dto.getCargo());
         empleado.setSalario(dto.getSalario());
         empleadoRepository.save(empleado);
         return "Empleado actualizado correctamente";

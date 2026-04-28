@@ -1,4 +1,5 @@
 package com.app.CitaMed.Model.Administrativo;
+import com.app.CitaMed.Model.Medico.Especialidad;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
@@ -7,6 +8,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.validator.constraints.UniqueElements;
 
 @Getter
 @Setter
@@ -30,6 +32,6 @@ public class Consultorio {
     @NotNull(message = "Debe seleccionar un área")
     @ManyToOne
     @JsonIgnore
-    @JoinColumn(name = "area_id", nullable = false)
-    private Area area;
+    @JoinColumn(name = "especialidad_id", nullable = false)
+    private Especialidad especialidad;
 }

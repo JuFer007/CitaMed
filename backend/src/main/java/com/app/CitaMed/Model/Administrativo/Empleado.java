@@ -60,9 +60,6 @@ public class Empleado {
     @Enumerated(EnumType.STRING)
     private Genero genero;
 
-    @NotBlank(message = "El cargo es obligatorio")
-    private String cargo;
-
     @Positive(message = "El salario debe ser mayor que 0")
     private double salario;
 

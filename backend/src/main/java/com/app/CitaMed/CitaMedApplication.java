@@ -4,8 +4,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
 
-public class DocCenterApplication {
+public class CitaMedApplication {
 	public static void main(String[] args) {
-		SpringApplication.run(DocCenterApplication.class, args);
+		SpringApplication.run(CitaMedApplication.class, args);
 	}
 }

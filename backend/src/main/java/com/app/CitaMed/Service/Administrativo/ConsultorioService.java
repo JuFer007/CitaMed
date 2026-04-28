@@ -1,8 +1,6 @@
 package com.app.CitaMed.Service.Administrativo;
 import com.app.CitaMed.DTO.ConsultorioDTO;
-import com.app.CitaMed.Model.Administrativo.Area;
 import com.app.CitaMed.Model.Administrativo.Consultorio;
-import com.app.CitaMed.Repository.Administrativo.AreaRepository;
 import com.app.CitaMed.Repository.Administrativo.ConsultorioRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -13,7 +11,6 @@ import java.util.List;
 
 public class ConsultorioService {
     private final ConsultorioRepository consultorioRepository;
-    private final AreaRepository areaRepository;
 
     public List<Consultorio> findAll() {
         return consultorioRepository.findAll();
@@ -23,25 +20,16 @@ public class ConsultorioService {
         return consultorioRepository.findByDisponibleTrue();
     }
 
-    public List<Consultorio> findByArea(Long areaId) {
-        return consultorioRepository.findByAreaId(areaId);
-    }
-
     public Consultorio findById(Long id) {
         return consultorioRepository.findById(id).orElse(null);
     }
 
     public String save(ConsultorioDTO dto) {
-        Area area = areaRepository.findById(dto.getAreaId()).orElse(null);
-        if (area == null) return "Área no encontrada";
-
         if (consultorioRepository.existsByNumero(dto.getNumero()))
             return "Ya existe un consultorio con ese número";
-
         Consultorio consultorio = new Consultorio();
         consultorio.setNumero(dto.getNumero());
         consultorio.setDescripcion(dto.getDescripcion());
-        consultorio.setArea(area);
         consultorio.setDisponible(true);
         consultorioRepository.save(consultorio);
         return "Consultorio registrado correctamente";
@@ -50,13 +38,8 @@ public class ConsultorioService {
     public String update(Long id, ConsultorioDTO dto) {
         Consultorio consultorio = consultorioRepository.findById(id).orElse(null);
         if (consultorio == null) return "Consultorio no encontrado";
-
-        Area area = areaRepository.findById(dto.getAreaId()).orElse(null);
-        if (area == null) return "Área no encontrada";
-
         consultorio.setNumero(dto.getNumero());
         consultorio.setDescripcion(dto.getDescripcion());
-        consultorio.setArea(area);
         consultorioRepository.save(consultorio);
         return "Consultorio actualizado correctamente";
     }

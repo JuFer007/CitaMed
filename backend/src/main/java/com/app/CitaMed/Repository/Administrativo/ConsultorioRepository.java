@@ -9,5 +9,4 @@ import java.util.List;
 public interface ConsultorioRepository extends JpaRepository<Consultorio, Long> {
     boolean existsByNumero(String numero);
     List<Consultorio> findByDisponibleTrue();
-    List<Consultorio> findByAreaId(Long areaId);
 }

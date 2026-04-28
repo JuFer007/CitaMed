@@ -1,5 +1,4 @@
--- create database CitaMed;
-
+create database CitaMed;
 use CitaMed;
 
 

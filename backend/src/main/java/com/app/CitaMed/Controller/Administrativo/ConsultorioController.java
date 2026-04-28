@@ -33,11 +33,6 @@ public class ConsultorioController {
         return ResponseEntity.ok(consultorioService.findDisponibles());
     }
 
-    @GetMapping("/area/{areaId}")
-    public ResponseEntity<List<Consultorio>> findByArea(@PathVariable Long areaId) {
-        return ResponseEntity.ok(consultorioService.findByArea(areaId));
-    }
-
     @PostMapping
     public ResponseEntity<String> save(@RequestBody ConsultorioDTO dto) {
         String resultado = consultorioService.save(dto);

@@ -1,22 +1,18 @@
 package com.app.CitaMed.Config;
-
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
-
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-
 import javax.crypto.SecretKey;
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
 
-
 @Configuration
 @EnableWebSecurity
-public class JwtUtil {
 
+public class JwtUtil {
     private final SecretKey key;
     private final long expiracion;
 
