@@ -9,7 +9,7 @@ import { LoaderComponent } from './shared/components/loader-component/loader-com
   styleUrl: './app.css'
 })
 export class App {
-  protected readonly title = signal('Acuamont-frontend');
+  protected readonly title = signal('CitaMed');
 
 
 }
