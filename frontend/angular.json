@@ -7,7 +7,7 @@
   },
   "newProjectRoot": "projects",
   "projects": {
-    "Acuamont-frontend": {
+    "CitaMed-frontend": {
       "projectType": "application",
       "schematics": {},
       "root": "",
@@ -57,10 +57,10 @@
           "builder": "@angular/build:dev-server",
           "configurations": {
             "production": {
-              "buildTarget": "Acuamont-frontend:build:production"
+              "buildTarget": "CitaMed-frontend:build:production"
             },
             "development": {
-              "buildTarget": "Acuamont-frontend:build:development"
+              "buildTarget": "CitaMed-frontend:build:development"
             }
           },
           "defaultConfiguration": "development"
