@@ -4,149 +4,43 @@
 
 @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600&display=swap');
 
-/* ── CSS VARIABLES (Design Tokens) ── */
-:root {
-  --navy:      #0B1F3A;
-  --navy-mid:  #122B52;
-  --teal:      #0E7C7B;
-  --teal-light:#14A49E;
-  --mint:      #D4F0EE;
-  --mint-pale: #EEF9F8;
-  --gold:      #C9A84C;
-  --gold-light:#E4C97B;
-  --gold-pale: #FDF6E3;
-  --snow:      #F7FAFB;
-  --white:     #FFFFFF;
-  --gray-100:  #EEF2F5;
-  --gray-300:  #C8D5DF;
-  --gray-500:  #7A94A8;
-  --gray-700:  #3E5668;
-  --text:      #0B1F3A;
-  --r-sm: 12px;
-  --r-md: 20px;
-  --r-lg: 32px;
-  --r-xl: 48px;
+@import "tailwindcss";
+
+
+@theme {
+  --font-sans: "Outfit", "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Outfit", sans-serif;
+
+  --color-aquamarine: #7fffd4;
+  --color-ocean-light: #e0f2f1;
+  --color-ocean-soft: #b2ebf2;
+  --color-ocean-deep: #00bcd4;
+  --color-turquesa: #53d1e2;
 }
 
-/* ── RESET ── */
-*, *::before, *::after {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
+::-webkit-scrollbar {
+  width: 4px;
 }
 
-html { scroll-behavior: smooth; }
-
-body {
-  font-family: 'Plus Jakarta Sans', sans-serif;
-  background: var(--white);
-  color: var(--text);
-  overflow-x: hidden;
+::-webkit-scrollbar-track {
+  background: #8d8d8d;
 }
 
-a { text-decoration: none; color: inherit; }
-img { display: block; max-width: 100%; }
-
-/* ── LAYOUT ── */
-.container {
-  max-width: 1160px;
-  margin: 0 auto;
-  padding: 0 2rem;
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 999px;
 }
 
-/* ── TYPOGRAPHY TOKENS ── */
-.section-kicker {
-  font-size: .72rem;
-  font-weight: 700;
-  letter-spacing: .16em;
-  text-transform: uppercase;
-  color: var(--teal);
-  display: flex;
-  align-items: center;
-  gap: .6rem;
-  margin-bottom: 1rem;
-}
-.section-kicker::before {
-  content: '';
-  display: inline-block;
-  width: 24px;
-  height: 2px;
-  background: var(--teal);
-  border-radius: 2px;
-}
-.section-title {
-  font-family: 'Cormorant Garamond', serif;
-  font-size: clamp(2rem, 4.5vw, 3rem);
-  font-weight: 700;
-  line-height: 1.15;
-  color: var(--navy);
-}
-.section-desc {
-  font-size: 1rem;
-  color: var(--gray-700);
-  line-height: 1.75;
-  max-width: 560px;
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.35);
 }
 
-/* ── BUTTONS ── */
-.btn {
-  display: inline-flex;
-  align-items: center;
-  gap: .55rem;
-  padding: .9rem 2rem;
-  border-radius: 100px;
-  font-family: 'Plus Jakarta Sans', sans-serif;
-  font-size: .9rem;
-  font-weight: 600;
-  cursor: pointer;
-  border: none;
-  transition: all .25s;
-  text-decoration: none;
-}
-.btn-teal {
-  background: var(--teal);
-  color: #fff;
-  box-shadow: 0 6px 24px rgba(14,124,123,.30);
-}
-.btn-teal:hover {
-  background: var(--teal-light);
-  transform: translateY(-2px);
-  box-shadow: 0 10px 32px rgba(14,124,123,.40);
-}
-.btn-outline-navy {
-  background: transparent;
-  color: var(--navy);
-  border: 2px solid var(--navy);
-}
-.btn-outline-navy:hover {
-  background: var(--navy);
-  color: #fff;
-}
-.btn-white {
-  background: #fff;
-  color: var(--teal);
-  box-shadow: 0 4px 20px rgba(0,0,0,.12);
-}
-.btn-white:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 28px rgba(0,0,0,.18);
+.nav-active-link {
+  background-color: #2563eb !important;
+  color: white !important;
 }
 
-/* ── TAGS ── */
-.tag {
-  display: inline-flex;
-  align-items: center;
-  gap: .4rem;
-  padding: .3rem .85rem;
-  border-radius: 100px;
-  font-size: .72rem;
-  font-weight: 700;
-  letter-spacing: .05em;
+.nav-active-link:hover {
+  background-color: #1d4ed8 !important;
+  color: white !important;
 }
-.tag-teal  { background: var(--mint); color: var(--teal); }
-.tag-gold  { background: var(--gold-pale); color: var(--gold); }
-.tag-navy  { background: rgba(11,31,58,.08); color: var(--navy); }
-
-/* ── STARS ── */
-.stars { display: flex; gap: 2px; }
-.stars span { color: var(--gold); font-size: .85rem; }

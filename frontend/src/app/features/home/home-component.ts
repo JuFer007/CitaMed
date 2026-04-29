@@ -2,11 +2,14 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { NavbarComponent } from './navbar-component/navbar-component';
 import { FooterComponent } from './footer-component/footer-component';
+import { HeroComponent } from "./hero-component/hero-component";
+import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CommonModule, NavbarComponent, FooterComponent],
+  imports: [CommonModule, NavbarComponent, FooterComponent, HeroComponent],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
   templateUrl: './home-component.html',
   styleUrl: './home-component.css'
 })
