@@ -1,53 +1,18 @@
-import { Component, HostListener, OnInit } from '@angular/core';
+import { Component, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterLink } from '@angular/router';
-import { AuthService } from '../../../core/services/auth-service';
-
 
 @Component({
-  selector: 'app-navbar-component',
+  selector: 'app-navbar',
   standalone: true,
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule],
   templateUrl: './navbar-component.html',
-  styleUrl: './navbar-component.css'
+  styleUrls: ['./navbar-component.css']
 })
-export class NavbarComponent implements OnInit {
+export class NavbarComponent {
   isScrolled = false;
-  isLoggedIn = false;
-  nombre = '';
-  inicial = '';
-  menuPerfil = false;
-  menuMobile = false;
-
-  constructor(private authService: AuthService) {
-  }
-
-  ngOnInit(): void {
-    this.isLoggedIn = this.authService.isLoggedIn();
-    if (this.isLoggedIn) {
-      this.nombre = localStorage.getItem('nombre') ?? '';
-      this.inicial = this.nombre.charAt(0).toUpperCase();
-    }
-  }
 
   @HostListener('window:scroll', [])
   onWindowScroll() {
-    this.isScrolled = window.scrollY > 50;
+    this.isScrolled = window.scrollY > 40;
   }
-
-  toggleMenuPerfil(): void {
-    this.menuPerfil = !this.menuPerfil;
-  }
-
-  toggleMenuMobile(): void { // ← agregar
-    this.menuMobile = !this.menuMobile;
-  }
-
-  cerrarSesion(): void {
-    this.authService.logout();
-    this.isLoggedIn = false;
-    this.menuPerfil = false;
-    this.menuMobile = false;
-  }
-
 }

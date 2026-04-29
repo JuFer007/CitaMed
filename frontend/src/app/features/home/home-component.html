@@ -1,4 +1,376 @@
-<div class="min-h-screen">
-    <app-navbar-component></app-navbar-component>
-    <app-footer-component></app-footer-component>
+<app-navbar></app-navbar>
+
+<!-- HERO -->
+<section class="hero" id="inicio">
+  <div class="hero-left">
+    <div class="hero-eyebrow anim-1">
+      <div class="pulse-dot"></div>
+      <span>Atención médica de calidad</span>
+    </div>
+    <h1 class="hero-title anim-2">
+      Tu salud merece<br>la mejor <em>atención</em><br>médica
+    </h1>
+    <p class="hero-desc anim-3">
+      Reserva tu cita con especialistas en minutos. Sin filas, sin esperas innecesarias. Elige el médico, el día y la hora que mejor te convenga.
+    </p>
+    <div class="hero-actions anim-4">
+      <a href="#reserva" class="btn btn-teal" style="font-size:1rem;padding:1rem 2.2rem;">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+        Reservar cita ahora
+      </a>
+      <a href="#especialidades" class="btn btn-outline-navy" style="font-size:1rem;padding:1rem 2.2rem;">Ver especialidades</a>
+    </div>
+    <div class="hero-trust anim-4">
+      <div class="trust-avatars">
+        <span>JR</span><span>MC</span><span>AP</span><span>SV</span>
+      </div>
+      <div class="trust-text">
+        <strong>+1,200 pacientes</strong>
+        <span>confían en CitaMed</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="hero-right">
+    <div class="hero-right-mesh"></div>
+    <div class="hero-right-dots"></div>
+
+    <div class="booking-card">
+      <div class="bc-title">Busca tu especialista</div>
+
+      <div class="bc-field">
+        <label class="bc-label">Especialidad</label>
+        <select class="bc-select">
+          <option>Selecciona una especialidad</option>
+          <option>Cardiología</option>
+          <option>Pediatría</option>
+          <option>Neurología</option>
+          <option>Medicina General</option>
+          <option>Traumatología</option>
+          <option>Dermatología</option>
+          <option>Ginecología</option>
+          <option>Oftalmología</option>
+        </select>
+      </div>
+
+      <div class="bc-date-row">
+        <div>
+          <label class="bc-label">Fecha</label>
+          <select class="bc-select">
+            <option>Hoy, 28 Abr</option>
+            <option>Mañana, 29 Abr</option>
+            <option>Jue, 30 Abr</option>
+            <option>Vie, 01 May</option>
+          </select>
+        </div>
+        <div>
+          <label class="bc-label">Médico</label>
+          <select class="bc-select">
+            <option>Cualquier médico</option>
+            <option>Dr. Carlos Vega</option>
+            <option>Dra. Ana Soto</option>
+            <option>Dr. Miguel Flores</option>
+          </select>
+        </div>
+      </div>
+
+      <label class="bc-label">Hora disponible</label>
+      <div class="bc-times">
+        <div class="bc-time-btn active" (click)="selectTime($event)">09:00</div>
+        <div class="bc-time-btn" (click)="selectTime($event)">10:00</div>
+        <div class="bc-time-btn" (click)="selectTime($event)">11:30</div>
+        <div class="bc-time-btn" (click)="selectTime($event)">14:00</div>
+        <div class="bc-time-btn" (click)="selectTime($event)">15:30</div>
+        <div class="bc-time-btn" (click)="selectTime($event)">17:00</div>
+      </div>
+
+      <button class="bc-cta" (click)="scrollToReserva()">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        Confirmar y reservar
+      </button>
+    </div>
+  </div>
+</section>
+
+<!-- INFO BAND -->
+<div class="info-band">
+  <div class="container">
+    <div class="info-items">
+      <div class="info-item">
+        <div class="info-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg></div>
+        <div><div class="info-label">Citas en minutos</div><div class="info-sub">Reserva 100% online, sin llamadas</div></div>
+      </div>
+      <div class="info-item">
+        <div class="info-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg></div>
+        <div><div class="info-label">Especialistas certificados</div><div class="info-sub">Médicos con colegiatura vigente</div></div>
+      </div>
+      <div class="info-item">
+        <div class="info-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2"/></svg></div>
+        <div><div class="info-label">Historial en línea</div><div class="info-sub">Tus consultas siempre disponibles</div></div>
+      </div>
+      <div class="info-item">
+        <div class="info-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></div>
+        <div><div class="info-label">Recordatorio automático</div><div class="info-sub">Te avisamos por correo antes de tu cita</div></div>
+      </div>
+    </div>
+  </div>
 </div>
+
+<!-- ESPECIALIDADES -->
+<section class="especialidades" id="especialidades">
+  <div class="container">
+    <div class="esp-header">
+      <div>
+        <div class="section-kicker">Nuestras especialidades</div>
+        <h2 class="section-title">Encuentra el especialista<br>que necesitas</h2>
+      </div>
+      <a href="#reserva" class="btn btn-teal">Ver todos los médicos</a>
+    </div>
+    <div class="esp-grid">
+
+      <div class="esp-card">
+        <div class="esp-icon-wrap">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+        </div>
+        <div class="esp-name">Cardiología</div>
+        <div class="esp-desc">Diagnóstico y tratamiento de enfermedades del corazón y sistema cardiovascular.</div>
+        <div class="esp-link">Reservar cita <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div>
+      </div>
+
+      <div class="esp-card">
+        <div class="esp-icon-wrap">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8"><circle cx="12" cy="8" r="4"/><path d="M12 14c-5 0-8 2-8 4v1h16v-1c0-2-3-4-8-4z"/></svg>
+        </div>
+        <div class="esp-name">Pediatría</div>
+        <div class="esp-desc">Atención médica especializada para niños y adolescentes de todas las edades.</div>
+        <div class="esp-link">Reservar cita <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div>
+      </div>
+
+      <div class="esp-card">
+        <div class="esp-icon-wrap">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg>
+        </div>
+        <div class="esp-name">Neurología</div>
+        <div class="esp-desc">Evaluación y tratamiento de trastornos del sistema nervioso central y periférico.</div>
+        <div class="esp-link">Reservar cita <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div>
+      </div>
+
+      <div class="esp-card">
+        <div class="esp-icon-wrap">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        </div>
+        <div class="esp-name">Medicina General</div>
+        <div class="esp-desc">Consultas generales, chequeos preventivos y derivación a especialistas cuando se requiere.</div>
+        <div class="esp-link">Reservar cita <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div>
+      </div>
+
+      <div class="esp-card">
+        <div class="esp-icon-wrap">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+        </div>
+        <div class="esp-name">Traumatología</div>
+        <div class="esp-desc">Lesiones óseas, musculares y articulares. Fracturas, esguinces y rehabilitación.</div>
+        <div class="esp-link">Reservar cita <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div>
+      </div>
+
+      <div class="esp-card">
+        <div class="esp-icon-wrap">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="10" r="3"/><path d="M7 20.662V19a2 2 0 012-2h6a2 2 0 012 2v1.662"/></svg>
+        </div>
+        <div class="esp-name">Ginecología</div>
+        <div class="esp-desc">Salud reproductiva y preventiva de la mujer. Controles, ecografías y seguimiento especializado.</div>
+        <div class="esp-link">Reservar cita <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div>
+      </div>
+
+      <div class="esp-card">
+        <div class="esp-icon-wrap">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8"><circle cx="12" cy="12" r="2"/><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z"/></svg>
+        </div>
+        <div class="esp-name">Oftalmología</div>
+        <div class="esp-desc">Evaluación de la visión, diagnóstico y tratamiento de enfermedades oculares.</div>
+        <div class="esp-link">Reservar cita <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div>
+      </div>
+
+      <div class="esp-card">
+        <div class="esp-icon-wrap">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
+        </div>
+        <div class="esp-name">Dermatología</div>
+        <div class="esp-desc">Diagnóstico y tratamiento de enfermedades de la piel, cabello y uñas.</div>
+        <div class="esp-link">Reservar cita <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- CÓMO FUNCIONA -->
+<section class="como" id="como">
+  <div class="container">
+    <div class="como-inner">
+      <div class="app-preview">
+        <div class="app-header">
+          <div class="app-dots"><span class="ad-r"></span><span class="ad-y"></span><span class="ad-g"></span></div>
+          <span class="app-title">CitaMed · Portal del paciente</span>
+        </div>
+        <div class="app-body">
+          <div class="app-greeting">Buenos días, María 👋</div>
+          <div class="app-search">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+            <span>Buscar especialidad o médico...</span>
+          </div>
+          <div class="app-spec-row">
+            <div class="app-spec-chip asc-a">Todos</div>
+            <div class="app-spec-chip asc-b">Cardiología</div>
+            <div class="app-spec-chip asc-b">Pediatría</div>
+            <div class="app-spec-chip asc-b">Neurología</div>
+          </div>
+          <div class="app-doc-card">
+            <div class="doc-av da-1">CV</div>
+            <div><div class="doc-name">Dr. Carlos Vega</div><div class="doc-spec">Cardiología · CMP 45231</div></div>
+            <div class="doc-avail"><span class="avail-dot"></span><span class="avail-txt">Disponible hoy</span></div>
+          </div>
+          <div class="app-doc-card">
+            <div class="doc-av da-2">AS</div>
+            <div><div class="doc-name">Dra. Ana Soto</div><div class="doc-spec">Pediatría · CMP 38109</div></div>
+            <div class="doc-avail"><span class="avail-dot"></span><span class="avail-txt">Disponible hoy</span></div>
+          </div>
+          <div class="app-doc-card">
+            <div class="doc-av da-3">MF</div>
+            <div><div class="doc-name">Dr. Miguel Flores</div><div class="doc-spec">Neurología · CMP 51874</div></div>
+            <div class="doc-avail"><span class="avail-dot" style="background:var(--gold-light);"></span><span class="avail-txt">Mañana</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <div class="section-kicker">Proceso simple</div>
+        <h2 class="section-title" style="margin-bottom:1rem;">Reserva tu cita<br>en 4 pasos</h2>
+        <p class="section-desc" style="margin-bottom:0;">Sin trámites complicados. Todo desde tu teléfono o computadora, en cualquier momento.</p>
+        <div class="steps-track" style="margin-top:2.5rem;">
+          <div class="step-item"><div class="step-num sn-1">1</div><div><div class="step-title">Elige tu especialidad</div><div class="step-desc">Selecciona entre nuestras especialidades médicas disponibles y filtra por el profesional que prefieras.</div></div></div>
+          <div class="step-item"><div class="step-num sn-2">2</div><div><div class="step-title">Selecciona fecha y hora</div><div class="step-desc">Elige el día y horario que mejor se adapte a tu agenda. Verás la disponibilidad en tiempo real.</div></div></div>
+          <div class="step-item"><div class="step-num sn-3">3</div><div><div class="step-title">Ingresa tus datos</div><div class="step-desc">Completa tu información básica (nombre, DNI y motivo de consulta) para registrar la reserva.</div></div></div>
+          <div class="step-item"><div class="step-num sn-4">4</div><div><div class="step-title">Recibe tu confirmación</div><div class="step-desc">Te enviamos un correo con todos los detalles: médico, consultorio, fecha y hora de tu cita.</div></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SERVICIOS -->
+<section class="servicios" id="servicios">
+  <div class="container">
+    <div class="servicios-header">
+      <div class="section-kicker" style="justify-content:center;">Lo que ofrecemos</div>
+      <h2 class="section-title" style="margin-bottom:.85rem;">Servicios pensados<br>para tu comodidad</h2>
+      <p class="section-desc" style="margin:0 auto;text-align:center;">Desde la reserva hasta el seguimiento de tu salud, CitaMed está contigo en cada paso.</p>
+    </div>
+    <div class="servicios-grid">
+      <div class="serv-card serv-card-light">
+        <div class="serv-icon si-mint"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" width="24" height="24"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg></div>
+        <div class="serv-name serv-name-light">Citas online</div>
+        <div class="serv-desc serv-desc-light">Reserva, reprograma o cancela tu cita médica desde cualquier dispositivo, las 24 horas del día.</div>
+        <ul class="serv-list sl-light"><li>Disponibilidad en tiempo real</li><li>Confirmación instantánea</li><li>Recordatorio por correo</li><li>Sin necesidad de llamar</li></ul>
+      </div>
+      <div class="serv-card serv-card-dark">
+        <div class="serv-icon si-white-t"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" width="24" height="24"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2"/></svg></div>
+        <div class="serv-name serv-name-dark">Historial médico digital</div>
+        <div class="serv-desc serv-desc-dark">Accede a tu historial completo: diagnósticos, tratamientos, medicamentos y resultados de todas tus consultas.</div>
+        <ul class="serv-list sl-dark"><li>Consultas anteriores archivadas</li><li>Diagnósticos y tratamientos</li><li>Medicamentos prescritos</li><li>Signos vitales registrados</li></ul>
+      </div>
+      <div class="serv-card serv-card-teal">
+        <div class="serv-icon si-white-t"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" width="24" height="24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></div>
+        <div class="serv-name serv-name-teal">Confirmación por correo</div>
+        <div class="serv-desc serv-desc-teal">Al reservar tu cita recibirás un correo con todos los detalles. También te avisamos antes de la cita para que no se te olvide.</div>
+        <ul class="serv-list sl-teal"><li>Email de confirmación inmediato</li><li>Recordatorio 24 h antes</li><li>Datos del médico y consultorio</li><li>Opción de cancelar por correo</li></ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIOS -->
+<section class="testimonios" id="testimonios">
+  <div class="container">
+    <div class="test-header">
+      <div class="section-kicker" style="justify-content:center;">Lo que dicen nuestros pacientes</div>
+      <h2 class="section-title" style="margin-bottom:.75rem;">Experiencias reales,<br>resultados reales</h2>
+    </div>
+    <div class="test-grid">
+      <div class="test-card">
+        <div class="test-stars"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div>
+        <p class="test-quote">"Reservé mi cita con cardiología en menos de 5 minutos. El sistema es muy fácil de usar y recibí la confirmación de inmediato. Excelente servicio."</p>
+        <div class="test-author"><div class="test-av tav-1">MR</div><div><div class="test-name">María Ríos</div><div class="test-detail">Paciente de Cardiología</div></div></div>
+      </div>
+      <div class="test-card">
+        <div class="test-stars"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div>
+        <p class="test-quote">"Llevo a mi hijo al pediatra con CitaMed desde hace meses. Ya no tengo que llamar ni esperar en fila. Todo queda guardado en el historial digital."</p>
+        <div class="test-author"><div class="test-av tav-2">JP</div><div><div class="test-name">Jessica Paredes</div><div class="test-detail">Mamá de paciente de Pediatría</div></div></div>
+      </div>
+      <div class="test-card">
+        <div class="test-stars"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div>
+        <p class="test-quote">"El correo de confirmación con todos los datos del médico y el consultorio me da mucha tranquilidad. Nunca me olvido de mis citas gracias a los recordatorios."</p>
+        <div class="test-author"><div class="test-av tav-3">LC</div><div><div class="test-name">Luis Castillo</div><div class="test-detail">Paciente de Neurología</div></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- RESERVA -->
+<section class="reserva" id="reserva">
+  <div class="reserva-mesh"></div>
+  <div class="container">
+    <div class="reserva-inner">
+      <div class="reserva-left">
+        <div class="section-kicker">Reserva tu cita</div>
+        <h2 class="section-title" style="color:#fff;">Agenda con tu<br>especialista hoy</h2>
+        <p class="reserva-desc">Completa el formulario y nos pondremos en contacto contigo para confirmar. Recibirás un correo con todos los detalles.</p>
+        <div class="reserva-benefits">
+          <div class="rb-item"><div class="rb-check"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.5"><path d="M5 13l4 4L19 7"/></svg></div><span class="rb-text">Confirmación inmediata por correo</span></div>
+          <div class="rb-item"><div class="rb-check"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.5"><path d="M5 13l4 4L19 7"/></svg></div><span class="rb-text">Cancelación gratuita hasta 24 h antes</span></div>
+          <div class="rb-item"><div class="rb-check"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.5"><path d="M5 13l4 4L19 7"/></svg></div><span class="rb-text">Médicos con colegiatura vigente</span></div>
+          <div class="rb-item"><div class="rb-check"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.5"><path d="M5 13l4 4L19 7"/></svg></div><span class="rb-text">Tu historial clínico queda guardado</span></div>
+        </div>
+      </div>
+
+      <div class="reserva-form">
+        <div class="rf-title">Completa tu reserva</div>
+        <div class="rf-row-2">
+          <div><label class="rf-label">Nombre</label><input class="rf-input" type="text" placeholder="Juan"/></div>
+          <div><label class="rf-label">Apellido</label><input class="rf-input" type="text" placeholder="Pérez"/></div>
+        </div>
+        <div class="rf-row-2">
+          <div><label class="rf-label">DNI</label><input class="rf-input" type="text" placeholder="12345678"/></div>
+          <div><label class="rf-label">Teléfono</label><input class="rf-input" type="tel" placeholder="987 654 321"/></div>
+        </div>
+        <div class="rf-row">
+          <label class="rf-label">Correo electrónico</label>
+          <input class="rf-input" type="email" placeholder="tu&#64;correo.com"/>
+        </div>
+        <div class="rf-row-2">
+          <div>
+            <label class="rf-label">Especialidad</label>
+            <select class="rf-select">
+              <option value="">Selecciona</option>
+              <option>Cardiología</option><option>Pediatría</option><option>Neurología</option>
+              <option>Medicina General</option><option>Traumatología</option>
+              <option>Ginecología</option><option>Oftalmología</option><option>Dermatología</option>
+            </select>
+          </div>
+          <div><label class="rf-label">Fecha preferida</label><input class="rf-input" type="date"/></div>
+        </div>
+        <div class="rf-row">
+          <label class="rf-label">Motivo de consulta</label>
+          <input class="rf-input" type="text" placeholder="Describe brevemente tu consulta"/>
+        </div>
+        <button class="rf-submit" (click)="submitReserva()">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+          Reservar mi cita
+        </button>
+        <div class="rf-note">Recibirás confirmación en tu correo · Atención de Lun–Sáb 8:00–20:00</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<app-footer></app-footer>
