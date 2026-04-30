@@ -24,11 +24,18 @@ public class JwtFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
 
+        if ("OPTIONS".equalsIgnoreCase(request.getMethod())) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+
         String path = request.getRequestURI();
-        if (path.startsWith("/api/auth/")
-            || path.startsWith("/api/reniec/")
-            || path.startsWith("/api/contacto")
-            || path.startsWith("/api/lading")) {
+
+        if (path.startsWith("/api/auth/") ||
+                path.startsWith("/api/reniec/") ||
+                path.startsWith("/api/contacto") ||
+                path.startsWith("/api/lading/") ||
+                path.equals("/api/especialidad")) {
             filterChain.doFilter(request, response);
             return;
         }

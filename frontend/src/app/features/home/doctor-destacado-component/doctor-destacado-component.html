@@ -7,8 +7,8 @@
         <div
           class="h-[500px] rounded-3xl overflow-hidden shadow-xl ring-1 ring-[#36b2ac]/10 bg-gray-100">
           <img
-            [src]="obtenerFoto()"
-            alt="Especialista CitaMed"
+            [src]="fotoActual"
+            alt="Especialista"
             class="object-cover w-full h-full"
             loading="lazy">
         </div>
@@ -67,7 +67,7 @@
             <li class="flex items-center">
               <iconify-icon icon="solar:phone-linear" class="text-[#36b2ac] mr-3" width="20"></iconify-icon>
               <span class="text-sm text-[#083d3a]">
-                <strong>Citas:</strong> {{ medico.telefono }}
+                <strong>Télefono:</strong> {{ medico.telefono }}
               </span>
             </li>
           </ul>

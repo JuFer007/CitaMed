@@ -1,0 +1,71 @@
+<div id="testimonios" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 overflow-hidden">
+    <div class="text-center mb-16">
+        <h2 class="text-3xl font-bold text-[#083d3a]">
+        Testimonios de Pacientes
+        </h2>
+        <p class="mt-4 text-[#5f7d7b]">
+        Lo que opinan nuestros pacientes sobre CitaMed
+        </p>
+    </div>
+
+    <!-- carrusel -->
+    <div class="slider-track">
+        @for (item of testimonios; track $index) {
+        <div class="card">
+        <div class="flex text-[#36b2ac] mb-4 gap-1">
+            <iconify-icon icon="solar:star-bold" width="18"></iconify-icon>
+            <iconify-icon icon="solar:star-bold" width="18"></iconify-icon>
+            <iconify-icon icon="solar:star-bold" width="18"></iconify-icon>
+            <iconify-icon icon="solar:star-bold" width="18"></iconify-icon>
+            <iconify-icon icon="solar:star-bold" width="18"></iconify-icon>
+        </div>
+        <p class="text-sm text-[#5f7d7b] italic mb-6">
+            "{{ item.mensaje }}"
+        </p>
+        <div class="flex items-center">
+            <div class="w-10 h-10 rounded-full flex items-center justify-center text-xs font-bold mr-3"
+            [ngClass]="item.color">
+            {{ item.iniciales }}
+            </div>
+            <div>
+            <h5 class="text-sm font-semibold text-[#083d3a]">
+                {{ item.nombre }}
+            </h5>
+            <p class="text-xs text-[#6c8a88]">
+                {{ item.tipo }}
+            </p>
+            </div>
+        </div>
+        </div>
+        }
+
+        @for (item of testimonios; track $index) {
+        <div class="card">
+        <div class="flex text-[#36b2ac] mb-4 gap-1">
+            <iconify-icon icon="solar:star-bold" width="18"></iconify-icon>
+            <iconify-icon icon="solar:star-bold" width="18"></iconify-icon>
+            <iconify-icon icon="solar:star-bold" width="18"></iconify-icon>
+            <iconify-icon icon="solar:star-bold" width="18"></iconify-icon>
+            <iconify-icon icon="solar:star-bold" width="18"></iconify-icon>
+        </div>
+        <p class="text-sm text-[#5f7d7b] italic mb-6">
+            "{{ item.mensaje }}"
+        </p>
+        <div class="flex items-center">
+            <div class="w-10 h-10 rounded-full flex items-center justify-center text-xs font-bold mr-3"
+            [ngClass]="item.color">
+            {{ item.iniciales }}
+            </div>
+            <div>
+            <h5 class="text-sm font-semibold text-[#083d3a]">
+                {{ item.nombre }}
+            </h5>
+            <p class="text-xs text-[#6c8a88]">
+                {{ item.tipo }}
+            </p>
+            </div>
+        </div>
+        </div>
+        }
+    </div>
+</div>
