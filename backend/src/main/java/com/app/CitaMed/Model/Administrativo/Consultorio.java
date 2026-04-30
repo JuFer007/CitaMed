@@ -15,7 +15,7 @@ import org.hibernate.validator.constraints.UniqueElements;
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "Consultorios")
+@Table(name = "consultorios")
 
 public class Consultorio {
     @Id

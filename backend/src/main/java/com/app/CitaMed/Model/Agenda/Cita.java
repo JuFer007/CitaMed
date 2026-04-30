@@ -22,7 +22,7 @@ import java.time.LocalDateTime;
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "Citas")
+@Table(name = "citas")
 
 public class Cita {
     @Id
