@@ -1,0 +1,79 @@
+<div id="doctores" class="bg-[#f8fffe] border-y border-[#36b2ac]/10 py-24">
+@if (medico) {
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="lg:grid lg:grid-cols-2 lg:gap-16 items-center">
+      <!-- Imagen -->
+      <div class="relative order-2 lg:order-1 mt-12 lg:mt-0">
+        <div
+          class="h-[500px] rounded-3xl overflow-hidden shadow-xl ring-1 ring-[#36b2ac]/10 bg-gray-100">
+          <img
+            [src]="obtenerFoto()"
+            alt="Especialista CitaMed"
+            class="object-cover w-full h-full"
+            loading="lazy">
+        </div>
+
+        <!-- tarjeta -->
+        <div
+          class="absolute bottom-6 -right-6 lg:-right-8 bg-white p-5 rounded-2xl shadow-xl ring-1 ring-[#36b2ac]/10 hidden sm:block">
+          <div class="flex items-center space-x-4">
+            <div
+              class="w-12 h-12 bg-[#36b2ac]/10 text-[#36b2ac] rounded-full flex items-center justify-center">
+              <iconify-icon icon="solar:verified-check-linear" width="24"></iconify-icon>
+            </div>
+            <div>
+              <p class="text-sm font-bold text-[#083d3a]">
+                Colegiatura: {{ medico.numeroColegiatura }}
+              </p>
+              <p class="text-xs text-[#6c8a88]">
+                Médico Verificado
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Texto -->
+      <div class="order-1 lg:order-2 space-y-6">
+        <h2 class="text-[#36b2ac] font-semibold text-sm uppercase tracking-wide">
+          Tu especialista de confianza
+        </h2>
+        <h3 class="text-3xl sm:text-4xl font-bold text-[#083d3a]">
+          {{
+            medico.genero === 'FEMENINO'
+            ? 'Dra.'
+            : 'Dr.'
+          }}
+          {{ medico.nombre }}
+          {{ medico.apellidoPaterno }}
+          {{ medico.apellidoMaterno }}
+        </h3>
+        <p class="text-lg font-medium text-[#36b2ac] italic">
+          Especialista en {{ medico.especialidad }}
+        </p>
+        <p class="text-sm text-[#5f7d7b] leading-relaxed text-justify">
+          Profesional altamente capacitado, enfocado en brindar atención humana,
+          diagnósticos precisos y soluciones médicas personalizadas para mejorar
+          tu bienestar y calidad de vida.
+        </p>
+        <div class="pt-6 border-t border-[#36b2ac]/10">
+          <ul class="space-y-4">
+            <li class="flex items-center">
+              <iconify-icon icon="solar:letter-linear" class="text-[#36b2ac] mr-3" width="20"></iconify-icon>
+              <span class="text-sm text-[#083d3a]">
+                <strong>Correo:</strong> {{ medico.email }}
+              </span>
+            </li>
+            <li class="flex items-center">
+              <iconify-icon icon="solar:phone-linear" class="text-[#36b2ac] mr-3" width="20"></iconify-icon>
+              <span class="text-sm text-[#083d3a]">
+                <strong>Citas:</strong> {{ medico.telefono }}
+              </span>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+  }
+</div>

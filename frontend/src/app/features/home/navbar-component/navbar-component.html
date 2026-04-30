@@ -11,26 +11,47 @@
       </a>
     </div>
 
-    <!-- Links -->
+    <!-- LINKS DESKTOP -->
     <div class="hidden md:flex items-center space-x-8">
       <a [routerLink]="['/inicio']" fragment="especialidades"
-        class="cursor-pointer text-[10px] uppercase tracking-[0.2em] font-medium opacity-60 hover:opacity-100 transition-opacity">Especialidades</a>
-      <a [routerLink]="['/inicio']" fragment="como-funciona"
-        class="cursor-pointer text-[10px] uppercase tracking-[0.2em] font-medium opacity-60 hover:opacity-100 transition-opacity">Como
-        funciona</a>
+        class="relative group cursor-pointer text-xs uppercase tracking-[0.18em] font-semibold text-black transition-all duration-300">
+        Especialidades
+        <span
+          class="absolute left-0 -bottom-1 h-[2px] w-0 bg-[#36b2ac] rounded-full transition-all duration-300 group-hover:w-full">
+        </span>
+      </a>
+      <a [routerLink]="['/inicio']" fragment="doctores"
+        class="relative group cursor-pointer text-xs uppercase tracking-[0.18em] font-semibold text-black transition-all duration-300">
+        Nuestros doctores
+        <span
+          class="absolute left-0 -bottom-1 h-[2px] w-0 bg-[#36b2ac] rounded-full transition-all duration-300 group-hover:w-full">
+        </span>
+      </a>
       <a [routerLink]="['/inicio']" fragment="servicios"
-        class="cursor-pointer text-[10px] uppercase tracking-[0.2em] font-medium opacity-60 hover:opacity-100 transition-opacity">Servicios</a>
+        class="relative group cursor-pointer text-xs uppercase tracking-[0.18em] font-semibold text-black transition-all duration-300">
+        Servicios
+        <span
+          class="absolute left-0 -bottom-1 h-[2px] w-0 bg-[#36b2ac] rounded-full transition-all duration-300 group-hover:w-full">
+        </span>
+      </a>
       <a [routerLink]="['/inicio']" fragment="reseñas"
-        class="cursor-pointer text-[10px] uppercase tracking-[0.2em] font-medium opacity-60 hover:opacity-100 transition-opacity">Reseñas</a>
+        class="relative group cursor-pointer text-xs uppercase tracking-[0.18em] font-semibold text-black transition-all duration-300">
+        Reseñas
+        <span
+          class="absolute left-0 -bottom-1 h-[2px] w-0 bg-[#36b2ac] rounded-full transition-all duration-300 group-hover:w-full">
+        </span>
+      </a>
       <a [routerLink]="['/inicio']" fragment="contacto"
-        class="cursor-pointer text-[10px] uppercase tracking-[0.2em] font-medium opacity-60 hover:opacity-100 transition-opacity">Contacto</a>
+        class="relative group cursor-pointer text-xs uppercase tracking-[0.18em] font-semibold text-black transition-all duration-300">
+        Contacto
+        <span
+          class="absolute left-0 -bottom-1 h-[2px] w-0 bg-[#36b2ac] rounded-full transition-all duration-300 group-hover:w-full">
+        </span>
+      </a>
     </div>
 
     <!-- Botón login + menú mobile -->
     <div class="flex items-center gap-4">
-
-
-
       @if (isLoggedIn) {
       <div class="relative hidden md:block">
         <button (click)="toggleMenuPerfil()"

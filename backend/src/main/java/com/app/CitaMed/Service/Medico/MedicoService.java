@@ -1,5 +1,6 @@
 package com.app.CitaMed.Service.Medico;
 import com.app.CitaMed.DTO.MedicoDTO;
+import com.app.CitaMed.DTO.MedicoPerfilDTO;
 import com.app.CitaMed.Enums.Rol;
 import com.app.CitaMed.Model.Medico.Especialidad;
 import com.app.CitaMed.Model.Medico.Medico;
@@ -10,6 +11,7 @@ import com.app.CitaMed.Repository.Administrativo.UsuarioRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import java.util.List;
+import java.util.concurrent.ThreadLocalRandom;
 
 @Service
 @RequiredArgsConstructor
@@ -82,5 +84,36 @@ public class MedicoService {
         medico.setEspecialidad(especialidad);
         medicoRepository.save(medico);
         return "Especialidad actualizada correctamente";
+    }
+
+    public Medico medicoAlAzar() {
+        List<Medico> medicos = medicoRepository.findAll().stream().filter(Medico :: isActivo).toList();
+
+        if (medicos.isEmpty()) {
+            return null;
+        }
+
+        int indice = ThreadLocalRandom.current().nextInt(medicos.size());
+        return medicos.get(indice);
+    }
+
+    public MedicoPerfilDTO medicoAlAzarPerfil() {
+
+        Medico medico = medicoAlAzar();
+
+        if (medico == null) {
+            return null;
+        }
+
+        return new MedicoPerfilDTO(
+                medico.getNombre(),
+                medico.getApellidoPaterno(),
+                medico.getApellidoMaterno(),
+                medico.getTelefono(),
+                medico.getEmail(),
+                medico.getGenero(),
+                medico.getNumeroColegiatura(),
+                medico.getEspecialidad().getNombre()
+        );
     }
 }

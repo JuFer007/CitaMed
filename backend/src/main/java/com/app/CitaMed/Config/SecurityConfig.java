@@ -41,6 +41,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/reniec/**").permitAll()
                         .requestMatchers("/api/contacto/**").permitAll()
                         .requestMatchers("/api/contacto").permitAll()
+                        .requestMatchers("/api/lading/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);

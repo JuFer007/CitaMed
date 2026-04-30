@@ -1,0 +1,47 @@
+<div id="especialidades" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24">
+  <!-- título -->
+  <div class="text-center max-w-2xl mx-auto mb-16">
+    <h2 class="text-[#36b2ac] font-semibold text-sm uppercase mb-2">
+      Siempre comprometidos con tu salud
+    </h2>
+    <h3 class="text-3xl sm:text-4xl font-bold text-[#083d3a]">
+      Nuestras Especialidades
+    </h3>
+  </div>
+
+  <!-- Cards -->
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    @for (item of especialidadesVisibles; track item.id) {
+      <div
+        class="group bg-white rounded-2xl p-8 ring-1 ring-[#36b2ac]/10 hover:shadow-xl hover:shadow-[#36b2ac]/10 hover:-translate-y-1 transition-all duration-300">
+        <!-- ICONO -->
+        <div
+          class="w-14 h-14 bg-[#36b2ac]/10 text-[#36b2ac] rounded-xl flex items-center justify-center mb-6 group-hover:bg-[#36b2ac] group-hover:text-white transition-all duration-300">
+          <span class="material-symbols-outlined text-3xl">
+            {{ obtenerIcono(item.nombre) }}
+          </span>
+        </div>
+        <!-- NOMBRE -->
+        <h4
+          class="relative w-fit text-lg font-semibold text-[#083d3a] mb-3 after:content-[''] after:absolute after:left-0 after:-bottom-1 after:w-0 after:h-[2px] after:bg-[#36b2ac] after:transition-all after:duration-300 group-hover:after:w-full">
+          {{ item.nombre }}
+        </h4>
+        <!-- DESCRIPCIÓN -->
+        <p class="text-sm text-[#5f7d7b] leading-relaxed text-justify">
+          {{ item.descripcion }}
+        </p>
+      </div>
+    }
+  </div>
+
+  <!-- BOTÓN -->
+  @if (especialidades.length > 6) {
+    <div class="flex justify-center mt-12">
+      <button
+        (click)="toggleVerMas()"
+        class="px-8 py-3 rounded-full bg-[#36b2ac] text-white font-medium hover:bg-[#2b9a95] transition-all duration-300 shadow-lg">
+        {{ mostrarTodas ? 'Ver menos' : 'Ver más' }}
+      </button>
+    </div>
+  }
+</div>

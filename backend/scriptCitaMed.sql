@@ -37,6 +37,8 @@ INSERT INTO Usuarios (user_name, password, rol, activo) VALUES
 -- 2. ESPECIALIDADES
 -- ========================
 INSERT INTO Especialidades (nombre, descripcion) VALUES
+('Urología',                  'Diagnóstico y tratamiento del sistema urinario y reproductor masculino'),
+('Reumatología',              'Tratamiento de enfermedades articulares, musculares y autoinmunes'),
 ('Medicina General',          'Atención médica primaria y consultas generales de salud'),
 ('Cardiología',               'Diagnóstico y tratamiento de enfermedades cardiovasculares'),
 ('Pediatría',                 'Atención médica integral de niños desde el nacimiento hasta la adolescencia'),
