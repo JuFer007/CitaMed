@@ -3,11 +3,28 @@ import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { Especialidad } from '../../../model/Especialidad';
-import { HorarioMedico } from '../../../model/HorarioMedico ';
 import { Medico } from '../../../model/Medico ';
-import { ReniecData } from '../../../model/ReniecData ';
-import { SlotHorario } from '../../../model/SlotHorario ';
 import 'iconify-icon';
+
+export interface SlotDisponible {
+  medicoId: number;
+  medicoNombre: string;
+  medicoApellidoPaterno: string;
+  medicoGenero: string;
+  especialidadNombre: string;
+  consultorioId: number;
+  horasDisponibles: string[];
+}
+
+export interface SlotSeleccionado {
+  medicoId: number;
+  medicoNombre: string;
+  medicoApellidoPaterno: string;
+  medicoGenero: string;
+  especialidadNombre: string;
+  consultorioId: number;
+  hora: string;
+}
 
 @Component({
   selector: 'app-contacto',
@@ -18,54 +35,46 @@ import 'iconify-icon';
   styleUrls: ['./contacto-component.css']
 })
 export class ContactoComponent implements OnInit {
- 
+
   private baseUrl = 'http://localhost:8080/api';
- 
+
   pasoActual = 1;
- 
+
   reservaForm!: FormGroup;
   contactoForm!: FormGroup;
- 
+
   especialidades: Especialidad[] = [];
-  medicosDisponibles: Medico[] = [];
-  slotsDisponibles: SlotHorario[] = [];
- 
+  slots: SlotDisponible[] = [];
+
+  cargandoSlots = false;
   cargandoDni = false;
-  cargandoMedicos = false;
   reservando = false;
   reservaExitosa = false;
   errorReserva = '';
   dniEncontrado = false;
- 
-  medicoSeleccionado: Medico | null = null;
-  slotSeleccionado: SlotHorario | null = null;
- 
-  pacienteExistente: any = null;
- 
-  diasSemana: { [key: string]: number } = {
-    'DOMINGO': 0, 'LUNES': 1, 'MARTES': 2, 'MIERCOLES': 3,
-    'JUEVES': 4, 'VIERNES': 5, 'SABADO': 6
-  };
- 
+  pacienteExistente = false;
+
+  slotSeleccionado: SlotSeleccionado | null = null;
+
   gruposSanguineos = [
     'A_POSITIVO', 'A_NEGATIVO', 'B_POSITIVO', 'B_NEGATIVO',
     'AB_POSITIVO', 'AB_NEGATIVO', 'O_POSITIVO', 'O_NEGATIVO'
   ];
- 
+
   constructor(private fb: FormBuilder, private http: HttpClient) { }
- 
+
   ngOnInit(): void {
     this.initForms();
     this.cargarEspecialidades();
   }
- 
+
   private initForms(): void {
     this.reservaForm = this.fb.group({
       especialidadId: ['', Validators.required],
       fecha: ['', Validators.required],
       motivoConsulta: ['', [Validators.required, Validators.minLength(10), Validators.maxLength(200)]]
     });
- 
+
     this.contactoForm = this.fb.group({
       dni: ['', [Validators.required, Validators.pattern(/^\d{8}$/)]],
       nombre: ['', Validators.required],
@@ -79,93 +88,65 @@ export class ContactoComponent implements OnInit {
       grupoSanguineo: ['', Validators.required]
     });
   }
- 
+
   private cargarEspecialidades(): void {
     this.http.get<Especialidad[]>(`${this.baseUrl}/especialidad`).subscribe({
       next: (data) => this.especialidades = data,
       error: (err) => console.error('Error cargando especialidades', err)
     });
   }
- 
+
+  // ── PASO 1: Cargar slots desde backend con UN solo request ──────────────
   onEspecialidadFechaChange(): void {
     const especialidadId = this.reservaForm.get('especialidadId')?.value;
     const fecha = this.reservaForm.get('fecha')?.value;
- 
     if (!especialidadId || !fecha) return;
- 
-    this.cargandoMedicos = true;
-    this.medicosDisponibles = [];
-    this.slotsDisponibles = [];
-    this.medicoSeleccionado = null;
+
+    this.cargandoSlots = true;
+    this.slots = [];
     this.slotSeleccionado = null;
- 
-    this.http.get<Medico[]>(`${this.baseUrl}/medico/especialidad/${especialidadId}`).subscribe({
-      next: (medicos) => {
-        this.medicosDisponibles = medicos;
-        this.calcularSlots(medicos, fecha);
-        this.cargandoMedicos = false;
+
+    this.http.get<SlotDisponible[]>(
+      `${this.baseUrl}/reserva/slots?especialidadId=${especialidadId}&fecha=${fecha}`
+    ).subscribe({
+      next: (data) => {
+        this.slots = data;
+        this.cargandoSlots = false;
       },
-      error: () => { this.cargandoMedicos = false; }
+      error: () => { this.cargandoSlots = false; }
     });
   }
- 
-  private calcularSlots(medicos: Medico[], fechaStr: string): void {
-    const fecha = new Date(fechaStr + 'T12:00:00');
-    const diaSemana = fecha.getDay();
-    const nombreDia = Object.keys(this.diasSemana).find(k => this.diasSemana[k] === diaSemana) || '';
- 
-    this.slotsDisponibles = [];
- 
-    medicos.forEach(medico => {
-      this.http.get<HorarioMedico[]>(`${this.baseUrl}/horarioMedico/medico/${medico.id}`).subscribe({
-        next: (horarios) => {
-          horarios.forEach(horario => {
-            if (horario.dia === nombreDia && horario.activo) {
-              const slots = this.generarSlotsDeTiempo(horario.horaInicio, horario.horaFin, fechaStr);
-              slots.forEach(slot => {
-                this.slotsDisponibles.push({ medico, horario, horaDisponible: slot });
-              });
-            }
-          });
-        }
-      });
-    });
+
+  seleccionarSlot(slot: SlotDisponible, hora: string): void {
+    this.slotSeleccionado = {
+      medicoId: slot.medicoId,
+      medicoNombre: slot.medicoNombre,
+      medicoApellidoPaterno: slot.medicoApellidoPaterno,
+      medicoGenero: slot.medicoGenero,
+      especialidadNombre: slot.especialidadNombre,
+      consultorioId: slot.consultorioId,
+      hora
+    };
   }
- 
-  private generarSlotsDeTiempo(inicio: string, fin: string, fecha: string): string[] {
-    const slots: string[] = [];
-    const [hInicio, mInicio] = inicio.split(':').map(Number);
-    const [hFin, mFin] = fin.split(':').map(Number);
- 
-    let current = hInicio * 60 + mInicio;
-    const end = hFin * 60 + mFin;
- 
-    while (current + 30 <= end) {
-      const h = Math.floor(current / 60).toString().padStart(2, '0');
-      const m = (current % 60).toString().padStart(2, '0');
-      slots.push(`${fecha}T${h}:${m}:00`);
-      current += 30;
-    }
- 
-    return slots;
+
+  isSlotSelected(slot: SlotDisponible, hora: string): boolean {
+    return this.slotSeleccionado?.medicoId === slot.medicoId &&
+           this.slotSeleccionado?.hora === hora;
   }
- 
-  seleccionarSlot(slot: SlotHorario): void {
-    this.slotSeleccionado = slot;
-    this.medicoSeleccionado = slot.medico;
-  }
- 
+
+  // ── PASO 2: Buscar paciente por DNI ─────────────────────────────────────
   buscarPorDni(): void {
     const dni = this.contactoForm.get('dni')?.value;
     if (!dni || dni.length !== 8) return;
- 
+
     this.cargandoDni = true;
     this.dniEncontrado = false;
- 
+    this.pacienteExistente = false;
+
     this.http.get<any>(`${this.baseUrl}/paciente/dni/${dni}`).subscribe({
       next: (paciente) => {
         if (paciente) {
-          this.pacienteExistente = paciente;
+          this.pacienteExistente = true;
           this.dniEncontrado = true;
           this.contactoForm.patchValue({
             nombre: paciente.nombre,
@@ -175,11 +156,10 @@ export class ContactoComponent implements OnInit {
             email: paciente.email,
             direccion: paciente.direccion,
             genero: paciente.genero,
-            grupoSanguineo: paciente.grupoSanguineo
+            grupoSanguineo: paciente.grupoSanguineo,
+            fechaNacimiento: paciente.fechaNacimiento
           });
-          if (paciente.fechaNacimiento) {
-            this.contactoForm.patchValue({ fechaNacimiento: paciente.fechaNacimiento });
-          }
+          this.bloquearCamposPaciente();
         }
         this.cargandoDni = false;
       },
@@ -188,187 +168,160 @@ export class ContactoComponent implements OnInit {
       }
     });
   }
- 
+
+  private bloquearCamposPaciente(): void {
+    const camposABloquear = ['nombre', 'apellidoPaterno', 'apellidoMaterno',
+      'fechaNacimiento', 'genero', 'grupoSanguineo'];
+    camposABloquear.forEach(campo => {
+      this.contactoForm.get(campo)?.disable();
+    });
+  }
+
+  private habilitarCamposPaciente(): void {
+    Object.keys(this.contactoForm.controls).forEach(campo => {
+      if (campo !== 'dni') this.contactoForm.get(campo)?.enable();
+    });
+  }
+
   private consultarReniec(dni: string): void {
-    this.http.get<ReniecData>(`${this.baseUrl}/reniec/dni/${dni}`).subscribe({
+    this.http.get<any>(`${this.baseUrl}/reniec/dni/${dni}`).subscribe({
       next: (data) => {
         if (data) {
           this.dniEncontrado = true;
           this.contactoForm.patchValue({
-            nombre: data.first_name || '',
-            apellidoPaterno: data.first_last_name || '',
-            apellidoMaterno: data.second_last_name || ''
+            nombre: data.first_name || data.nombres || '',
+            apellidoPaterno: data.first_last_name || data.apellidoPaterno || '',
+            apellidoMaterno: data.second_last_name || data.apellidoMaterno || ''
           });
         }
         this.cargandoDni = false;
       },
-      error: () => {
-        this.cargandoDni = false;
+      error: () => { this.cargandoDni = false; }
+    });
+  }
+
+  // ── PASO 3: Confirmar reserva ────────────────────────────────────────────
+  async confirmarReserva(): Promise<void> {
+    if (!this.slotSeleccionado) return;
+    const formValue = this.contactoForm.getRawValue();
+    if (!formValue.dni || !formValue.nombre) return;
+
+    this.reservando = true;
+    this.errorReserva = '';
+
+    const payload = {
+      dni: formValue.dni,
+      nombre: formValue.nombre,
+      apellidoPaterno: formValue.apellidoPaterno,
+      apellidoMaterno: formValue.apellidoMaterno,
+      telefono: formValue.telefono,
+      email: formValue.email,
+      direccion: formValue.direccion,
+      fechaNacimiento: formValue.fechaNacimiento,
+      genero: formValue.genero,
+      grupoSanguineo: formValue.grupoSanguineo,
+      medicoId: this.slotSeleccionado.medicoId,
+      consultorioId: this.slotSeleccionado.consultorioId,
+      fechaHora: this.slotSeleccionado.hora,
+      motivoConsulta: this.reservaForm.value.motivoConsulta
+    };
+
+    this.http.post<string>(`${this.baseUrl}/reserva`, payload).subscribe({
+      next: () => {
+        this.reservaExitosa = true;
+        this.pasoActual = 3;
+        this.reservando = false;
+        this.enviarCorreoConfirmacion();
+      },
+      error: (err) => {
+        this.errorReserva = err?.error || 'Error al procesar la reserva. Intente nuevamente.';
+        this.reservando = false;
       }
     });
   }
- 
+
+  private enviarCorreoConfirmacion(): void {
+    if (!this.slotSeleccionado) return;
+    const formValue = this.contactoForm.getRawValue();
+    const slot = this.slotSeleccionado;
+    const titulo = slot.medicoGenero === 'FEMENINO' ? 'Dra.' : 'Dr.';
+    const doctor = `${titulo} ${slot.medicoNombre} ${slot.medicoApellidoPaterno}`;
+
+    const msg = {
+      nombre: formValue.nombre,
+      email: formValue.email,
+      mensaje: `cita confirmada con ${doctor} - ${slot.especialidadNombre} el ${this.formatearDia(this.reservaForm.value.fecha)} a las ${this.formatearHora(slot.hora)}. Motivo: ${this.reservaForm.value.motivoConsulta}`
+    };
+
+    this.http.post(`${this.baseUrl}/contacto`, msg).subscribe({ error: () => {} });
+  }
+
+  // ── Helpers UI ───────────────────────────────────────────────────────────
+  getNombreDoctor(slot: SlotDisponible): string {
+    const titulo = slot.medicoGenero === 'FEMENINO' ? 'Dra.' : 'Dr.';
+    return `${titulo} ${slot.medicoNombre} ${slot.medicoApellidoPaterno}`;
+  }
+
+  formatearHora(fechaHoraStr: string): string {
+    const partes = fechaHoraStr.split('T');
+    if (partes.length < 2) return fechaHoraStr;
+    const [h, m] = partes[1].substring(0, 5).split(':').map(Number);
+    const ampm = h >= 12 ? 'PM' : 'AM';
+    const h12 = h % 12 || 12;
+    return `${h12}:${m.toString().padStart(2, '0')} ${ampm}`;
+  }
+
+  formatearDia(fechaStr: string): string {
+    if (!fechaStr) return '';
+    const [anio, mes, dia] = fechaStr.split('-').map(Number);
+    return new Date(anio, mes - 1, dia)
+      .toLocaleDateString('es-PE', { weekday: 'long', day: 'numeric', month: 'long' });
+  }
+
   get fechaMin(): string {
     const hoy = new Date();
     hoy.setDate(hoy.getDate() + 1);
     return hoy.toISOString().split('T')[0];
   }
- 
+
   get fechaMax(): string {
     const limite = new Date();
     limite.setMonth(limite.getMonth() + 3);
     return limite.toISOString().split('T')[0];
   }
- 
-  formatearHora(fechaHoraStr: string): string {
-    const partes = fechaHoraStr.split('T');
-    if (partes.length < 2) return fechaHoraStr;
-    const horaParte = partes[1].substring(0, 5);
-    const [h, m] = horaParte.split(':').map(Number);
-    const ampm = h >= 12 ? 'PM' : 'AM';
-    const h12 = h % 12 || 12;
-    return `${h12}:${m.toString().padStart(2, '0')} ${ampm}`;
-  }
- 
-  formatearDia(fechaStr: string): string {
-    const fecha = new Date(fechaStr + 'T12:00:00');
-    return fecha.toLocaleDateString('es-PE', { weekday: 'long', day: 'numeric', month: 'long' });
-  }
- 
-  getNombreDoctor(medico: Medico): string {
-    const titulo = medico.genero === 'FEMENINO' ? 'Dra.' : 'Dr.';
-    return `${titulo} ${medico.nombre} ${medico.apellidoPaterno}`;
-  }
- 
+
   siguientePaso(): void {
     if (this.pasoActual === 1 && (!this.reservaForm.valid || !this.slotSeleccionado)) return;
     this.pasoActual++;
+    if (this.pasoActual === 2) {
+      this.habilitarCamposPaciente();
+      this.dniEncontrado = false;
+      this.pacienteExistente = false;
+      this.contactoForm.reset();
+    }
   }
- 
+
   anteriorPaso(): void {
-    if (this.pasoActual > 1) this.pasoActual--;
-  }
- 
-  async confirmarReserva(): Promise<void> {
-    if (this.contactoForm.invalid || !this.slotSeleccionado) return;
- 
-    this.reservando = true;
-    this.errorReserva = '';
- 
-    try {
-      let pacienteId: number;
- 
-      if (this.pacienteExistente) {
-        pacienteId = this.pacienteExistente.id;
-      } else {
-        // Registrar paciente nuevo
-        const pacienteData = {
-          ...this.contactoForm.value,
-          nombre: this.contactoForm.value.nombre.toUpperCase(),
-          apellidoPaterno: this.contactoForm.value.apellidoPaterno.toUpperCase(),
-          apellidoMaterno: this.contactoForm.value.apellidoMaterno.toUpperCase()
-        };
- 
-        const pacienteResp = await this.http.post<any>(
-          `${this.baseUrl}/paciente`, pacienteData
-        ).toPromise();
- 
-        // Buscar el paciente recién creado
-        const pacienteBuscado = await this.http.get<any>(
-          `${this.baseUrl}/paciente/dni/${this.contactoForm.value.dni}`
-        ).toPromise();
- 
-        pacienteId = pacienteBuscado.id;
+    if (this.pasoActual > 1) {
+      this.pasoActual--;
+      if (this.pasoActual === 1) {
+        this.habilitarCamposPaciente();
+        this.dniEncontrado = false;
+        this.pacienteExistente = false;
       }
- 
-      // Crear la cita
-      const citaData = {
-        pacienteId: pacienteId,
-        medicoId: this.slotSeleccionado.medico.id,
-        consultorioId: this.slotSeleccionado.horario.id,
-        fechaHora: this.slotSeleccionado.horaDisponible,
-        motivoConsulta: this.reservaForm.value.motivoConsulta
-      };
- 
-      await this.http.post(`${this.baseUrl}/cita`, citaData).toPromise();
- 
-      // Buscar la cita creada para el pago
-      const citas = await this.http.get<any[]>(
-        `${this.baseUrl}/cita/paciente/${pacienteId}`
-      ).toPromise();
- 
-      if (citas && citas.length > 0) {
-        const ultimaCita = citas[citas.length - 1];
-        // Registrar pago
-        const pagoData = {
-          citaId: ultimaCita.id,
-          monto: 80.00,
-          metodoPago: 'EFECTIVO'
-        };
-        await this.http.post(`${this.baseUrl}/pago`, pagoData).toPromise();
-      }
- 
-      await this.enviarCorreoConfirmacion();
- 
-      this.reservaExitosa = true;
-      this.pasoActual = 3;
- 
-    } catch (error: any) {
-      this.errorReserva = error?.error || 'Ocurrió un error al procesar la reserva. Por favor intente nuevamente.';
-    } finally {
-      this.reservando = false;
     }
   }
- 
-  private async enviarCorreoConfirmacion(): Promise<void> {
-    if (!this.slotSeleccionado) return;
-    const slot = this.slotSeleccionado;
-    const nombre = this.contactoForm.value.nombre;
-    const email = this.contactoForm.value.email;
-    const doctor = this.getNombreDoctor(slot.medico);
-    const fecha = this.formatearDia(this.reservaForm.value.fecha);
-    const hora = this.formatearHora(slot.horaDisponible);
-    const especialidad = slot.medico.especialidad?.nombre || '';
-    const motivo = this.reservaForm.value.motivoConsulta;
- 
-    const mensajeContacto = {
-      nombre: nombre,
-      email: email,
-      mensaje: `cita confirmada con ${doctor} - ${especialidad} el ${fecha} a las ${hora}. Motivo: ${motivo}`
-    };
- 
-    try {
-      await this.http.post(`${this.baseUrl}/contacto`, mensajeContacto).toPromise();
-    } catch (e) {
-      console.warn('No se pudo enviar correo de confirmación', e);
-    }
-  }
- 
+
   nuevaReserva(): void {
     this.pasoActual = 1;
     this.reservaExitosa = false;
     this.reservaForm.reset();
     this.contactoForm.reset();
+    this.habilitarCamposPaciente();
     this.slotSeleccionado = null;
-    this.medicoSeleccionado = null;
-    this.pacienteExistente = null;
-    this.slotsDisponibles = [];
+    this.slots = [];
     this.dniEncontrado = false;
+    this.pacienteExistente = false;
     this.errorReserva = '';
-  }
- 
-  getEspecialidadNombre(id: string): string {
-    return this.especialidades.find(e => e.id === +id)?.nombre || '';
-  }
- 
-  agruparSlotsPorMedico(): { medico: Medico, slots: SlotHorario[] }[] {
-    const mapa = new Map<number, { medico: Medico, slots: SlotHorario[] }>();
-    this.slotsDisponibles.forEach(slot => {
-      if (!mapa.has(slot.medico.id)) {
-        mapa.set(slot.medico.id, { medico: slot.medico, slots: [] });
-      }
-      mapa.get(slot.medico.id)!.slots.push(slot);
-    });
-    return Array.from(mapa.values());
   }
 }

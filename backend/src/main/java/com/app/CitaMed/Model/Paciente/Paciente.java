@@ -56,7 +56,7 @@ public class Paciente {
     @Past(message = "La fecha de nacimiento debe ser pasada")
     private LocalDate fechaNacimiento;
 
-    @NotBlank(message = "El género es obligatorio")
+    @NotNull(message = "El género es obligatorio")
     @Enumerated(EnumType.STRING)
     private Genero genero;
 

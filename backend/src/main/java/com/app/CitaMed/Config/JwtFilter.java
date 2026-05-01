@@ -24,6 +24,7 @@ public class JwtFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
 
+        // 1. Permitir siempre las peticiones OPTIONS (Preflight de CORS)
         if ("OPTIONS".equalsIgnoreCase(request.getMethod())) {
             filterChain.doFilter(request, response);
             return;
@@ -34,16 +35,23 @@ public class JwtFilter extends OncePerRequestFilter {
         if (path.startsWith("/api/auth/") ||
                 path.startsWith("/api/reniec/") ||
                 path.startsWith("/api/contacto") ||
-                path.startsWith("/api/lading/") ||
-                path.equals("/api/especialidad")) {
+                path.startsWith("/api/lading") ||  // Revisa si es lading o landing
+                path.startsWith("/api/landing") ||
+                path.startsWith("/api/paciente") ||
+                path.startsWith("/api/especialidad") ||
+                path.startsWith("/api/medico") ||
+                path.startsWith("/api/horarioMedico")) {
+
             filterChain.doFilter(request, response);
             return;
         }
 
+        // 3. Validación de Token para el resto de rutas (Admin/Médico)
         String authHeader = request.getHeader("Authorization");
 
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            response.setContentType("application/json");
             response.getWriter().write("{\"error\": \"Token requerido\"}");
             return;
         }
@@ -52,10 +60,12 @@ public class JwtFilter extends OncePerRequestFilter {
 
         if (!jwtUtil.validarToken(token)) {
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            response.setContentType("application/json");
             response.getWriter().write("{\"error\": \"Token inválido o expirado\"}");
             return;
         }
 
+        // Configurar el contexto de seguridad si el token es válido
         String username = jwtUtil.extraerUsername(token);
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
             UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
