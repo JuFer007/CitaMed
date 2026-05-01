@@ -1,4 +1,5 @@
 package com.app.CitaMed.Model.Agenda;
+
 import com.app.CitaMed.Enums.EstadoCita;
 import com.app.CitaMed.Model.Administrativo.Consultorio;
 import com.app.CitaMed.Model.Administrativo.Pago;
@@ -7,7 +8,6 @@ import com.app.CitaMed.Model.Paciente.ConsultaMedica;
 import com.app.CitaMed.Model.Paciente.Paciente;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Future;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -15,6 +15,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
 import java.time.LocalDateTime;
 
 @Getter
@@ -23,8 +24,8 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "citas")
-
 public class Cita {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -48,7 +49,6 @@ public class Cita {
     private Consultorio consultorio;
 
     @NotNull(message = "La fecha y hora de la cita es obligatoria")
-    @Future(message = "La cita debe programarse en una fecha futura")
     private LocalDateTime fechaHora;
 
     @NotBlank(message = "Debe indicar el motivo de la consulta")

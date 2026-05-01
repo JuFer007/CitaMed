@@ -1,8 +1,8 @@
 package com.app.CitaMed.Config;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -13,6 +13,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
 import java.util.List;
 
 @Configuration
@@ -21,13 +22,13 @@ public class SecurityConfig {
 
     private final JwtFilter jwtFilter;
 
+    public SecurityConfig(JwtFilter jwtFilter) {
+        this.jwtFilter = jwtFilter;
+    }
+
     @Bean
     public BCryptPasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
-    }
-
-    public SecurityConfig(JwtFilter jwtFilter) {
-        this.jwtFilter = jwtFilter;
     }
 
     @Bean
@@ -35,14 +36,26 @@ public class SecurityConfig {
         http
                 .csrf(csrf -> csrf.disable())
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
-                .csrf(csrf -> csrf.disable())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/auth/**", "/api/reniec/**", "/api/contacto/**").permitAll()
-                        .requestMatchers("/api/lading/**", "/api/landing/**").permitAll()
-                        .requestMatchers("/api/especialidad/**", "/api/medico/**", "/api/horarioMedico/**", "/api/paciente/**").permitAll()
+                        // Auth pública
+                        .requestMatchers("/api/auth/**").permitAll()
+                        // Microservicios públicos
+                        .requestMatchers("/api/reniec/**").permitAll()
+                        .requestMatchers("/api/contacto/**").permitAll()
+                        // Landing page — incluye /slots y /reserva
+                        .requestMatchers("/api/lading/**").permitAll()
+                        .requestMatchers("/api/landing/**").permitAll()
+                        // Recursos públicos del dominio
+                        .requestMatchers("/api/especialidad/**").permitAll()
+                        .requestMatchers("/api/medico/**").permitAll()
+                        .requestMatchers("/api/horarioMedico/**").permitAll()
+                        .requestMatchers("/api/paciente/**").permitAll()
+                        // Todo lo demás requiere autenticación
                         .anyRequest().authenticated()
-                );
+                )
+                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
+
         return http.build();
     }
 
@@ -54,9 +67,7 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
-        config.setAllowedOriginPatterns(List.of(
-                "http://localhost:4200"
-        ));
+        config.setAllowedOriginPatterns(List.of("http://localhost:4200", "https://*.vercel.app"));
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"));
         config.setAllowedHeaders(List.of("*"));
         config.setAllowCredentials(true);

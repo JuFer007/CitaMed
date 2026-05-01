@@ -1,4 +1,5 @@
 package com.app.CitaMed.Config;
+
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -8,6 +9,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
+
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -21,10 +23,12 @@ public class JwtFilter extends OncePerRequestFilter {
     }
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+    protected void doFilterInternal(HttpServletRequest request,
+                                    HttpServletResponse response,
+                                    FilterChain filterChain)
             throws ServletException, IOException {
 
-        // 1. Permitir siempre las peticiones OPTIONS (Preflight de CORS)
+        // Permitir preflight CORS
         if ("OPTIONS".equalsIgnoreCase(request.getMethod())) {
             filterChain.doFilter(request, response);
             return;
@@ -32,21 +36,21 @@ public class JwtFilter extends OncePerRequestFilter {
 
         String path = request.getRequestURI();
 
-        if (path.startsWith("/api/auth/") ||
-                path.startsWith("/api/reniec/") ||
-                path.startsWith("/api/contacto") ||
-                path.startsWith("/api/lading") ||  // Revisa si es lading o landing
-                path.startsWith("/api/landing") ||
-                path.startsWith("/api/paciente") ||
-                path.startsWith("/api/especialidad") ||
-                path.startsWith("/api/medico") ||
-                path.startsWith("/api/horarioMedico")) {
-
+        // Rutas públicas — sin token
+        if (path.startsWith("/api/auth/")
+                || path.startsWith("/api/reniec/")
+                || path.startsWith("/api/contacto")
+                || path.startsWith("/api/lading")     // landing + slots + reserva pública
+                || path.startsWith("/api/landing")
+                || path.startsWith("/api/paciente")
+                || path.startsWith("/api/especialidad")
+                || path.startsWith("/api/medico")
+                || path.startsWith("/api/horarioMedico")) {
             filterChain.doFilter(request, response);
             return;
         }
 
-        // 3. Validación de Token para el resto de rutas (Admin/Médico)
+        // Validación JWT para rutas protegidas
         String authHeader = request.getHeader("Authorization");
 
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
@@ -65,11 +69,10 @@ public class JwtFilter extends OncePerRequestFilter {
             return;
         }
 
-        // Configurar el contexto de seguridad si el token es válido
         String username = jwtUtil.extraerUsername(token);
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-            UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
-                    username, null, new ArrayList<>());
+            UsernamePasswordAuthenticationToken authToken =
+                    new UsernamePasswordAuthenticationToken(username, null, new ArrayList<>());
             authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
             SecurityContextHolder.getContext().setAuthentication(authToken);
         }

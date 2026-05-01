@@ -3,7 +3,6 @@ import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { Especialidad } from '../../../model/Especialidad';
-import { Medico } from '../../../model/Medico ';
 import 'iconify-icon';
 
 export interface SlotDisponible {
@@ -36,7 +35,9 @@ export interface SlotSeleccionado {
 })
 export class ContactoComponent implements OnInit {
 
-  private baseUrl = 'http://localhost:8080/api';
+  // ── Todas las rutas públicas van por /api/lading ─────────────────────
+  private baseUrl = 'http://localhost:8080/api/lading';
+  private apiUrl  = 'http://localhost:8080/api';   // para /paciente y /reniec
 
   pasoActual = 1;
 
@@ -61,7 +62,7 @@ export class ContactoComponent implements OnInit {
     'AB_POSITIVO', 'AB_NEGATIVO', 'O_POSITIVO', 'O_NEGATIVO'
   ];
 
-  constructor(private fb: FormBuilder, private http: HttpClient) { }
+  constructor(private fb: FormBuilder, private http: HttpClient) {}
 
   ngOnInit(): void {
     this.initForms();
@@ -90,13 +91,14 @@ export class ContactoComponent implements OnInit {
   }
 
   private cargarEspecialidades(): void {
-    this.http.get<Especialidad[]>(`${this.baseUrl}/especialidad`).subscribe({
+    // /api/lading/especialidades — ruta pública sin token
+    this.http.get<Especialidad[]>(`${this.baseUrl}/especialidades`).subscribe({
       next: (data) => this.especialidades = data,
       error: (err) => console.error('Error cargando especialidades', err)
     });
   }
 
-  // ── PASO 1: Cargar slots desde backend con UN solo request ──────────────
+  // ── PASO 1: slots ────────────────────────────────────────────────────
   onEspecialidadFechaChange(): void {
     const especialidadId = this.reservaForm.get('especialidadId')?.value;
     const fecha = this.reservaForm.get('fecha')?.value;
@@ -106,8 +108,9 @@ export class ContactoComponent implements OnInit {
     this.slots = [];
     this.slotSeleccionado = null;
 
+    // GET /api/lading/slots
     this.http.get<SlotDisponible[]>(
-      `${this.baseUrl}/reserva/slots?especialidadId=${especialidadId}&fecha=${fecha}`
+      `${this.baseUrl}/slots?especialidadId=${especialidadId}&fecha=${fecha}`
     ).subscribe({
       next: (data) => {
         this.slots = data;
@@ -134,7 +137,7 @@ export class ContactoComponent implements OnInit {
            this.slotSeleccionado?.hora === hora;
   }
 
-  // ── PASO 2: Buscar paciente por DNI ─────────────────────────────────────
+  // ── PASO 2: buscar paciente ──────────────────────────────────────────
   buscarPorDni(): void {
     const dni = this.contactoForm.get('dni')?.value;
     if (!dni || dni.length !== 8) return;
@@ -143,7 +146,7 @@ export class ContactoComponent implements OnInit {
     this.dniEncontrado = false;
     this.pacienteExistente = false;
 
-    this.http.get<any>(`${this.baseUrl}/paciente/dni/${dni}`).subscribe({
+    this.http.get<any>(`${this.apiUrl}/paciente/dni/${dni}`).subscribe({
       next: (paciente) => {
         if (paciente) {
           this.pacienteExistente = true;
@@ -170,11 +173,8 @@ export class ContactoComponent implements OnInit {
   }
 
   private bloquearCamposPaciente(): void {
-    const camposABloquear = ['nombre', 'apellidoPaterno', 'apellidoMaterno',
-      'fechaNacimiento', 'genero', 'grupoSanguineo'];
-    camposABloquear.forEach(campo => {
-      this.contactoForm.get(campo)?.disable();
-    });
+    ['nombre', 'apellidoPaterno', 'apellidoMaterno', 'fechaNacimiento', 'genero', 'grupoSanguineo']
+      .forEach(campo => this.contactoForm.get(campo)?.disable());
   }
 
   private habilitarCamposPaciente(): void {
@@ -184,14 +184,14 @@ export class ContactoComponent implements OnInit {
   }
 
   private consultarReniec(dni: string): void {
-    this.http.get<any>(`${this.baseUrl}/reniec/dni/${dni}`).subscribe({
+    this.http.get<any>(`${this.apiUrl}/reniec/dni/${dni}`).subscribe({
       next: (data) => {
         if (data) {
           this.dniEncontrado = true;
           this.contactoForm.patchValue({
-            nombre: data.first_name || data.nombres || '',
-            apellidoPaterno: data.first_last_name || data.apellidoPaterno || '',
-            apellidoMaterno: data.second_last_name || data.apellidoMaterno || ''
+            nombre: data.nombres || data.first_name || '',
+            apellidoPaterno: data.apellidoPaterno || data.first_last_name || '',
+            apellidoMaterno: data.apellidoMaterno || data.second_last_name || ''
           });
         }
         this.cargandoDni = false;
@@ -200,11 +200,10 @@ export class ContactoComponent implements OnInit {
     });
   }
 
-  // ── PASO 3: Confirmar reserva ────────────────────────────────────────────
-  async confirmarReserva(): Promise<void> {
+  // ── PASO 3: confirmar reserva ────────────────────────────────────────
+  confirmarReserva(): void {
     if (!this.slotSeleccionado) return;
     const formValue = this.contactoForm.getRawValue();
-    if (!formValue.dni || !formValue.nombre) return;
 
     this.reservando = true;
     this.errorReserva = '';
@@ -222,11 +221,12 @@ export class ContactoComponent implements OnInit {
       grupoSanguineo: formValue.grupoSanguineo,
       medicoId: this.slotSeleccionado.medicoId,
       consultorioId: this.slotSeleccionado.consultorioId,
-      fechaHora: this.slotSeleccionado.hora,
+      fechaHora: this.slotSeleccionado.hora,   // ya viene como "2025-08-04T08:00:00"
       motivoConsulta: this.reservaForm.value.motivoConsulta
     };
 
-    this.http.post<string>(`${this.baseUrl}/reserva`, payload).subscribe({
+    // POST /api/lading/reserva — sin token
+    this.http.post<string>(`${this.baseUrl}/reserva`, payload, { responseType: 'text' as 'json' }).subscribe({
       next: () => {
         this.reservaExitosa = true;
         this.pasoActual = 3;
@@ -253,10 +253,10 @@ export class ContactoComponent implements OnInit {
       mensaje: `cita confirmada con ${doctor} - ${slot.especialidadNombre} el ${this.formatearDia(this.reservaForm.value.fecha)} a las ${this.formatearHora(slot.hora)}. Motivo: ${this.reservaForm.value.motivoConsulta}`
     };
 
-    this.http.post(`${this.baseUrl}/contacto`, msg).subscribe({ error: () => {} });
+    this.http.post(`${this.apiUrl}/contacto`, msg).subscribe({ error: () => {} });
   }
 
-  // ── Helpers UI ───────────────────────────────────────────────────────────
+  // ── Helpers UI ───────────────────────────────────────────────────────
   getNombreDoctor(slot: SlotDisponible): string {
     const titulo = slot.medicoGenero === 'FEMENINO' ? 'Dra.' : 'Dr.';
     return `${titulo} ${slot.medicoNombre} ${slot.medicoApellidoPaterno}`;
