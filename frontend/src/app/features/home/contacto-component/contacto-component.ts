@@ -1,7 +1,17 @@
-import { Component, CUSTOM_ELEMENTS_SCHEMA, OnInit } from '@angular/core';
+import { Component, CUSTOM_ELEMENTS_SCHEMA, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { Subject, combineLatest } from 'rxjs';
+import {
+  debounceTime,
+  distinctUntilChanged,
+  switchMap,
+  filter,
+  takeUntil,
+  catchError
+} from 'rxjs/operators';
+import { of } from 'rxjs';
 import { Especialidad } from '../../../model/Especialidad';
 import 'iconify-icon';
 
@@ -33,11 +43,13 @@ export interface SlotSeleccionado {
   templateUrl: './contacto-component.html',
   styleUrls: ['./contacto-component.css']
 })
-export class ContactoComponent implements OnInit {
+export class ContactoComponent implements OnInit, OnDestroy {
 
-  // ── Todas las rutas públicas van por /api/lading ─────────────────────
   private baseUrl = 'http://localhost:8080/api/lading';
-  private apiUrl  = 'http://localhost:8080/api';   // para /paciente y /reniec
+  private apiUrl  = 'http://localhost:8080/api';
+
+  // Sujeto para cancelar suscripciones al destruir el componente
+  private destroy$ = new Subject<void>();
 
   pasoActual = 1;
 
@@ -48,10 +60,10 @@ export class ContactoComponent implements OnInit {
   slots: SlotDisponible[] = [];
 
   cargandoSlots = false;
-  cargandoDni = false;
-  reservando = false;
+  cargandoDni   = false;
+  reservando    = false;
   reservaExitosa = false;
-  errorReserva = '';
+  errorReserva  = '';
   dniEncontrado = false;
   pacienteExistente = false;
 
@@ -67,6 +79,12 @@ export class ContactoComponent implements OnInit {
   ngOnInit(): void {
     this.initForms();
     this.cargarEspecialidades();
+    this.suscribirCambiosSlots();
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
   private initForms(): void {
@@ -77,47 +95,72 @@ export class ContactoComponent implements OnInit {
     });
 
     this.contactoForm = this.fb.group({
-      dni: ['', [Validators.required, Validators.pattern(/^\d{8}$/)]],
-      nombre: ['', Validators.required],
-      apellidoPaterno: ['', Validators.required],
-      apellidoMaterno: ['', Validators.required],
-      telefono: ['', [Validators.required, Validators.pattern(/^\d{9}$/)]],
-      email: ['', [Validators.required, Validators.email]],
-      direccion: ['', Validators.required],
-      fechaNacimiento: ['', Validators.required],
-      genero: ['', Validators.required],
+      dni:            ['', [Validators.required, Validators.pattern(/^\d{8}$/)]],
+      nombre:         ['', Validators.required],
+      apellidoPaterno:['', Validators.required],
+      apellidoMaterno:['', Validators.required],
+      telefono:       ['', [Validators.required, Validators.pattern(/^\d{9}$/)]],
+      email:          ['', [Validators.required, Validators.email]],
+      direccion:      ['', Validators.required],
+      fechaNacimiento:['', Validators.required],
+      genero:         ['', Validators.required],
       grupoSanguineo: ['', Validators.required]
     });
   }
 
   private cargarEspecialidades(): void {
-    // /api/lading/especialidades — ruta pública sin token
-    this.http.get<Especialidad[]>(`${this.baseUrl}/especialidades`).subscribe({
-      next: (data) => this.especialidades = data,
-      error: (err) => console.error('Error cargando especialidades', err)
-    });
+    this.http.get<Especialidad[]>(`${this.baseUrl}/especialidades`)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (data) => this.especialidades = data,
+        error: (err) => console.error('Error cargando especialidades', err)
+      });
   }
 
-  // ── PASO 1: slots ────────────────────────────────────────────────────
+  // ── PASO 1: suscripción reactiva a cambios de especialidad + fecha ─────
+  private suscribirCambiosSlots(): void {
+    const especialidadId$ = this.reservaForm.get('especialidadId')!.valueChanges;
+    const fecha$          = this.reservaForm.get('fecha')!.valueChanges;
+
+    combineLatest([especialidadId$, fecha$])
+      .pipe(
+        debounceTime(300),                          // espera 300ms tras el último cambio
+        distinctUntilChanged(
+          ([prevEsp, prevFecha], [currEsp, currFecha]) =>
+            prevEsp === currEsp && prevFecha === currFecha
+        ),
+        filter(([especialidadId, fecha]) => !!especialidadId && !!fecha),
+        switchMap(([especialidadId, fecha]) => {
+          this.cargandoSlots = true;
+          this.slots = [];
+          this.slotSeleccionado = null;
+
+          return this.http
+            .get<SlotDisponible[]>(
+              `${this.baseUrl}/slots?especialidadId=${especialidadId}&fecha=${fecha}`
+            )
+            .pipe(
+              catchError(() => {
+                this.cargandoSlots = false;
+                return of([]);
+              })
+            );
+        }),
+        takeUntil(this.destroy$)
+      )
+      .subscribe({
+        next: (data) => {
+          this.slots = data;
+          this.cargandoSlots = false;
+        }
+      });
+  }
+
+  // Mantener para compatibilidad con el template (cambio en select dispara valueChanges)
   onEspecialidadFechaChange(): void {
-    const especialidadId = this.reservaForm.get('especialidadId')?.value;
-    const fecha = this.reservaForm.get('fecha')?.value;
-    if (!especialidadId || !fecha) return;
-
-    this.cargandoSlots = true;
-    this.slots = [];
+    // La lógica está en suscribirCambiosSlots() vía valueChanges.
+    // Este método puede quedar vacío o usarse para un reset de UI inmediato.
     this.slotSeleccionado = null;
-
-    // GET /api/lading/slots
-    this.http.get<SlotDisponible[]>(
-      `${this.baseUrl}/slots?especialidadId=${especialidadId}&fecha=${fecha}`
-    ).subscribe({
-      next: (data) => {
-        this.slots = data;
-        this.cargandoSlots = false;
-      },
-      error: () => { this.cargandoSlots = false; }
-    });
   }
 
   seleccionarSlot(slot: SlotDisponible, hora: string): void {
@@ -146,30 +189,30 @@ export class ContactoComponent implements OnInit {
     this.dniEncontrado = false;
     this.pacienteExistente = false;
 
-    this.http.get<any>(`${this.apiUrl}/paciente/dni/${dni}`).subscribe({
-      next: (paciente) => {
-        if (paciente) {
-          this.pacienteExistente = true;
-          this.dniEncontrado = true;
-          this.contactoForm.patchValue({
-            nombre: paciente.nombre,
-            apellidoPaterno: paciente.apellidoPaterno,
-            apellidoMaterno: paciente.apellidoMaterno,
-            telefono: paciente.telefono,
-            email: paciente.email,
-            direccion: paciente.direccion,
-            genero: paciente.genero,
-            grupoSanguineo: paciente.grupoSanguineo,
-            fechaNacimiento: paciente.fechaNacimiento
-          });
-          this.bloquearCamposPaciente();
-        }
-        this.cargandoDni = false;
-      },
-      error: () => {
-        this.consultarReniec(dni);
-      }
-    });
+    this.http.get<any>(`${this.apiUrl}/paciente/dni/${dni}`)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (paciente) => {
+          if (paciente) {
+            this.pacienteExistente = true;
+            this.dniEncontrado = true;
+            this.contactoForm.patchValue({
+              nombre:          paciente.nombre,
+              apellidoPaterno: paciente.apellidoPaterno,
+              apellidoMaterno: paciente.apellidoMaterno,
+              telefono:        paciente.telefono,
+              email:           paciente.email,
+              direccion:       paciente.direccion,
+              genero:          paciente.genero,
+              grupoSanguineo:  paciente.grupoSanguineo,
+              fechaNacimiento: paciente.fechaNacimiento
+            });
+            this.bloquearCamposPaciente();
+          }
+          this.cargandoDni = false;
+        },
+        error: () => this.consultarReniec(dni)
+      });
   }
 
   private bloquearCamposPaciente(): void {
@@ -184,20 +227,22 @@ export class ContactoComponent implements OnInit {
   }
 
   private consultarReniec(dni: string): void {
-    this.http.get<any>(`${this.apiUrl}/reniec/dni/${dni}`).subscribe({
-      next: (data) => {
-        if (data) {
-          this.dniEncontrado = true;
-          this.contactoForm.patchValue({
-            nombre: data.nombres || data.first_name || '',
-            apellidoPaterno: data.apellidoPaterno || data.first_last_name || '',
-            apellidoMaterno: data.apellidoMaterno || data.second_last_name || ''
-          });
-        }
-        this.cargandoDni = false;
-      },
-      error: () => { this.cargandoDni = false; }
-    });
+    this.http.get<any>(`${this.apiUrl}/reniec/dni/${dni}`)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (data) => {
+          if (data) {
+            this.dniEncontrado = true;
+            this.contactoForm.patchValue({
+              nombre:          data.nombres        || data.first_name   || '',
+              apellidoPaterno: data.apellidoPaterno || data.first_last_name  || '',
+              apellidoMaterno: data.apellidoMaterno || data.second_last_name || ''
+            });
+          }
+          this.cargandoDni = false;
+        },
+        error: () => { this.cargandoDni = false; }
+      });
   }
 
   // ── PASO 3: confirmar reserva ────────────────────────────────────────
@@ -209,51 +254,35 @@ export class ContactoComponent implements OnInit {
     this.errorReserva = '';
 
     const payload = {
-      dni: formValue.dni,
-      nombre: formValue.nombre,
+      dni:             formValue.dni,
+      nombre:          formValue.nombre,
       apellidoPaterno: formValue.apellidoPaterno,
       apellidoMaterno: formValue.apellidoMaterno,
-      telefono: formValue.telefono,
-      email: formValue.email,
-      direccion: formValue.direccion,
+      telefono:        formValue.telefono,
+      email:           formValue.email,
+      direccion:       formValue.direccion,
       fechaNacimiento: formValue.fechaNacimiento,
-      genero: formValue.genero,
-      grupoSanguineo: formValue.grupoSanguineo,
-      medicoId: this.slotSeleccionado.medicoId,
-      consultorioId: this.slotSeleccionado.consultorioId,
-      fechaHora: this.slotSeleccionado.hora,   // ya viene como "2025-08-04T08:00:00"
-      motivoConsulta: this.reservaForm.value.motivoConsulta
+      genero:          formValue.genero,
+      grupoSanguineo:  formValue.grupoSanguineo,
+      medicoId:        this.slotSeleccionado.medicoId,
+      consultorioId:   this.slotSeleccionado.consultorioId,
+      fechaHora:       this.slotSeleccionado.hora,
+      motivoConsulta:  this.reservaForm.value.motivoConsulta
     };
 
-    // POST /api/lading/reserva — sin token
-    this.http.post<string>(`${this.baseUrl}/reserva`, payload, { responseType: 'text' as 'json' }).subscribe({
-      next: () => {
-        this.reservaExitosa = true;
-        this.pasoActual = 3;
-        this.reservando = false;
-        this.enviarCorreoConfirmacion();
-      },
-      error: (err) => {
-        this.errorReserva = err?.error || 'Error al procesar la reserva. Intente nuevamente.';
-        this.reservando = false;
-      }
-    });
-  }
-
-  private enviarCorreoConfirmacion(): void {
-    if (!this.slotSeleccionado) return;
-    const formValue = this.contactoForm.getRawValue();
-    const slot = this.slotSeleccionado;
-    const titulo = slot.medicoGenero === 'FEMENINO' ? 'Dra.' : 'Dr.';
-    const doctor = `${titulo} ${slot.medicoNombre} ${slot.medicoApellidoPaterno}`;
-
-    const msg = {
-      nombre: formValue.nombre,
-      email: formValue.email,
-      mensaje: `cita confirmada con ${doctor} - ${slot.especialidadNombre} el ${this.formatearDia(this.reservaForm.value.fecha)} a las ${this.formatearHora(slot.hora)}. Motivo: ${this.reservaForm.value.motivoConsulta}`
-    };
-
-    this.http.post(`${this.apiUrl}/contacto`, msg).subscribe({ error: () => {} });
+    this.http.post<string>(`${this.baseUrl}/reserva`, payload, { responseType: 'text' as 'json' })
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: () => {
+          this.reservaExitosa = true;
+          this.pasoActual = 3;
+          this.reservando = false;
+        },
+        error: (err) => {
+          this.errorReserva = err?.error || 'Error al procesar la reserva. Intente nuevamente.';
+          this.reservando = false;
+        }
+      });
   }
 
   // ── Helpers UI ───────────────────────────────────────────────────────
@@ -267,7 +296,7 @@ export class ContactoComponent implements OnInit {
     if (partes.length < 2) return fechaHoraStr;
     const [h, m] = partes[1].substring(0, 5).split(':').map(Number);
     const ampm = h >= 12 ? 'PM' : 'AM';
-    const h12 = h % 12 || 12;
+    const h12  = h % 12 || 12;
     return `${h12}:${m.toString().padStart(2, '0')} ${ampm}`;
   }
 

@@ -6,8 +6,8 @@ import org.springframework.web.client.RestTemplate;
 import java.util.*;
 
 @Service
-
 public class MailerSendService {
+
     @Value("${mailersend.api.token}")
     private String apiToken;
 
@@ -39,6 +39,7 @@ public class MailerSendService {
             return response.getStatusCode().is2xxSuccessful();
         } catch (Exception e) {
             System.err.println("Error enviando email: " + e.getMessage());
+            e.printStackTrace(); // Mejor logging en desarrollo
             return false;
         }
     }
