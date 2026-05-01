@@ -1,10 +1,14 @@
 package com.app.CitaMed.Service.MicroServicios;
+
 import com.app.CitaMed.DTO.ReniecDataDTO;
+import com.app.CitaMed.DTO.ReniecResponseDTO;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
+
+import java.util.List;
 
 @Service
 public class ReniecService {
@@ -20,39 +24,40 @@ public class ReniecService {
     public ReniecDataDTO consultarDni(String numero) {
 
         HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
         headers.setBearerAuth(apiToken);
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.setAccept(List.of(MediaType.APPLICATION_JSON));
 
-        String url = UriComponentsBuilder.fromUriString(apiUrl)
-                .queryParam("numero", numero)
-                .build()
+        String url = UriComponentsBuilder
+                .fromUriString(apiUrl)
+                .pathSegment(numero)
                 .toUriString();
 
-        // 🔥 DEBUG
-        System.out.println("TOKEN: " + apiToken);
-        System.out.println("URL: " + url);
+        System.out.println("URL FINAL: " + url);
         System.out.println("DNI: " + numero);
 
         HttpEntity<Void> entity = new HttpEntity<>(headers);
 
         try {
-            ResponseEntity<ReniecDataDTO> response = restTemplate.exchange(
+            ResponseEntity<ReniecResponseDTO> response = restTemplate.exchange(
                     url,
                     HttpMethod.GET,
                     entity,
-                    ReniecDataDTO.class
+                    ReniecResponseDTO.class
             );
 
             System.out.println("STATUS: " + response.getStatusCode());
             System.out.println("BODY: " + response.getBody());
 
-            return response.getBody();
+            if (response.getBody() != null && response.getBody().isSuccess()) {
+                return response.getBody().getData();
+            }
+
+            return null;
 
         } catch (Exception e) {
-
-            System.out.println("ERROR COMPLETO:");
+            System.out.println("ERROR RENIEC:");
             e.printStackTrace();
-
             return null;
         }
     }

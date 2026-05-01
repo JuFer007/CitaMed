@@ -36,3 +36,6 @@ build/
 node_modules/
 dist/
 .env
+
+#backend
+backend/.env

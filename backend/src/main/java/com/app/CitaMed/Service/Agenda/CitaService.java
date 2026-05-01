@@ -1,16 +1,24 @@
 package com.app.CitaMed.Service.Agenda;
 import com.app.CitaMed.DTO.CitaDTO;
 import com.app.CitaMed.Enums.EstadoCita;
+import com.app.CitaMed.Enums.EstadoPago;
+import com.app.CitaMed.Enums.MetodoPago;
 import com.app.CitaMed.Model.Administrativo.Consultorio;
+import com.app.CitaMed.Model.Administrativo.Pago;
 import com.app.CitaMed.Model.Agenda.Cita;
 import com.app.CitaMed.Model.Medico.Medico;
 import com.app.CitaMed.Model.Paciente.Paciente;
 import com.app.CitaMed.Repository.Administrativo.ConsultorioRepository;
+import com.app.CitaMed.Repository.Administrativo.PagoRepository;
 import com.app.CitaMed.Repository.Agenda.CitaRepository;
 import com.app.CitaMed.Repository.Medico.MedicoRepository;
 import com.app.CitaMed.Repository.Paciente.PacienteRepository;
+import com.app.CitaMed.Service.MicroServicios.EmailService;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -21,6 +29,8 @@ public class CitaService {
     private final PacienteRepository pacienteRepository;
     private final MedicoRepository medicoRepository;
     private final ConsultorioRepository consultorioRepository;
+    private final EmailService emailService;
+    private final PagoRepository pagoRepository;
 
     public List<Cita> findAll() {
         return citaRepository.findAll();
@@ -38,6 +48,7 @@ public class CitaService {
         return citaRepository.findByPacienteId(pacienteId);
     }
 
+    @Transactional
     public String save(CitaDTO dto) {
         Paciente paciente = pacienteRepository.findById(dto.getPacienteId()).orElse(null);
         if (paciente == null) return "Paciente no encontrado";
@@ -65,17 +76,37 @@ public class CitaService {
         cita.setFechaHora(dto.getFechaHora());
         cita.setMotivoConsulta(dto.getMotivoConsulta());
         cita.setEstado(EstadoCita.PROGRAMADA);
+
+        Pago pago = new Pago();
+        pago.setCita(cita);
+        pago.setMonto(80.00);
+        pago.setMetodoPago(MetodoPago.EFECTIVO);
+        pago.setEstado(EstadoPago.PAGADO);
+        pago.setFechaPago(LocalDateTime.now());
+        pagoRepository.save(pago);
+
         citaRepository.save(cita);
+
+        emailService.enviarConfirmacion(cita);
+
         return "Cita registrada correctamente";
     }
 
+    @Transactional
     public String cancelar(Long id) {
         Cita cita = citaRepository.findById(id).orElse(null);
         if (cita == null) return "Cita no encontrada";
+
         if (cita.getEstado() == EstadoCita.ATENDIDA)
             return "No se puede cancelar una cita ya atendida";
+
+        if (cita.getPago().getEstado().equals(EstadoPago.PAGADO))
+            return "No se puede cancelar una cita ya pagada";
+
         cita.setEstado(EstadoCita.CANCELADA);
         citaRepository.save(cita);
+
+        emailService.enviarCancelacion(cita);
         return "Cita cancelada correctamente";
     }
 
@@ -95,5 +126,26 @@ public class CitaService {
         cita.setEstado(EstadoCita.NO_ASISTIO);
         citaRepository.save(cita);
         return "Cita marcada como no asistida";
+    }
+
+    @Transactional
+    public String reprogramar(Long id, LocalDateTime nuevaFechaHora) {
+        Cita cita = citaRepository.findById(id).orElse(null);
+        if (cita == null) return "Cita no encontrada";
+
+        if (cita.getEstado() != EstadoCita.PROGRAMADA)
+            return "Solo se pueden reprogramar citas en estado PROGRAMADA";
+
+        if (citaRepository.existsByMedicoIdAndFechaHoraAndEstadoNot(cita.getMedico().getId(), nuevaFechaHora, EstadoCita.CANCELADA))
+            return "El médico ya tiene una cita en ese horario";
+
+        LocalDateTime fechaAnterior = cita.getFechaHora();
+
+        cita.setFechaHora(nuevaFechaHora);
+        citaRepository.save(cita);
+
+        emailService.enviarReprogramacion(cita, fechaAnterior);
+
+        return "Cita reprogramada correctamente";
     }
 }

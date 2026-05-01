@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>Cita Cancelada - CitaMed</title>
+</head>
+
+<body style="margin:0;padding:0;background:#f4f7f6;font-family:Helvetica,Arial,sans-serif;">
+
+<table width="100%" cellpadding="0" cellspacing="0" role="presentation">
+    <tr>
+        <td align="center" style="padding:20px 10px;">
+
+            <table width="100%" cellpadding="0" cellspacing="0" style="max-width:480px;background:#ffffff;border-radius:12px;overflow:hidden;box-shadow:0 4px 12px rgba(0,0,0,0.05);">
+
+                <!-- Encabezado con Logo (Fondo Blanco) -->
+                <tr>
+                    <td style="padding:25px 20px 10px;text-align:center;background:#ffffff;">
+                        <img src="https://res.cloudinary.com/dxtmosl3k/image/upload/v1777662957/logoCitaMed_nizz29.png"
+                             alt="CitaMed Logo"
+                             width="120"
+                             style="display:block;margin:0 auto;border:0;">
+                    </td>
+                </tr>
+
+                <!-- Mensaje de Cancelación -->
+                <tr>
+                    <td style="padding:10px 30px 20px;text-align:center;">
+                        <!-- Etiqueta de Estado -->
+                        <div style="display:inline-block; background:#fef2f2; color:#b91c1c; padding:4px 12px; border-radius:20px; font-size:12px; font-weight:bold; margin-bottom:10px; border:1px solid #fee2e2;">
+                            CITA CANCELADA
+                        </div>
+                        <h2 style="color:#126565;margin:5px 0;font-size:20px;font-weight:bold;">Aviso de cancelación</h2>
+                        <p style="color:#4b5563;margin:10px 0 0;font-size:14px;line-height:1.5;">
+                            Hola <strong th:text="${nombre}">Usuario</strong>,<br>
+                            Te informamos que tu cita médica en <strong>CitaMed</strong> ha sido cancelada exitosamente.
+                        </p>
+                    </td>
+                </tr>
+
+                <!-- Detalles de la Cita Cancelada (Color Rojo Suave) -->
+                <tr>
+                    <td style="padding:0 30px 30px;">
+                        <table width="100%" cellpadding="0" cellspacing="0" style="background:#fef2f2;border-radius:10px;padding:15px;border-left:4px solid #b91c1c;">
+                            <tr>
+                                <td style="padding:4px 0;font-size:13px;color:#7f1d1d;"><strong>Doctor:</strong></td>
+                                <td align="right" style="padding:4px 0;font-size:13px;color:#111827;" th:text="${doctor}">Dr. Nombre Apellido</td>
+                            </tr>
+                            <tr>
+                                <td style="padding:4px 0;font-size:13px;color:#7f1d1d;"><strong>Especialidad:</strong></td>
+                                <td align="right" style="padding:4px 0;font-size:13px;color:#111827;" th:text="${especialidad}">Medicina General</td>
+                            </tr>
+                            <tr>
+                                <td style="padding:4px 0;font-size:13px;color:#7f1d1d;"><strong>Fecha:</strong></td>
+                                <td align="right" style="padding:4px 0;font-size:13px;color:#111827;text-decoration:line-through;" th:text="${fecha}">01/01/2026</td>
+                            </tr>
+                            <tr>
+                                <td style="padding:4px 0;font-size:13px;color:#7f1d1d;"><strong>Hora:</strong></td>
+                                <td align="right" style="padding:4px 0;font-size:13px;color:#111827;text-decoration:line-through;" th:text="${hora}">10:00 AM</td>
+                            </tr>
+                        </table>
+
+                        <p style="margin-top:20px; font-size:13px; color:#6b7280; text-align:center;">
+                            Si crees que esto es un error o deseas agendar una nueva cita, por favor visita nuestra plataforma.
+                        </p>
+                    </td>
+                </tr>
+
+                <!-- Pie de página (Color de Marca Oscuro) -->
+                <tr>
+                    <td style="background:#126565;padding:25px;text-align:center;">
+                        <p style="color:#ffffff;font-size:11px;margin:0;line-height:1.5;opacity:0.9;">
+                            © 2026 Todos los derechos reservados.<br>
+                            Este es un mensaje automático, por favor no respondas a este correo.
+                        </p>
+                        <p style="color:#ffffff;font-size:11px;margin:10px 0 0;font-weight:bold;letter-spacing:1px;text-transform:uppercase;">
+                            CITAMED · Tu salud, en línea
+                        </p>
+                    </td>
+                </tr>
+
+            </table>
+
+        </td>
+    </tr>
+</table>
+</body>
+</html>

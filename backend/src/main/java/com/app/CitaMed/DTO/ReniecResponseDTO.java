@@ -1,10 +1,9 @@
-package com.app.CitaMed.Response;
-import com.app.CitaMed.DTO.ReniecDataDTO;
+package com.app.CitaMed.DTO;
 import lombok.Data;
 
 @Data
 
-public class ReniecResponse {
+public class ReniecResponseDTO {
     private boolean success;
     private ReniecDataDTO data;
     private String message;

@@ -51,6 +51,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/medico/**").permitAll()
                         .requestMatchers("/api/horarioMedico/**").permitAll()
                         .requestMatchers("/api/paciente/**").permitAll()
+                        .requestMatchers("/api/email/**").permitAll()
                         // Todo lo demás requiere autenticación
                         .anyRequest().authenticated()
                 )

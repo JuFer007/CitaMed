@@ -16,6 +16,7 @@ import com.app.CitaMed.Repository.Agenda.HorarioMedicoRepository;
 import com.app.CitaMed.Repository.Medico.MedicoRepository;
 import com.app.CitaMed.Repository.Paciente.HistorialMedicoRepository;
 import com.app.CitaMed.Repository.Paciente.PacienteRepository;
+import com.app.CitaMed.Service.MicroServicios.EmailService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,7 +30,6 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 
 public class ReservaService {
-
     private final CitaRepository citaRepository;
     private final PagoRepository pagoRepository;
     private final PacienteRepository pacienteRepository;
@@ -37,6 +37,7 @@ public class ReservaService {
     private final MedicoRepository medicoRepository;
     private final ConsultorioRepository consultorioRepository;
     private final HorarioMedicoRepository horarioMedicoRepository;
+    private final EmailService emailService;
 
     public List<SlotDisponibleDTO> obtenerSlotsDisponibles(Long especialidadId, String fechaStr) {
         LocalDateTime fechaBase = LocalDateTime.parse(fechaStr + "T12:00:00");
@@ -82,7 +83,6 @@ public class ReservaService {
                 }
             }
         }
-
         return resultado;
     }
 
@@ -102,25 +102,22 @@ public class ReservaService {
             paciente.setGenero(Genero.valueOf(dto.getGenero()));
             paciente.setGrupoSanguineo(GrupoSanguineo.valueOf(dto.getGrupoSanguineo()));
             pacienteRepository.save(paciente);
-
             HistorialMedico historial = new HistorialMedico();
             historial.setPaciente(paciente);
             historialMedicoRepository.save(historial);
         }
 
-        Medico medico = medicoRepository.findById(dto.getMedicoId())
-                .orElseThrow(() -> new RuntimeException("Médico no encontrado"));
+        Medico medico = medicoRepository.findById(dto.getMedicoId()).orElseThrow(() -> new RuntimeException("Médico no encontrado"));
+
         if (!medico.isActivo()) throw new RuntimeException("El médico no está activo");
 
-        Consultorio consultorio = consultorioRepository.findById(dto.getConsultorioId())
-                .orElseThrow(() -> new RuntimeException("Consultorio no encontrado"));
+        Consultorio consultorio = consultorioRepository.findById(dto.getConsultorioId()).orElseThrow(() -> new RuntimeException("Consultorio no encontrado"));
+
         if (!consultorio.isDisponible()) throw new RuntimeException("El consultorio no está disponible");
 
-        LocalDateTime fechaHora = LocalDateTime.parse(dto.getFechaHora(),
-                DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss"));
+        LocalDateTime fechaHora = LocalDateTime.parse(dto.getFechaHora(), DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss"));
 
-        if (citaRepository.existsByMedicoIdAndFechaHoraAndEstadoNot(
-                medico.getId(), fechaHora, EstadoCita.CANCELADA)) {
+        if (citaRepository.existsByMedicoIdAndFechaHoraAndEstadoNot(medico.getId(), fechaHora, EstadoCita.CANCELADA)) {
             throw new RuntimeException("El horario seleccionado ya no está disponible");
         }
 
@@ -141,20 +138,8 @@ public class ReservaService {
         pago.setFechaPago(LocalDateTime.now());
         pagoRepository.save(pago);
 
+        emailService.enviarConfirmacion(cita);
         return "Reserva registrada correctamente";
-    }
-
-    private List<String> generarSlots(LocalTime inicio, LocalTime fin, String fecha) {
-        List<String> slots = new ArrayList<>();
-        int current = inicio.getHour() * 60 + inicio.getMinute();
-        int end = fin.getHour() * 60 + fin.getMinute();
-        while (current + 30 <= end) {
-            int h = current / 60;
-            int m = current % 60;
-            slots.add(String.format("%sT%02d:%02d:00", fecha, h, m));
-            current += 30;
-        }
-        return slots;
     }
 
     private DiaSemana mapearDia(int dayOfWeek) {
@@ -168,5 +153,18 @@ public class ReservaService {
             case 7 -> DiaSemana.DOMINGO;
             default -> null;
         };
+    }
+
+    private List<String> generarSlots(LocalTime inicio, LocalTime fin, String fecha) {
+        List<String> slots = new ArrayList<>();
+        int current = inicio.getHour() * 60 + inicio.getMinute();
+        int end = fin.getHour() * 60 + fin.getMinute();
+        while (current + 30 <= end) {
+            int h = current / 60;
+            int m = current % 60;
+            slots.add(String.format("%sT%02d:%02d:00", fecha, h, m));
+            current += 30;
+        }
+        return slots;
     }
 }

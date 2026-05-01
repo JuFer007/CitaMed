@@ -13,34 +13,41 @@
 
     <!-- LINKS DESKTOP -->
     <div class="hidden md:flex items-center space-x-8">
-      <a [routerLink]="['/especialidades']" fragment="especialidades"
-        class="relative group cursor-pointer text-xs uppercase tracking-[0.18em] font-semibold text-black transition-all duration-300">
+      <button
+        (click)="scrollToSection('especialidades')"
+        class="relative group cursor-pointer text-xs uppercase tracking-[0.18em] font-semibold text-black transition-all duration-300 bg-transparent border-none">
         Especialidades
         <span
           class="absolute left-0 -bottom-1 h-[2px] w-0 bg-[#36b2ac] rounded-full transition-all duration-300 group-hover:w-full">
         </span>
-      </a>
-      <a [routerLink]="['/doctores']" fragment="doctores"
-        class="relative group cursor-pointer text-xs uppercase tracking-[0.18em] font-semibold text-black transition-all duration-300">
+      </button>
+
+      <button
+        (click)="scrollToSection('doctores')"
+        class="relative group cursor-pointer text-xs uppercase tracking-[0.18em] font-semibold text-black transition-all duration-300 bg-transparent border-none">
         Nuestros doctores
         <span
           class="absolute left-0 -bottom-1 h-[2px] w-0 bg-[#36b2ac] rounded-full transition-all duration-300 group-hover:w-full">
         </span>
-      </a>
-      <a [routerLink]="['/inicio']" fragment="contacto"
-        class="relative group cursor-pointer text-xs uppercase tracking-[0.18em] font-semibold text-black transition-all duration-300">
+      </button>
+
+      <button
+        (click)="scrollToSection('contacto')"
+        class="relative group cursor-pointer text-xs uppercase tracking-[0.18em] font-semibold text-black transition-all duration-300 bg-transparent border-none">
         Contacto
         <span
           class="absolute left-0 -bottom-1 h-[2px] w-0 bg-[#36b2ac] rounded-full transition-all duration-300 group-hover:w-full">
         </span>
-      </a>
-      <a [routerLink]="['/testimonios']" fragment="testimonios"
-        class="relative group cursor-pointer text-xs uppercase tracking-[0.18em] font-semibold text-black transition-all duration-300">
+      </button>
+
+      <button
+        (click)="scrollToSection('testimonios')"
+        class="relative group cursor-pointer text-xs uppercase tracking-[0.18em] font-semibold text-black transition-all duration-300 bg-transparent border-none">
         Testimonios
         <span
           class="absolute left-0 -bottom-1 h-[2px] w-0 bg-[#36b2ac] rounded-full transition-all duration-300 group-hover:w-full">
         </span>
-      </a>
+      </button>
     </div>
 
     <!-- Botón login + menú mobile -->
@@ -64,26 +71,6 @@
             <span class="material-symbols-outlined text-sm text-[#52b788]">person</span>
             Mi perfil
           </a>
-          <a routerLink="/mis-mascotas"
-            class="flex items-center gap-3 px-4 py-3 text-[10px] uppercase tracking-widest text-[#1b1b1b] hover:bg-[#f0faf4] transition-colors">
-            <span class="material-symbols-outlined text-sm text-[#52b788]">pets</span>
-            Mis mascotas
-          </a>
-          <a routerLink="/agendar-cita"
-            class="flex items-center gap-3 px-4 py-3 text-[10px] uppercase tracking-widest text-[#1b1b1b] hover:bg-[#f0faf4] transition-colors">
-            <span class="material-symbols-outlined text-sm text-[#52b788]">calendar_month</span>
-            Agendar cita
-          </a>
-          <a routerLink="/mis-citas"
-            class="flex items-center gap-3 px-4 py-3 text-[10px] uppercase tracking-widest text-[#1b1b1b] hover:bg-[#f0faf4] transition-colors">
-            <span class="material-symbols-outlined text-sm text-[#52b788]">event</span>
-            Mis citas
-          </a>
-          <a routerLink="/mis-compras"
-            class="flex items-center gap-3 px-4 py-3 text-[10px] uppercase tracking-widest text-[#1b1b1b] hover:bg-[#f0faf4] transition-colors">
-            <span class="material-symbols-outlined text-sm text-[#52b788]">shopping_bag</span>
-            Mis compras
-          </a>
           <button (click)="cerrarSesion()"
             class="w-full flex cursor-pointer items-center gap-3 px-4 py-3 text-[10px] uppercase tracking-widest text-red-400 hover:bg-red-50 transition-colors">
             <span class="material-symbols-outlined text-sm">logout</span>
@@ -94,11 +81,18 @@
       </div>
       }
 
+      @if (!isLoggedIn) {
+      <a routerLink="/login"
+        class="hidden md:flex items-center gap-2 text-[10px] uppercase tracking-[0.2em] font-medium px-5 py-2.5 rounded-full border border-[#36b2ac] text-[#36b2ac] hover:bg-[#36b2ac] hover:text-white transition-all duration-500">
+        <span class="material-symbols-outlined text-sm">login</span>
+        Iniciar Sesión
+      </a>
+      }
+
       <!-- Botón hamburguesa -->
       <button class="md:hidden" (click)="toggleMenuMobile()">
         <span class="material-symbols-outlined">{{ menuMobile ? 'close' : 'menu' }}</span>
       </button>
-
     </div>
   </div>
 
@@ -106,23 +100,31 @@
   @if (menuMobile) {
   <div class="md:hidden bg-white border-t border-gray-200 px-6 py-4 flex flex-col gap-4 shadow-lg">
 
-    <a [routerLink]="['/inicio']" fragment="about" (click)="menuMobile=false"
-      class="text-[10px] uppercase tracking-[0.2em] font-medium text-[#6b7280] hover:text-[#2d6a4f] transition-colors">Sobre
-      nosotros</a>
-    <a [routerLink]="['/inicio']" fragment="services" (click)="menuMobile=false"
-      class="text-[10px] uppercase tracking-[0.2em] font-medium text-[#6b7280] hover:text-[#2d6a4f] transition-colors">Servicios</a>
-    <a [routerLink]="['/inicio']" fragment="products" (click)="menuMobile=false"
-      class="text-[10px] uppercase tracking-[0.2em] font-medium text-[#6b7280] hover:text-[#2d6a4f] transition-colors">Productos</a>
-    <a [routerLink]="['/inicio']" fragment="pharmacy" (click)="menuMobile=false"
-      class="text-[10px] uppercase tracking-[0.2em] font-medium text-[#6b7280] hover:text-[#2d6a4f] transition-colors">Farmacia</a>
-    <a [routerLink]="['/inicio']" fragment="contact" (click)="menuMobile=false"
-      class="text-[10px] uppercase tracking-[0.2em] font-medium text-[#6b7280] hover:text-[#2d6a4f] transition-colors">Contacto</a>
+    <button (click)="scrollToSection('especialidades')"
+      class="text-left text-[10px] uppercase tracking-[0.2em] font-medium text-[#6b7280] hover:text-[#36b2ac] transition-colors bg-transparent border-none cursor-pointer">
+      Especialidades
+    </button>
+
+    <button (click)="scrollToSection('doctores')"
+      class="text-left text-[10px] uppercase tracking-[0.2em] font-medium text-[#6b7280] hover:text-[#36b2ac] transition-colors bg-transparent border-none cursor-pointer">
+      Nuestros doctores
+    </button>
+
+    <button (click)="scrollToSection('contacto')"
+      class="text-left text-[10px] uppercase tracking-[0.2em] font-medium text-[#6b7280] hover:text-[#36b2ac] transition-colors bg-transparent border-none cursor-pointer">
+      Contacto
+    </button>
+
+    <button (click)="scrollToSection('testimonios')"
+      class="text-left text-[10px] uppercase tracking-[0.2em] font-medium text-[#6b7280] hover:text-[#36b2ac] transition-colors bg-transparent border-none cursor-pointer">
+      Testimonios
+    </button>
 
     <hr class="border-gray-200">
 
     @if (!isLoggedIn) {
     <a routerLink="/login" (click)="menuMobile=false"
-      class="flex items-center gap-2 text-[10px] uppercase tracking-[0.2em] font-medium px-5 py-2.5 rounded-full border border-[#2d6a4f] text-[#2d6a4f] hover:bg-[#2d6a4f] hover:text-white transition-all duration-500 w-fit">
+      class="flex items-center gap-2 text-[10px] uppercase tracking-[0.2em] font-medium px-5 py-2.5 rounded-full border border-[#36b2ac] text-[#36b2ac] hover:bg-[#36b2ac] hover:text-white transition-all duration-500 w-fit">
       <span class="material-symbols-outlined text-sm">login</span>
       Iniciar Sesión
     </a>
@@ -136,29 +138,9 @@
       <span class="text-[10px] uppercase tracking-[0.2em] font-medium text-[#1b1b1b]">{{ nombre }}</span>
     </div>
     <a href="#" (click)="menuMobile=false"
-      class="flex items-center gap-3 text-[10px] uppercase tracking-widest text-[#6b7280] hover:text-[#2d6a4f] transition-colors">
+      class="flex items-center gap-3 text-[10px] uppercase tracking-widest text-[#6b7280] hover:text-[#36b2ac] transition-colors">
       <span class="material-symbols-outlined text-sm text-[#52b788]">person</span>
       Mi perfil
-    </a>
-    <a routerLink="/mis-mascotas" (click)="menuMobile=false"
-      class="flex items-center gap-3 text-[10px] uppercase tracking-widest text-[#6b7280] hover:text-[#2d6a4f] transition-colors">
-      <span class="material-symbols-outlined text-sm text-[#52b788]">pets</span>
-      Mis mascotas
-    </a>
-    <a routerLink="/agendar-cita" (click)="menuMobile=false"
-      class="flex items-center gap-3 text-[10px] uppercase tracking-widest text-[#6b7280] hover:text-[#2d6a4f] transition-colors">
-      <span class="material-symbols-outlined text-sm text-[#52b788]">calendar_month</span>
-      Agendar cita
-    </a>
-    <a routerLink="/mis-citas" (click)="menuMobile=false"
-      class="flex items-center gap-3 text-[10px] uppercase tracking-widest text-[#6b7280] hover:text-[#2d6a4f] transition-colors">
-      <span class="material-symbols-outlined text-sm text-[#52b788]">event</span>
-      Mis citas
-    </a>
-    <a routerLink="/mis-compras" (click)="menuMobile=false"
-      class="flex items-center gap-3 text-[10px] uppercase tracking-widest text-[#6b7280] hover:text-[#2d6a4f] transition-colors">
-      <span class="material-symbols-outlined text-sm text-[#52b788]">shopping_bag</span>
-      Mis compras
     </a>
     <button (click)="cerrarSesion(); menuMobile=false"
       class="flex items-center gap-3 text-[10px] uppercase tracking-widest text-red-400 hover:text-red-600 transition-colors">
@@ -166,8 +148,6 @@
       Cerrar sesión
     </button>
     }
-
   </div>
   }
-
 </nav>
