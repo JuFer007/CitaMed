@@ -1,16 +1,19 @@
 package com.app.CitaMed.Service.MicroServicios;
-
 import com.app.CitaMed.DTO.ReniecDataDTO;
 import com.app.CitaMed.DTO.ReniecResponseDTO;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
-
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
+@Component
+
 public class ReniecService {
 
     @Value("${reniec.api.url}")

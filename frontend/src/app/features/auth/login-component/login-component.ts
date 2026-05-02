@@ -11,8 +11,9 @@ import { LoaderService } from '../../../core/services/loader-service';
   standalone: true,
   imports: [ReactiveFormsModule, CommonModule, RouterLink],
   templateUrl: './login-component.html',
-
+  styleUrl: './login-component.css'
 })
+
 export class LoginComponent implements OnInit {
   loginForm!: FormGroup;
   errorMessage: string = '';

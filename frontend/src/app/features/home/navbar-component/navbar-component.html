@@ -62,33 +62,9 @@
           <span class="text-[10px] uppercase tracking-[0.2em] font-medium">{{ nombre }}</span>
           <span class="material-symbols-outlined text-sm">expand_more</span>
         </button>
-
-        @if (menuPerfil) {
-        <div
-          class="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-xl overflow-hidden shadow-xl shadow-[#52b788]/10">
-          <a href="#"
-            class="flex items-center gap-3 px-4 py-3 text-[10px] uppercase tracking-widest text-[#1b1b1b] hover:bg-[#f0faf4] transition-colors">
-            <span class="material-symbols-outlined text-sm text-[#52b788]">person</span>
-            Mi perfil
-          </a>
-          <button (click)="cerrarSesion()"
-            class="w-full flex cursor-pointer items-center gap-3 px-4 py-3 text-[10px] uppercase tracking-widest text-red-400 hover:bg-red-50 transition-colors">
-            <span class="material-symbols-outlined text-sm">logout</span>
-            Cerrar sesión
-          </button>
-        </div>
-        }
       </div>
       }
-
-      @if (!isLoggedIn) {
-      <a routerLink="/login"
-        class="hidden md:flex items-center gap-2 text-[10px] uppercase tracking-[0.2em] font-medium px-5 py-2.5 rounded-full border border-[#36b2ac] text-[#36b2ac] hover:bg-[#36b2ac] hover:text-white transition-all duration-500">
-        <span class="material-symbols-outlined text-sm">login</span>
-        Iniciar Sesión
-      </a>
-      }
-
+      
       <!-- Botón hamburguesa -->
       <button class="md:hidden" (click)="toggleMenuMobile()">
         <span class="material-symbols-outlined">{{ menuMobile ? 'close' : 'menu' }}</span>

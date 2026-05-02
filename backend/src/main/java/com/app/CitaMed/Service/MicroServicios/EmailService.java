@@ -3,6 +3,7 @@ import com.app.CitaMed.Model.Agenda.Cita;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Async;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.thymeleaf.TemplateEngine;
@@ -12,6 +13,8 @@ import java.util.*;
 
 @Service
 @RequiredArgsConstructor
+@Component
+
 public class EmailService {
     private final TemplateEngine templateEngine;
 

@@ -16,11 +16,7 @@ import com.app.CitaMed.Repository.Agenda.HorarioMedicoRepository;
 import com.app.CitaMed.Repository.Medico.MedicoRepository;
 import com.app.CitaMed.Repository.Paciente.HistorialMedicoRepository;
 import com.app.CitaMed.Repository.Paciente.PacienteRepository;
-<<<<<<< HEAD
 import com.app.CitaMed.Service.MicroServicios.EmailService;
-=======
-import com.app.CitaMed.Service.MicroServicios.MailerSendService;
->>>>>>> 9bdbef7091e073c5e022b427d3a629892596c822
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -40,7 +36,6 @@ public class ReservaService {
     private final HistorialMedicoRepository historialMedicoRepository;
     private final MedicoRepository medicoRepository;
     private final ConsultorioRepository consultorioRepository;
-    private final MailerSendService mailerSendService;
     private final HorarioMedicoRepository horarioMedicoRepository;
     private final EmailService emailService;
 
@@ -93,7 +88,6 @@ public class ReservaService {
 
     @Transactional
     public String procesarReserva(ReservaDTO dto) {
-        // === 1. Crear o recuperar paciente ===
         Paciente paciente = pacienteRepository.findByDni(dto.getDni());
         if (paciente == null) {
             paciente = new Paciente();
@@ -113,22 +107,11 @@ public class ReservaService {
             historialMedicoRepository.save(historial);
         }
 
-<<<<<<< HEAD
         Medico medico = medicoRepository.findById(dto.getMedicoId()).orElseThrow(() -> new RuntimeException("Médico no encontrado"));
 
         if (!medico.isActivo()) throw new RuntimeException("El médico no está activo");
 
         Consultorio consultorio = consultorioRepository.findById(dto.getConsultorioId()).orElseThrow(() -> new RuntimeException("Consultorio no encontrado"));
-=======
-        // === 2. Validaciones ===
-        Medico medico = medicoRepository.findById(dto.getMedicoId())
-                .orElseThrow(() -> new RuntimeException("Médico no encontrado"));
-
-        if (!medico.isActivo()) throw new RuntimeException("El médico no está activo");
-
-        Consultorio consultorio = consultorioRepository.findById(dto.getConsultorioId())
-                .orElseThrow(() -> new RuntimeException("Consultorio no encontrado"));
->>>>>>> 9bdbef7091e073c5e022b427d3a629892596c822
 
         if (!consultorio.isDisponible()) throw new RuntimeException("El consultorio no está disponible");
 
@@ -138,7 +121,6 @@ public class ReservaService {
             throw new RuntimeException("El horario seleccionado ya no está disponible");
         }
 
-        // === 3. Guardar Cita ===
         Cita cita = new Cita();
         cita.setPaciente(paciente);
         cita.setMedico(medico);
@@ -148,7 +130,6 @@ public class ReservaService {
         cita.setEstado(EstadoCita.PROGRAMADA);
         citaRepository.save(cita);
 
-        // === 4. Registrar Pago ===
         Pago pago = new Pago();
         pago.setCita(cita);
         pago.setMonto(80.00);
@@ -157,95 +138,10 @@ public class ReservaService {
         pago.setFechaPago(LocalDateTime.now());
         pagoRepository.save(pago);
 
-<<<<<<< HEAD
         emailService.enviarConfirmacion(cita);
         return "Reserva registrada correctamente";
     }
 
-=======
-        // === 5. Enviar correo de confirmación (¡Aquí está el cambio importante!) ===
-        enviarCorreoConfirmacion(cita, paciente, medico);
-
-        return "Reserva registrada correctamente";
-    }
-
-    private void enviarCorreoConfirmacion(Cita cita, Paciente paciente, Medico medico) {
-        String titulo = medico.getGenero() == Genero.FEMENINO ? "Dra." : "Dr.";
-        String doctor = titulo + " " + medico.getNombre() + " " + medico.getApellidoPaterno();
-        String especialidad = medico.getEspecialidad().getNombre();
-
-        String fechaFormateada = cita.getFechaHora()
-                .toLocalDate()
-                .format(DateTimeFormatter.ofPattern("EEEE dd 'de' MMMM yyyy", new Locale("es", "PE")));
-
-        String horaFormateada = cita.getFechaHora()
-                .toLocalTime()
-                .format(DateTimeFormatter.ofPattern("hh:mm a"));
-
-        String asunto = "Confirmación de Cita - CitaMed";
-
-        String cuerpoTexto = String.format("""
-                Hola %s,
-
-                Tu cita ha sido reservada exitosamente.
-
-                Detalles de tu cita:
-                • Médico: %s
-                • Especialidad: %s
-                • Fecha: %s
-                • Hora: %s
-                • Consultorio: %d
-                • Motivo: %s
-
-                Por favor llega 15 minutos antes.
-                Cualquier cambio, avísanos con anticipación.
-
-                Saludos,
-                Equipo CitaMed
-                """,
-                paciente.getNombre(),
-                doctor,
-                especialidad,
-                fechaFormateada,
-                horaFormateada,
-                cita.getConsultorio().getId(),
-                cita.getMotivoConsulta()
-        );
-
-        String cuerpoHtml = formatearHtml(cuerpoTexto);
-
-        boolean enviado = mailerSendService.enviarEmail(
-                paciente.getEmail(),
-                paciente.getNombre(),
-                asunto,
-                cuerpoHtml,
-                cuerpoTexto
-        );
-
-        if (!enviado) {
-            System.err.println("No se pudo enviar el correo de confirmación a: " + paciente.getEmail());
-        }
-    }
-
-    private String formatearHtml(String texto) {
-        return "<div style='font-family: Arial, sans-serif; line-height: 1.8; color: #333; max-width: 600px; margin: 0 auto;'>" +
-                texto.replace("\n", "<br>") +
-                "</div>";
-    }
-    private List<String> generarSlots(LocalTime inicio, LocalTime fin, String fecha) {
-        List<String> slots = new ArrayList<>();
-        int current = inicio.getHour() * 60 + inicio.getMinute();
-        int end = fin.getHour() * 60 + fin.getMinute();
-        while (current + 30 <= end) {
-            int h = current / 60;
-            int m = current % 60;
-            slots.add(String.format("%sT%02d:%02d:00", fecha, h, m));
-            current += 30;
-        }
-        return slots;
-    }
-
->>>>>>> 9bdbef7091e073c5e022b427d3a629892596c822
     private DiaSemana mapearDia(int dayOfWeek) {
         return switch (dayOfWeek) {
             case 1 -> DiaSemana.LUNES;
