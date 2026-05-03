@@ -1,1 +1,409 @@
-<p>dashboard-component works!</p>
+<div class="flex-1 overflow-y-auto p-1">
+
+    <!-- Page header -->
+    <div class="flex items-center justify-between mb-5">
+        <div class="text-[18px] font-semibold text-navy">Resumen general</div>
+        <div class="text-[12px] text-muted">Viernes, 01 de mayo de 2026</div>
+    </div>
+
+    <!-- ── STAT CARDS ── -->
+    <div class="grid grid-cols-4 gap-3 mb-4">
+
+        <div class="bg-white rounded-[10px] border border-border p-4 flex flex-col gap-1.5">
+            <div class="w-9 h-9 rounded-lg bg-teal-light flex items-center justify-center mb-0.5">
+                <span class="material-symbols-outlined text-teal-dark text-[18px]">calendar_month</span>
+            </div>
+            <div class="text-[11px] text-muted uppercase tracking-[0.07em] font-medium">Citas hoy</div>
+            <div class="text-[26px] font-semibold text-navy leading-none">12</div>
+            <div class="text-[11px] text-muted flex items-center gap-1"><span class="text-green-text font-semibold">↑
+                    3</span> vs ayer</div>
+        </div>
+
+        <div class="bg-white rounded-[10px] border border-border p-4 flex flex-col gap-1.5">
+            <div class="w-9 h-9 rounded-lg bg-green-bg flex items-center justify-center mb-0.5">
+                <span class="material-symbols-outlined text-green-text text-[18px]">person</span>
+            </div>
+            <div class="text-[11px] text-muted uppercase tracking-[0.07em] font-medium">Pacientes activos</div>
+            <div class="text-[26px] font-semibold text-navy leading-none">30</div>
+            <div class="text-[11px] text-muted flex items-center gap-1"><span class="text-green-text font-semibold">↑
+                    2</span> este mes</div>
+        </div>
+
+        <div class="bg-white rounded-[10px] border border-border p-4 flex flex-col gap-1.5">
+            <div class="w-9 h-9 rounded-lg bg-amber-bg flex items-center justify-center mb-0.5">
+                <span class="material-symbols-outlined text-amber-text text-[18px]">payments</span>
+            </div>
+            <div class="text-[11px] text-muted uppercase tracking-[0.07em] font-medium">Ingresos del mes</div>
+            <div class="text-[26px] font-semibold text-navy leading-none">S/ 3,140</div>
+            <div class="text-[11px] text-muted flex items-center gap-1"><span class="text-green-text font-semibold">↑
+                    18%</span> vs mes anterior</div>
+        </div>
+
+        <div class="bg-white rounded-[10px] border border-border p-4 flex flex-col gap-1.5">
+            <div class="w-9 h-9 rounded-lg bg-red-bg flex items-center justify-center mb-0.5">
+                <span class="material-symbols-outlined text-red-text text-[18px]">event_busy</span>
+            </div>
+            <div class="text-[11px] text-muted uppercase tracking-[0.07em] font-medium">Citas canceladas</div>
+            <div class="text-[26px] font-semibold text-navy leading-none">2</div>
+            <div class="text-[11px] text-muted flex items-center gap-1"><span class="text-red-text font-semibold">↑
+                    1</span> vs semana pasada</div>
+        </div>
+
+    </div>
+
+    <!-- ── Últimas citas + Barras especialidades ── -->
+    <div class="grid grid-cols-[2fr_1fr] gap-3.5 mb-3.5">
+
+        <!-- Últimas citas -->
+        <div class="bg-white rounded-[10px] border border-border p-[18px]">
+            <div class="flex items-center justify-between mb-3.5">
+                <span class="text-[13px] font-semibold text-navy">Últimas citas</span>
+                <span class="text-[12px] text-teal-dark font-medium cursor-pointer hover:underline">Ver todas →</span>
+            </div>
+            <table class="w-full border-collapse">
+                <thead>
+                    <tr>
+                        <th
+                            class="text-[10px] text-muted uppercase tracking-[0.08em] pb-1.5 px-2.5 border-b border-border text-left font-semibold">
+                            Paciente</th>
+                        <th
+                            class="text-[10px] text-muted uppercase tracking-[0.08em] pb-1.5 px-2.5 border-b border-border text-left font-semibold">
+                            Médico</th>
+                        <th
+                            class="text-[10px] text-muted uppercase tracking-[0.08em] pb-1.5 px-2.5 border-b border-border text-left font-semibold">
+                            Especialidad</th>
+                        <th
+                            class="text-[10px] text-muted uppercase tracking-[0.08em] pb-1.5 px-2.5 border-b border-border text-left font-semibold">
+                            Fecha</th>
+                        <th
+                            class="text-[10px] text-muted uppercase tracking-[0.08em] pb-1.5 px-2.5 border-b border-border text-left font-semibold">
+                            Estado</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="hover:bg-bg">
+                        <td class="py-2 px-2.5 border-b border-border text-[12px] font-medium">Juan Carlos Quispe</td>
+                        <td class="py-2 px-2.5 border-b border-border text-[12px]">Dr. García</td>
+                        <td class="py-2 px-2.5 border-b border-border text-[12px]">Urología</td>
+                        <td class="py-2 px-2.5 border-b border-border text-[12px] text-muted">04/08/2025</td>
+                        <td class="py-2 px-2.5 border-b border-border"><span
+                                class="inline-block text-[10px] font-semibold px-2.5 py-0.5 rounded-full bg-green-bg text-green-text">Atendida</span>
+                        </td>
+                    </tr>
+                    <tr class="hover:bg-bg">
+                        <td class="py-2 px-2.5 border-b border-border text-[12px] font-medium">María Elena Soto</td>
+                        <td class="py-2 px-2.5 border-b border-border text-[12px]">Dra. Torres</td>
+                        <td class="py-2 px-2.5 border-b border-border text-[12px]">Reumatología</td>
+                        <td class="py-2 px-2.5 border-b border-border text-[12px] text-muted">05/08/2025</td>
+                        <td class="py-2 px-2.5 border-b border-border"><span
+                                class="inline-block text-[10px] font-semibold px-2.5 py-0.5 rounded-full bg-teal-light text-teal-dark">Programada</span>
+                        </td>
+                    </tr>
+                    <tr class="hover:bg-bg">
+                        <td class="py-2 px-2.5 border-b border-border text-[12px] font-medium">Pedro Pablo Huamán</td>
+                        <td class="py-2 px-2.5 border-b border-border text-[12px]">Dr. Ramírez</td>
+                        <td class="py-2 px-2.5 border-b border-border text-[12px]">Med. General</td>
+                        <td class="py-2 px-2.5 border-b border-border text-[12px] text-muted">05/08/2025</td>
+                        <td class="py-2 px-2.5 border-b border-border"><span
+                                class="inline-block text-[10px] font-semibold px-2.5 py-0.5 rounded-full bg-green-bg text-green-text">Atendida</span>
+                        </td>
+                    </tr>
+                    <tr class="hover:bg-bg">
+                        <td class="py-2 px-2.5 border-b border-border text-[12px] font-medium">Lucía Rosa Paredes</td>
+                        <td class="py-2 px-2.5 border-b border-border text-[12px]">Dra. Flores</td>
+                        <td class="py-2 px-2.5 border-b border-border text-[12px]">Cardiología</td>
+                        <td class="py-2 px-2.5 border-b border-border text-[12px] text-muted">06/08/2025</td>
+                        <td class="py-2 px-2.5 border-b border-border"><span
+                                class="inline-block text-[10px] font-semibold px-2.5 py-0.5 rounded-full bg-red-bg text-red-text">Cancelada</span>
+                        </td>
+                    </tr>
+                    <tr class="hover:bg-bg">
+                        <td class="py-2 px-2.5 border-b border-border text-[12px] font-medium">Carlos Alberto Mendoza
+                        </td>
+                        <td class="py-2 px-2.5 border-b border-border text-[12px]">Dr. Castro</td>
+                        <td class="py-2 px-2.5 border-b border-border text-[12px]">Pediatría</td>
+                        <td class="py-2 px-2.5 border-b border-border text-[12px] text-muted">06/08/2025</td>
+                        <td class="py-2 px-2.5 border-b border-border"><span
+                                class="inline-block text-[10px] font-semibold px-2.5 py-0.5 rounded-full bg-amber-bg text-amber-text">No
+                                asistió</span></td>
+                    </tr>
+                    <tr class="hover:bg-bg">
+                        <td class="py-2 px-2.5 text-[12px] font-medium">Ana Sofía Rojas</td>
+                        <td class="py-2 px-2.5 text-[12px]">Dra. Herrera</td>
+                        <td class="py-2 px-2.5 text-[12px]">Ginecología</td>
+                        <td class="py-2 px-2.5 text-[12px] text-muted">07/08/2025</td>
+                        <td class="py-2 px-2.5"><span
+                                class="inline-block text-[10px] font-semibold px-2.5 py-0.5 rounded-full bg-green-bg text-green-text">Atendida</span>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Barras por especialidad -->
+        <div class="bg-white rounded-[10px] border border-border p-[18px]">
+            <div class="flex items-center justify-between mb-3.5">
+                <span class="text-[13px] font-semibold text-navy">Citas por especialidad</span>
+            </div>
+            <div class="flex flex-col gap-2.5">
+                <div class="flex items-center gap-2">
+                    <span class="w-[100px] text-muted text-[11px] flex-shrink-0">Med. General</span>
+                    <div class="flex-1 h-[7px] bg-teal-light rounded-full overflow-hidden">
+                        <div class="h-full bg-teal rounded-full" style="width:83%"></div>
+                    </div>
+                    <span class="w-7 text-right text-navy font-semibold text-[11px]">10</span>
+                </div>
+                <div class="flex items-center gap-2">
+                    <span class="w-[100px] text-muted text-[11px] flex-shrink-0">Urología</span>
+                    <div class="flex-1 h-[7px] bg-teal-light rounded-full overflow-hidden">
+                        <div class="h-full bg-teal rounded-full" style="width:75%"></div>
+                    </div>
+                    <span class="w-7 text-right text-navy font-semibold text-[11px]">9</span>
+                </div>
+                <div class="flex items-center gap-2">
+                    <span class="w-[100px] text-muted text-[11px] flex-shrink-0">Cardiología</span>
+                    <div class="flex-1 h-[7px] bg-teal-light rounded-full overflow-hidden">
+                        <div class="h-full bg-teal rounded-full" style="width:67%"></div>
+                    </div>
+                    <span class="w-7 text-right text-navy font-semibold text-[11px]">8</span>
+                </div>
+                <div class="flex items-center gap-2">
+                    <span class="w-[100px] text-muted text-[11px] flex-shrink-0">Pediatría</span>
+                    <div class="flex-1 h-[7px] bg-teal-light rounded-full overflow-hidden">
+                        <div class="h-full bg-teal rounded-full" style="width:58%"></div>
+                    </div>
+                    <span class="w-7 text-right text-navy font-semibold text-[11px]">7</span>
+                </div>
+                <div class="flex items-center gap-2">
+                    <span class="w-[100px] text-muted text-[11px] flex-shrink-0">Neurología</span>
+                    <div class="flex-1 h-[7px] bg-teal-light rounded-full overflow-hidden">
+                        <div class="h-full bg-teal rounded-full" style="width:50%"></div>
+                    </div>
+                    <span class="w-7 text-right text-navy font-semibold text-[11px]">6</span>
+                </div>
+                <div class="flex items-center gap-2">
+                    <span class="w-[100px] text-muted text-[11px] flex-shrink-0">Ginecología</span>
+                    <div class="flex-1 h-[7px] bg-teal-light rounded-full overflow-hidden">
+                        <div class="h-full bg-teal rounded-full" style="width:42%"></div>
+                    </div>
+                    <span class="w-7 text-right text-navy font-semibold text-[11px]">5</span>
+                </div>
+                <div class="flex items-center gap-2">
+                    <span class="w-[100px] text-muted text-[11px] flex-shrink-0">Dermatología</span>
+                    <div class="flex-1 h-[7px] bg-teal-light rounded-full overflow-hidden">
+                        <div class="h-full bg-teal rounded-full" style="width:33%"></div>
+                    </div>
+                    <span class="w-7 text-right text-navy font-semibold text-[11px]">4</span>
+                </div>
+                <div class="flex items-center gap-2">
+                    <span class="w-[100px] text-muted text-[11px] flex-shrink-0">Traumatología</span>
+                    <div class="flex-1 h-[7px] bg-teal-light rounded-full overflow-hidden">
+                        <div class="h-full bg-teal rounded-full" style="width:25%"></div>
+                    </div>
+                    <span class="w-7 text-right text-navy font-semibold text-[11px]">3</span>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- ── Agenda + Médicos + Pagos ── -->
+    <div class="grid grid-cols-2 gap-3.5 mb-3.5">
+
+        <!-- Agenda del día -->
+        <div class="bg-white rounded-[10px] border border-border p-[18px]">
+            <div class="flex items-center justify-between mb-3.5">
+                <span class="text-[13px] font-semibold text-navy">Agenda de hoy</span>
+                <span class="text-[12px] text-teal-dark font-medium cursor-pointer hover:underline">Ver completa
+                    →</span>
+            </div>
+            <div class="grid grid-cols-4 gap-2">
+                <div class="bg-teal-light border border-border rounded-lg p-2.5">
+                    <div class="text-[10px] text-teal-dark font-semibold">08:00 AM</div>
+                    <div class="text-[12px] text-navy mt-0.5 font-medium">Juan C. Quispe</div>
+                    <div class="text-[10px] text-muted mt-px">Urología — Dr. García</div>
+                </div>
+                <div class="bg-teal-light border border-border rounded-lg p-2.5">
+                    <div class="text-[10px] text-teal-dark font-semibold">09:00 AM</div>
+                    <div class="text-[12px] text-navy mt-0.5 font-medium">María E. Soto</div>
+                    <div class="text-[10px] text-muted mt-px">Cardiología — Dra. Torres</div>
+                </div>
+                <div class="bg-bg border border-dashed border-border rounded-lg p-2.5">
+                    <div class="text-[10px] text-subtle font-semibold">10:00 AM</div>
+                    <div class="text-[12px] text-subtle mt-0.5 font-medium">Disponible</div>
+                    <div class="text-[10px] text-subtle mt-px">Sin cita asignada</div>
+                </div>
+                <div class="bg-teal-light border border-border rounded-lg p-2.5">
+                    <div class="text-[10px] text-teal-dark font-semibold">11:00 AM</div>
+                    <div class="text-[12px] text-navy mt-0.5 font-medium">Carlos A. Mendoza</div>
+                    <div class="text-[10px] text-muted mt-px">Pediatría — Dr. Castro</div>
+                </div>
+            </div>
+            <div class="grid grid-cols-4 gap-2 mt-2">
+                <div class="bg-teal-light border border-border rounded-lg p-2.5">
+                    <div class="text-[10px] text-teal-dark font-semibold">02:00 PM</div>
+                    <div class="text-[12px] text-navy mt-0.5 font-medium">Diego A. Fuentes</div>
+                    <div class="text-[10px] text-muted mt-px">Neurología — Dra. Herrera</div>
+                </div>
+                <div class="bg-bg border border-dashed border-border rounded-lg p-2.5">
+                    <div class="text-[10px] text-subtle font-semibold">03:00 PM</div>
+                    <div class="text-[12px] text-subtle mt-0.5 font-medium">Disponible</div>
+                    <div class="text-[10px] text-subtle mt-px">Sin cita asignada</div>
+                </div>
+                <div class="bg-teal-light border border-border rounded-lg p-2.5">
+                    <div class="text-[10px] text-teal-dark font-semibold">04:00 PM</div>
+                    <div class="text-[12px] text-navy mt-0.5 font-medium">Valentina Espinoza</div>
+                    <div class="text-[10px] text-muted mt-px">Ginecología — Dra. Herrera</div>
+                </div>
+                <div class="bg-bg border border-dashed border-border rounded-lg p-2.5">
+                    <div class="text-[10px] text-subtle font-semibold">05:00 PM</div>
+                    <div class="text-[12px] text-subtle mt-0.5 font-medium">Disponible</div>
+                    <div class="text-[10px] text-subtle mt-px">Sin cita asignada</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Panel derecho: médicos + pagos -->
+        <div class="flex flex-col gap-3.5">
+
+            <!-- Médicos activos -->
+            <div class="bg-white rounded-[10px] border border-border p-[18px]">
+                <div class="flex items-center justify-between mb-3.5">
+                    <span class="text-[13px] font-semibold text-navy">Médicos activos</span>
+                    <span class="text-[12px] text-teal-dark font-medium cursor-pointer hover:underline">Ver todos
+                        →</span>
+                </div>
+                <table class="w-full border-collapse">
+                    <thead>
+                        <tr>
+                            <th
+                                class="text-[10px] text-muted uppercase tracking-[0.08em] pb-1.5 px-2.5 border-b border-border text-left font-semibold">
+                                Médico</th>
+                            <th
+                                class="text-[10px] text-muted uppercase tracking-[0.08em] pb-1.5 px-2.5 border-b border-border text-left font-semibold">
+                                Especialidad</th>
+                            <th
+                                class="text-[10px] text-muted uppercase tracking-[0.08em] pb-1.5 px-2.5 border-b border-border text-right font-semibold">
+                                Citas</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="hover:bg-bg">
+                            <td class="py-2 px-2.5 border-b border-border">
+                                <div class="flex items-center gap-2">
+                                    <div
+                                        class="w-[26px] h-[26px] rounded-full bg-teal text-white flex items-center justify-center text-[10px] font-semibold flex-shrink-0">
+                                        LG</div>
+                                    <div>
+                                        <div class="text-[12px] font-medium text-navy">Dr. Luis García</div>
+                                        <div class="text-[11px] text-muted">CMP-045231</div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="py-2 px-2.5 border-b border-border text-[12px]">Urología</td>
+                            <td class="py-2 px-2.5 border-b border-border text-right font-semibold text-[12px]">9</td>
+                        </tr>
+                        <tr class="hover:bg-bg">
+                            <td class="py-2 px-2.5 border-b border-border">
+                                <div class="flex items-center gap-2">
+                                    <div
+                                        class="w-[26px] h-[26px] rounded-full bg-navy-mid text-white flex items-center justify-center text-[10px] font-semibold flex-shrink-0">
+                                        RT</div>
+                                    <div>
+                                        <div class="text-[12px] font-medium text-navy">Dra. Rosa Torres</div>
+                                        <div class="text-[11px] text-muted">CMP-038742</div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="py-2 px-2.5 border-b border-border text-[12px]">Reumatología</td>
+                            <td class="py-2 px-2.5 border-b border-border text-right font-semibold text-[12px]">7</td>
+                        </tr>
+                        <tr class="hover:bg-bg">
+                            <td class="py-2 px-2.5 border-b border-border">
+                                <div class="flex items-center gap-2">
+                                    <div
+                                        class="w-[26px] h-[26px] rounded-full bg-green-text text-white flex items-center justify-center text-[10px] font-semibold flex-shrink-0">
+                                        MR</div>
+                                    <div>
+                                        <div class="text-[12px] font-medium text-navy">Dr. Miguel Ramírez</div>
+                                        <div class="text-[11px] text-muted">CMP-029183</div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="py-2 px-2.5 border-b border-border text-[12px]">Med. General</td>
+                            <td class="py-2 px-2.5 border-b border-border text-right font-semibold text-[12px]">10</td>
+                        </tr>
+                        <tr class="hover:bg-bg">
+                            <td class="py-2 px-2.5">
+                                <div class="flex items-center gap-2">
+                                    <div
+                                        class="w-[26px] h-[26px] rounded-full bg-amber-text text-white flex items-center justify-center text-[10px] font-semibold flex-shrink-0">
+                                        CF</div>
+                                    <div>
+                                        <div class="text-[12px] font-medium text-navy">Dra. Carmen Flores</div>
+                                        <div class="text-[11px] text-muted">CMP-051647</div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="py-2 px-2.5 text-[12px]">Cardiología</td>
+                            <td class="py-2 px-2.5 text-right font-semibold text-[12px]">8</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Últimos pagos -->
+            <div class="bg-white rounded-[10px] border border-border p-[18px]">
+                <div class="flex items-center justify-between mb-3.5">
+                    <span class="text-[13px] font-semibold text-navy">Últimos pagos</span>
+                    <span class="text-[12px] text-teal-dark font-medium cursor-pointer hover:underline">Ver todos
+                        →</span>
+                </div>
+
+                <div class="flex items-center justify-between py-2 border-b border-border">
+                    <div class="flex flex-col">
+                        <span class="text-[12px] font-medium text-navy">Juan Carlos Quispe</span>
+                        <span class="text-[11px] text-muted">Efectivo · Cita #1</span>
+                    </div>
+                    <div class="text-right">
+                        <div class="text-[13px] font-semibold text-navy">S/ 80.00</div>
+                        <div class="text-[10px] text-green-text font-semibold">Pagado</div>
+                    </div>
+                </div>
+                <div class="flex items-center justify-between py-2 border-b border-border">
+                    <div class="flex flex-col">
+                        <span class="text-[12px] font-medium text-navy">María Elena Soto</span>
+                        <span class="text-[11px] text-muted">Tarjeta · Cita #2</span>
+                    </div>
+                    <div class="text-right">
+                        <div class="text-[13px] font-semibold text-navy">S/ 120.00</div>
+                        <div class="text-[10px] text-green-text font-semibold">Pagado</div>
+                    </div>
+                </div>
+                <div class="flex items-center justify-between py-2 border-b border-border">
+                    <div class="flex flex-col">
+                        <span class="text-[12px] font-medium text-navy">Lucía Rosa Paredes</span>
+                        <span class="text-[11px] text-muted">Transferencia · Cita #4</span>
+                    </div>
+                    <div class="text-right">
+                        <div class="text-[13px] font-semibold text-navy">S/ 100.00</div>
+                        <div class="text-[10px] text-green-text font-semibold">Pagado</div>
+                    </div>
+                </div>
+                <div class="flex items-center justify-between py-2">
+                    <div class="flex flex-col">
+                        <span class="text-[12px] font-medium text-navy">Carlos Alberto Mendoza</span>
+                        <span class="text-[11px] text-muted">Efectivo · Cita #5</span>
+                    </div>
+                    <div class="text-right">
+                        <div class="text-[13px] font-semibold text-navy">S/ 110.00</div>
+                        <div class="text-[10px] text-green-text font-semibold">Pagado</div>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+
+</div><!-- /content -->

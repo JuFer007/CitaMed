@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
-import { Observable, tap } from 'rxjs'; // Asegúrate de importar Observable
-import { LoginResponse } from '../../shared/interfaces/perfil';
+import { Observable, tap } from 'rxjs';
+import { LoginResponse } from '../../model/Perfil';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
