@@ -8,18 +8,40 @@
 
 
 @theme {
-  --font-sans: "Outfit", "Inter", ui-sans-serif, system-ui, sans-serif;
+  /* Fuentes */
+  --font-sans: "Plus Jakarta Sans", "Outfit", "Inter", ui-sans-serif, system-ui, sans-serif;
   --font-display: "Outfit", sans-serif;
 
+  /* Colores personalizados */
   --color-aquamarine: #7fffd4;
   --color-ocean-light: #e0f2f1;
   --color-ocean-soft: #b2ebf2;
   --color-ocean-deep: #00bcd4;
   --color-turquesa: #53d1e2;
+
+  /* Colores de la paleta Teal / Navy */
+  --color-teal: #36b1ae;
+  --color-teal-dark: #0f8b86;
+  --color-teal-light: #e0f9f8;
+  --color-teal-mid: #2d9694;
+  --color-navy: #083d3a;
+  --color-navy-mid: #0d5450;
+  --color-bg: #f0f9f9;
+  --color-muted: #4d6d6b;
+  --color-subtle: #b2d4d2;
+  --color-border: #c8e8e6;
+
+  /* Colores de estado y notificaciones */
+  --color-red-bg: #fcebeb;
+  --color-red-text: #a32d2d;
+  --color-amber-bg: #faeeda;
+  --color-amber-text: #ba7517;
+  --color-green-bg: #eaf3de;
+  --color-green-text: #3b6d11;
 }
 
 ::-webkit-scrollbar {
-  width: 4px;
+  width: 0;
 }
 
 ::-webkit-scrollbar-track {

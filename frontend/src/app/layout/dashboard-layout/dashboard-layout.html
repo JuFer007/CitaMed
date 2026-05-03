@@ -1,77 +1,126 @@
 <div class="flex h-screen w-full bg-gray-200 overflow-hidden">
 
     <!-- SIDEBAR -->
-    <aside
-        class="bg-[#102139] text-white flex flex-col shadow-xl transition-all duration-300 ease-in-out overflow-hidden">
+    <aside class="w-[230px] bg-navy flex flex-col flex-shrink-0 overflow-y-auto scrollbar-thin">
 
-        <!-- HEADER LOGO -->
-        <div class="p-4 flex flex-col items-center border-b border-slate-700 min-h-[80px] justify-center">
-
-            <div class="flex flex-col items-center w-full transition-opacity duration-200">
-                <img src="logoCitaMed.png" alt="Logo" class="w-24 h-auto object-contain">
-                <p
-                    class="text-xs text-gray-400 font-medium tracking-widest uppercase border-t border-gray-600 pt-2 mt-1">
-                    Panel Administrativo
-                </p>
+        <!-- Logo -->
+        <div class="px-4 py-5 border-b border-white/[0.08] flex items-center gap-2.5">
+            <div class="w-9 h-9 bg-teal rounded-[9px] flex items-center justify-center flex-shrink-0">
+                <span class="material-symbols-outlined text-white text-xl">medical_services</span>
             </div>
-
+            <div>
+                <div class="text-white text-[17px] font-semibold tracking-tight">CitaMed</div>
+                <div class="text-white/40 text-[10px] tracking-widest uppercase mt-px">Panel admin</div>
+            </div>
         </div>
 
-        <!-- NAV LINKS -->
-        <nav class="flex-1 mt-4 px-2 space-y-1">
+        <!-- Principal -->
+        <div class="px-3.5 pt-4 pb-1.5 text-white/30 text-[10px] tracking-[0.12em] uppercase font-semibold">Principal
+        </div>
+        <a routerLink="/admin/dashboard" routerLinkActive="bg-teal !text-white"
+            class="flex items-center gap-2.5 px-2.5 py-2 mx-2 rounded-[7px]  text-white/52 text-[13px] hover:bg-white/[0.07] hover:text-white/90 transition-all">
+            <span class="material-symbols-outlined text-[17px] flex-shrink-0">dashboard</span>
+            Dashboard
+        </a>
 
-            <a routerLink="/admin/dashboard" routerLinkActive="bg-blue-primary text-white"
-                class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-gray-300 hover:bg-blue-hover hover:text-white transition-colors group relative cursor-pointer">
-                <span class="material-symbols-outlined flex-shrink-0">home</span>
-                <span class="transition-opacity duration-200 whitespace-nowrap">Dashboard</span>
-            </a>
+        <!-- Gestión clínica -->
+        <div class="px-3.5 pt-4 pb-1.5 text-white/30 text-[10px] tracking-[0.12em] uppercase font-semibold">Gestión
+            clínica</div>
 
-            <a routerLink="/admin/ventas" routerLinkActive="bg-blue-primary text-white"
-                class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-gray-300 hover:bg-blue-hover hover:text-white transition-colors group relative cursor-pointer">
-                <span class="material-symbols-outlined flex-shrink-0">home</span>
-                <span class="transition-opacity duration-200 whitespace-nowrap">Gestion de Ventas</span>
-            </a>
+        <a routerLink="/admin/citas" routerLinkActive="bg-teal !text-white"
+            class="flex items-center gap-2.5 px-2.5 py-2 mx-2 rounded-[7px] text-white/52 text-[13px] hover:bg-white/[0.07] hover:text-white/90 transition-all">
+            <span class="material-symbols-outlined text-[17px] flex-shrink-0">calendar_month</span>
+            Citas
+            <span
+                class="ml-auto bg-white/[0.14] text-white/70 text-[10px] px-1.5 py-px rounded-full font-medium">N</span>
+        </a>
+        <a routerLink="/admin/pacientes" routerLinkActive="bg-teal !text-white"
+            class="flex items-center gap-2.5 px-2.5 py-2 mx-2 rounded-[7px] text-white/52 text-[13px] hover:bg-white/[0.07] hover:text-white/90 transition-all">
+            <span class="material-symbols-outlined text-[17px] flex-shrink-0">person</span>
+            Pacientes
+        </a>
+        <a routerLink="/admin/medicos" routerLinkActive="bg-teal !text-white"
+            class="flex items-center gap-2.5 px-2.5 py-2 mx-2 rounded-[7px] text-white/52 text-[13px] hover:bg-white/[0.07] hover:text-white/90 transition-all">
+            <span class="material-symbols-outlined text-[17px] flex-shrink-0">stethoscope</span>
+            Médicos
+        </a>
+        <a routerLink="/admin/especialidades" routerLinkActive="bg-teal !text-white"
+            class="flex items-center gap-2.5 px-2.5 py-2 mx-2 rounded-[7px] text-white/52 text-[13px] hover:bg-white/[0.07] hover:text-white/90 transition-all">
+            <span class="material-symbols-outlined text-[17px] flex-shrink-0">local_hospital</span>
+            Especialidades
+        </a>
+        <a routerLink="/admin/horarios" routerLinkActive="bg-teal !text-white"
+            class="flex items-center gap-2.5 px-2.5 py-2 mx-2 rounded-[7px] text-white/52 text-[13px] hover:bg-white/[0.07] hover:text-white/90 transition-all">
+            <span class="material-symbols-outlined text-[17px] flex-shrink-0">schedule</span>
+            Horarios médicos
+        </a>
 
+        <!-- Clínica -->
+        <div class="px-3.5 pt-4 pb-1.5 text-white/30 text-[10px] tracking-[0.12em] uppercase font-semibold">Clínica
+        </div>
+        <a routerLink="/admin/medicamentos" routerLinkActive="bg-teal !text-white"
+            class="flex items-center gap-2.5 px-2.5 py-2 mx-2 rounded-[7px] text-white/52 text-[13px] hover:bg-white/[0.07] hover:text-white/90 transition-all">
+            <span class="material-symbols-outlined text-[17px] flex-shrink-0">medication</span>
+            Medicamentos
+        </a>
+        <a routerLink="/admin/historial-medico" routerLinkActive="bg-teal !text-white"
+            class="flex items-center gap-2.5 px-2.5 py-2 mx-2 rounded-[7px] text-white/52 text-[13px] hover:bg-white/[0.07] hover:text-white/90 transition-all">
+            <span class="material-symbols-outlined text-[17px] flex-shrink-0">history</span>
+            Historial médico
+        </a>
 
-            <a routerLink="/admin/usuarios" routerLinkActive="bg-blue-primary text-white"
-                class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-gray-300 hover:bg-blue-hover hover:text-white transition-colors group relative cursor-pointer">
-                <span class="material-symbols-outlined flex-shrink-0">nearby</span>
-                <span class="transition-opacity duration-200 whitespace-nowrap">Gestion Usuarios</span>
-            </a>
+        <!-- Administración -->
+        <div class="px-3.5 pt-4 pb-1.5 text-white/30 text-[10px] tracking-[0.12em] uppercase font-semibold">
+            Administración</div>
 
+        <a routerLink="/admin/empleados" routerLinkActive="bg-teal !text-white"
+            class="flex items-center gap-2.5 px-2.5 py-2 mx-2 rounded-[7px] text-white/52 text-[13px] hover:bg-white/[0.07] hover:text-white/90 transition-all">
+            <span class="material-symbols-outlined text-[17px] flex-shrink-0">badge</span>
+            Empleados
+        </a>
+        <a routerLink="/admin/pagos" routerLinkActive="bg-teal !text-white"
+            class="flex items-center gap-2.5 px-2.5 py-2 mx-2 rounded-[7px] text-white/52 text-[13px] hover:bg-white/[0.07] hover:text-white/90 transition-all">
+            <span class="material-symbols-outlined text-[17px] flex-shrink-0">payments</span>
+            Pagos
+        </a>
+        <a routerLink="/admin/usuarios" routerLinkActive="bg-teal !text-white"
+            class="flex items-center gap-2.5 px-2.5 py-2 mx-2 rounded-[7px] text-white/52 text-[13px] hover:bg-white/[0.07] hover:text-white/90 transition-all">
+            <span class="material-symbols-outlined text-[17px] flex-shrink-0">shield_person</span>
+            Usuarios
+        </a>
+        <a routerLink="/admin/reportes" routerLinkActive="bg-teal !text-white"
+            class="flex items-center gap-2.5 px-2.5 py-2 mx-2 rounded-[7px] text-white/52 text-[13px] hover:bg-white/[0.07] hover:text-white/90 transition-all">
+            <span class="material-symbols-outlined text-[17px] flex-shrink-0">bar_chart</span>
+            Reportes
+        </a>
 
-        </nav>
-
-        <!-- FOOTER: CERRAR SESIÓN -->
-        <div class="p-2 border-t border-slate-700">
+        <!-- Bottom -->
+        <div class="mt-auto border-t border-white/[0.08] p-2">
             <button (click)="cerrarSesion()"
                 class="flex items-center cursor-pointer gap-3 p-3 text-red-600 py-2.5 hover:text-red-500 w-full group relative rounded-lg hover:bg-red-400/10 transition-colors">
-                <span class="material-symbols-outlined text-xl flex-shrink-0">exit_to_app</span>
-                <span class="transition-opacity duration-200 whitespace-nowrap">Cerrar Sesión</span>
+                <span class="material-symbols-outlined text-[17px] flex-shrink-0">logout</span>
+                Cerrar sesión
             </button>
+
         </div>
+
     </aside>
 
     <!-- CONTENIDO PRINCIPAL -->
     <div class="flex-1 flex flex-col overflow-hidden transition-all duration-300">
-        <header class="bg-white h-16 shadow-sm flex items-center justify-between px-6">
-            <div class="flex items-center gap-4">
-                <div class="flex items-center space-x-4">
-                    <h1 class="text-2xl font-bold text-gray-800">Dashboard</h1>
-                    <span class="text-gray-400">|</span>
-                    <p class=" font-bold text-gray-800">{{titulo}}</p>
-                </div>
-            </div>
-
-            <div class="flex items-center gap-3">
+        <header class="h-14 bg-white border-b border-border flex items-center px-6 gap-3 flex-shrink-0">
+            <span class="material-symbols-outlined text-teal text-xl">dashboard</span>
+            <span class="text-[15px] font-semibold text-navy">Dashboard</span>
+            <span class="text-subtle">/</span>
+            <span class="text-[12px] text-muted">{{titulo}}</span>
+            <div class="ml-auto flex items-center gap-3.5">
                 <div class="text-right">
-                    <p class="text-sm font-bold text-black leading-none">{{ nombre }}</p>
-                    <p class="text-[10px] text-slate-500">{{ rol }}</p>
+                    <div class="text-[13px] font-medium text-navy">{{nombre}}</div>
+                    <div class="text-[11px] text-muted">{{rol}}</div>
                 </div>
                 <div
-                    class="w-10 h-10 bg-blue-primary text-black rounded-full flex items-center justify-center font-bold">
-                    {{ inicial }}
-                </div>
+                    class="w-[33px] h-[33px] rounded-full bg-teal text-white flex items-center justify-center text-[13px] font-semibold">
+                    {{inicial}}</div>
             </div>
         </header>
 
