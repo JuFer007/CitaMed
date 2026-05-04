@@ -65,16 +65,7 @@ export class DashboardComponent implements OnInit {
   hoy: Date = new Date();
   agendaHoy: AgendaHoyDTO[] = [];
   especialidades: EspecialidadDTO[] = [];
-  stats: DashboardDTO = {
-    citasHoy: 0,
-    citasAyer: 0,
-    pacientesActivos: 0,
-    pacientesMesAnterior: 0,
-    ingresoMes: 0,
-    ingresoMesAnterior: 0,
-    canceladasSemana: 0,
-    canceladasSemanaAnterior: 0
-  };
+  stats!: DashboardDTO;
   ultimasCitas: UltimaCitaDTO[] = [];
   pagos: PagoDTO[] = [];
 
@@ -125,11 +116,11 @@ export class DashboardComponent implements OnInit {
 
   cargarAgendaHoy() {
     this.http
-      .get<AgendaHoyDTO[]>('http://localhost:8080/api/dashboard/agenda')
+      .get<AgendaHoyDTO[]>('http://localhost:8080/api/dashboard/dashboard/agenda')
       .subscribe({
         next: (data) => (this.agendaHoy = data),
         error: (err) => console.log(err)
-      });
+    });
   }
 
   cargarEspecialidades() {
@@ -138,7 +129,7 @@ export class DashboardComponent implements OnInit {
       .subscribe({
         next: (data) => (this.especialidades = data),
         error: (err) => console.log(err)
-      });
+    });
   }
 
   cargarUltimasCitas(): void {
@@ -146,7 +137,7 @@ export class DashboardComponent implements OnInit {
       .subscribe({
         next: (data) => this.ultimasCitas = data,
         error: (err) => console.log(err)
-      });
+    });
   }
 
   diferencia(actual: number, anterior: number): number {
@@ -175,12 +166,12 @@ export class DashboardComponent implements OnInit {
   }
 
   cargarPagos(): void {
-    this.http.get<any[]>('http://localhost:8080/api/dashboard/pagos')
-      .subscribe({
-        next: (data) => {
-          this.pagos = data;
-        },
-        error: (err) => console.log(err)
-      });
+  this.http.get<any[]>('http://localhost:8080/api/dashboard/pagos')
+    .subscribe({
+      next: (data) => {
+        this.pagos = data;
+      },
+      error: (err) => console.log(err)
+    });
   }
 }
