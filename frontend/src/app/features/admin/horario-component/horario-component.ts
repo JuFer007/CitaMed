@@ -1,7 +1,6 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, inject } from '@angular/core';
 import { CommonModule, DecimalPipe, SlicePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { DialogModule } from 'primeng/dialog';
 import { ButtonModule } from 'primeng/button';
 import { PaginatorModule } from 'primeng/paginator';
 import {
@@ -12,6 +11,7 @@ import {
   DiaSemana,
   Consultorio
 } from '../../../core/services/horario-medico-service';
+import { DialogModule } from 'primeng/dialog';
 
 @Component({
   selector: 'app-horario-component',
