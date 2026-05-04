@@ -13,7 +13,6 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-
 import java.util.List;
 
 @Configuration
@@ -38,21 +37,17 @@ public class SecurityConfig {
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
-                        // Auth pública
                         .requestMatchers("/api/auth/**").permitAll()
-                        // Microservicios públicos
                         .requestMatchers("/api/reniec/**").permitAll()
                         .requestMatchers("/api/contacto/**").permitAll()
-                        // Landing page — incluye /slots y /reserva
                         .requestMatchers("/api/lading/**").permitAll()
                         .requestMatchers("/api/landing/**").permitAll()
-                        // Recursos públicos del dominio
                         .requestMatchers("/api/especialidad/**").permitAll()
                         .requestMatchers("/api/medico/**").permitAll()
                         .requestMatchers("/api/horarioMedico/**").permitAll()
                         .requestMatchers("/api/paciente/**").permitAll()
                         .requestMatchers("/api/email/**").permitAll()
-                        // Todo lo demás requiere autenticación
+                        .requestMatchers("/api/dashboard/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);

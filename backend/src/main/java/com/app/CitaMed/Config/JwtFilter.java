@@ -23,35 +23,29 @@ public class JwtFilter extends OncePerRequestFilter {
     }
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request,
-                                    HttpServletResponse response,
-                                    FilterChain filterChain)
-            throws ServletException, IOException {
-
-        // Permitir preflight CORS
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         if ("OPTIONS".equalsIgnoreCase(request.getMethod())) {
             filterChain.doFilter(request, response);
             return;
         }
 
         String path = request.getRequestURI();
-
-        // Rutas públicas — sin token
         if (path.startsWith("/api/auth/")
                 || path.startsWith("/api/reniec/")
                 || path.startsWith("/api/contacto")
-                || path.startsWith("/api/lading")     // landing + slots + reserva pública
+                || path.startsWith("/api/lading")
                 || path.startsWith("/api/landing")
                 || path.startsWith("/api/paciente")
                 || path.startsWith("/api/especialidad")
                 || path.startsWith("/api/medico")
                 || path.startsWith("/api/horarioMedico")
-                || path.startsWith("/api/email/")) {
+                || path.startsWith("/api/email/")
+                || path.startsWith("/api/dashboard")
+                || path.startsWith("/api/dashboard/")) {
             filterChain.doFilter(request, response);
             return;
         }
 
-        // Validación JWT para rutas protegidas
         String authHeader = request.getHeader("Authorization");
 
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
