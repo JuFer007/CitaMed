@@ -127,7 +127,6 @@ export class HorarioComponent implements OnInit {
       },
       error: (err) => {
         console.error(err);
-        // Error silencioso al cargar horarios individuales para no saturar de toasts
       },
     });
   }
