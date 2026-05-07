@@ -7,6 +7,7 @@ export interface HorarioMedico {
   horaInicio: string;
   horaFin: string;
   activo: boolean;
+  consultorio?: { id: number; nombre: string; numero: string };
 }
 
 export interface HorarioMedicoDTO {
@@ -57,6 +58,10 @@ export class HorarioMedicoService {
   // ── HORARIOS ─────────────────────────────────────────
   getHorariosPorMedico(medicoId: number): Observable<HorarioMedico[]> {
     return this.http.get<HorarioMedico[]>(`${this.base}/horarioMedico/medico/${medicoId}`);
+  }
+
+  actualizarHorario(id: number, dto: HorarioMedicoDTO): Observable<string> {
+    return this.http.put(`${this.base}/horarioMedico/${id}`, dto, { responseType: 'text' });
   }
 
   crearHorario(dto: HorarioMedicoDTO): Observable<string> {

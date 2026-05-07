@@ -53,6 +53,26 @@ public class HorarioMedicoService {
         return horario.isActivo() ? "Horario activado" : "Horario desactivado";
     }
 
+    public String update(Long id, HorarioMedicoDTO dto) {
+        HorarioMedico horario = horarioMedicoRepository.findById(id).orElse(null);
+        if (horario == null) return "Horario no encontrado";
+
+        Medico medico = medicoRepository.findById(dto.getMedicoId()).orElse(null);
+        if (medico == null) return "Médico no encontrado";
+
+        Consultorio consultorio = consultorioRepository.findById(dto.getConsultorioId()).orElse(null);
+        if (consultorio == null) return "Consultorio no encontrado";
+
+        horario.setMedico(medico);
+        horario.setConsultorio(consultorio);
+        horario.setDia(dto.getDia());
+        horario.setHoraInicio(dto.getHoraInicio());
+        horario.setHoraFin(dto.getHoraFin());
+
+        horarioMedicoRepository.save(horario);
+        return "Horario actualizado correctamente";
+    }
+
     public List<HorarioMedico> findAll() {
         return horarioMedicoRepository.findAll();
     }

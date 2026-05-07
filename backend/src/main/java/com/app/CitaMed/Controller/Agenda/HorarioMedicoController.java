@@ -38,6 +38,16 @@ public class HorarioMedicoController {
         return ResponseEntity.ok(resultado);
     }
 
+    @PutMapping("/{id}")
+    public ResponseEntity<String> update(@PathVariable Long id, @RequestBody HorarioMedicoDTO dto) {
+        String resultado = horarioMedicoService.update(id, dto);
+        if (resultado.equals("Horario no encontrado"))
+            return ResponseEntity.notFound().build();
+        if (!resultado.equals("Horario actualizado correctamente"))
+            return ResponseEntity.badRequest().body(resultado);
+        return ResponseEntity.ok(resultado);
+    }
+
     @GetMapping
     public ResponseEntity<List<HorarioMedico>> findAll() {
         return ResponseEntity.ok(horarioMedicoService.findAll());
