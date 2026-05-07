@@ -1,7 +1,8 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { RouterLink } from '@angular/router';
+import { ChangeDetectorRef } from '@angular/core';
 
 interface DashboardDTO {
   citasHoy: number;
@@ -59,7 +60,7 @@ interface MedicoActivoDTO {
 
 export class DashboardComponent implements OnInit {
 
-  private http = inject(HttpClient);
+  constructor(private http: HttpClient, private cdr: ChangeDetectorRef) { }
 
   medicos: MedicoActivoDTO[] = [];
   hoy: Date = new Date();
@@ -92,7 +93,10 @@ export class DashboardComponent implements OnInit {
     this.http
       .get<MedicoActivoDTO[]>('http://localhost:8080/api/dashboard/medicos')
       .subscribe({
-        next: (data) => (this.medicos = data),
+        next: (data) => {
+          this.medicos = data;
+          this.cdr.detectChanges();
+        },
         error: (err) => console.log(err)
       });
   }
@@ -119,6 +123,7 @@ export class DashboardComponent implements OnInit {
 
           this.ingresosPorcentaje =
             this.porcentaje(data.ingresoMes, data.ingresoMesAnterior);
+          this.cdr.detectChanges();
         },
         error: (err) => console.log(err)
       });
@@ -128,7 +133,10 @@ export class DashboardComponent implements OnInit {
     this.http
       .get<AgendaHoyDTO[]>('http://localhost:8080/api/dashboard/agenda')
       .subscribe({
-        next: (data) => (this.agendaHoy = data),
+        next: (data) => {
+          this.agendaHoy = data;
+          this.cdr.detectChanges();
+        },
         error: (err) => console.log(err)
       });
   }
@@ -137,7 +145,10 @@ export class DashboardComponent implements OnInit {
     this.http
       .get<EspecialidadDTO[]>('http://localhost:8080/api/dashboard/especialidades')
       .subscribe({
-        next: (data) => (this.especialidades = data),
+        next: (data) => {
+          this.especialidades = data;
+          this.cdr.detectChanges();
+        },
         error: (err) => console.log(err)
       });
   }
@@ -145,7 +156,10 @@ export class DashboardComponent implements OnInit {
   cargarUltimasCitas(): void {
     this.http.get<UltimaCitaDTO[]>('http://localhost:8080/api/dashboard/ultimas-citas')
       .subscribe({
-        next: (data) => this.ultimasCitas = data,
+        next: (data) => {
+          this.ultimasCitas = data;
+          this.cdr.detectChanges();
+        },
         error: (err) => console.log(err)
       });
   }
@@ -180,6 +194,7 @@ export class DashboardComponent implements OnInit {
       .subscribe({
         next: (data) => {
           this.pagos = data;
+          this.cdr.detectChanges();
         },
         error: (err) => console.log(err)
       });
