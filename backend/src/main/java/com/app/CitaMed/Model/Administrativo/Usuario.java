@@ -1,20 +1,22 @@
 package com.app.CitaMed.Model.Administrativo;
-
 import com.app.CitaMed.Enums.Rol;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
-import lombok.Data;
+import lombok.*;
 
-@Entity
 @Table(name = "usuarios")
-@Data
+@Getter
+@Setter
+@Entity
+@NoArgsConstructor
+@AllArgsConstructor
+
 public class Usuario {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @NotBlank(message = "El nombre de usuario es obligatorio")
-    @Pattern(regexp = "^[a-zA-Z0-9._]+$", message = "El username solo puede contener letras, números, punto o guion bajo")
     @Size(min = 4, max = 20, message = "El username debe tener entre 4 y 20 caracteres")
     @Column(unique = true)
     private String userName;

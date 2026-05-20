@@ -1,4 +1,4 @@
-import { Medico } from "./Medico ";
+import { Medico } from "./Medico";
 import { HorarioMedico } from "./HorarioMedico ";
 
 export interface SlotHorario {

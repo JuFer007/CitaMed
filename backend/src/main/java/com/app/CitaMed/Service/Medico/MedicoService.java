@@ -8,9 +8,11 @@ import com.app.CitaMed.Model.Administrativo.Usuario;
 import com.app.CitaMed.Repository.Medico.EspecialidadRepository;
 import com.app.CitaMed.Repository.Medico.MedicoRepository;
 import com.app.CitaMed.Repository.Administrativo.UsuarioRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.ThreadLocalRandom;
 
 @Service
@@ -68,14 +70,6 @@ public class MedicoService {
         return "Médico registrado correctamente";
     }
 
-    public String toggleActivo(Long id) {
-        Medico medico = medicoRepository.findById(id).orElse(null);
-        if (medico == null) return "Médico no encontrado";
-        medico.setActivo(!medico.isActivo());
-        medicoRepository.save(medico);
-        return medico.isActivo() ? "Médico activado" : "Médico desactivado";
-    }
-
     public String updateEspecialidad(Long medicoId, Long especialidadId) {
         Medico medico = medicoRepository.findById(medicoId).orElse(null);
         if (medico == null) return "Médico no encontrado";
@@ -98,9 +92,7 @@ public class MedicoService {
     }
 
     public MedicoPerfilDTO medicoAlAzarPerfil() {
-
         Medico medico = medicoAlAzar();
-
         if (medico == null) {
             return null;
         }
@@ -115,5 +107,60 @@ public class MedicoService {
                 medico.getNumeroColegiatura(),
                 medico.getEspecialidad().getNombre()
         );
+    }
+
+    public String update(Long id, MedicoDTO dto) {
+        Medico medico = medicoRepository.findById(id).orElse(null);
+        if (medico == null) return "Médico no encontrado";
+
+        Especialidad especialidad = especialidadRepository.findById(dto.getEspecialidadId()).orElse(null);
+        if (especialidad == null) return "Especialidad no encontrada";
+
+        medico.setNombre(dto.getNombre().toUpperCase());
+        medico.setApellidoPaterno(dto.getApellidoPaterno().toUpperCase());
+        medico.setApellidoMaterno(dto.getApellidoMaterno().toUpperCase());
+        medico.setTelefono(dto.getTelefono());
+        medico.setDireccion(dto.getDireccion());
+        medico.setEmail(dto.getEmail());
+        medico.setFechaNacimiento(dto.getFechaNacimiento());
+        medico.setGenero(dto.getGenero());
+        medico.setNumeroColegiatura(dto.getNumeroColegiatura());
+        medico.setEspecialidad(especialidad);
+
+        if (medico.getUsuario() != null) {
+            Usuario usuario = medico.getUsuario();
+            usuario.setUserName(dto.getUserName());
+            if (dto.getPassword() != null && !dto.getPassword().isBlank()) {
+                usuario.setPassword(dto.getPassword());
+            }
+            usuarioRepository.save(usuario);
+        }
+
+        medicoRepository.save(medico);
+        return "Médico actualizado correctamente";
+    }
+
+    @Transactional
+    public String cambiarEstado(Long id) {
+
+        Optional<Medico> medicoOpt = medicoRepository.findById(id);
+
+        if (medicoOpt.isEmpty()) {
+            return "Médico no encontrado";
+        }
+
+        Medico medico = medicoOpt.get();
+        boolean nuevoEstado = !medico.isActivo();
+        medico.setActivo(nuevoEstado);
+
+        if (medico.getUsuario() != null) {
+            medico.getUsuario().setActivo(nuevoEstado);
+        }
+
+        medicoRepository.save(medico);
+
+        return nuevoEstado
+                ? "Médico activado correctamente"
+                : "Médico desactivado correctamente";
     }
 }

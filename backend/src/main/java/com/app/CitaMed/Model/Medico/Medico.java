@@ -45,7 +45,6 @@ public class Medico {
     @Pattern(regexp = "\\d{9}", message = "El teléfono debe tener 9 dígitos")
     private String telefono;
 
-    @NotBlank(message = "La dirección es obligatoria")
     @Size(max = 150)
     private String direccion;
 
@@ -58,7 +57,7 @@ public class Medico {
     @Past(message = "La fecha de nacimiento debe ser pasada")
     private LocalDate fechaNacimiento;
 
-    @NotBlank(message = "El género es obligatorio")
+    @NotNull(message = "El género es obligatorio")
     @Enumerated(EnumType.STRING)
     private Genero genero;
 
@@ -70,7 +69,6 @@ public class Medico {
 
     @NotNull(message = "Debe seleccionar una especialidad")
     @ManyToOne
-    @JsonIgnore
     @JoinColumn(name = "especialidad_id", nullable = false)
     private Especialidad especialidad;
 

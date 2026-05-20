@@ -6,7 +6,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @CrossOrigin(origins = "*")
@@ -41,14 +43,6 @@ public class MedicoController {
         return ResponseEntity.status(HttpStatus.CREATED).body(resultado);
     }
 
-    @PatchMapping("/{id}/estado")
-    public ResponseEntity<String> toggleActivo(@PathVariable Long id) {
-        String resultado = medicoService.toggleActivo(id);
-        if (resultado.equals("Médico no encontrado"))
-            return ResponseEntity.notFound().build();
-        return ResponseEntity.ok(resultado);
-    }
-
     @PatchMapping("/{medicoId}/especialidad/{especialidadId}")
     public ResponseEntity<String> updateEspecialidad(
             @PathVariable Long medicoId,
@@ -57,5 +51,35 @@ public class MedicoController {
         if (resultado.equals("Médico no encontrado") || resultado.equals("Especialidad no encontrada"))
             return ResponseEntity.notFound().build();
         return ResponseEntity.ok(resultado);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<?> update(@PathVariable Long id, @RequestBody MedicoDTO dto) {
+        String resultado = medicoService.update(id, dto);
+
+        if (resultado.equals("Médico no encontrado") || resultado.equals("Especialidad no encontrada")) {
+            return ResponseEntity.notFound().build();
+        }
+        if (resultado.equals("Ya existe un médico con ese DNI")) {
+            return ResponseEntity.badRequest().body(resultado);
+        }
+        Map<String, String> response = new HashMap<>();
+        response.put("mensaje", resultado);
+        return ResponseEntity.ok(response);
+    }
+
+    @PatchMapping("/{id}/estado")
+    public ResponseEntity<?> cambiarEstado(@PathVariable Long id) {
+
+        String resultado = medicoService.cambiarEstado(id);
+
+        if (resultado.equals("Médico no encontrado")) {
+            return ResponseEntity.notFound().build();
+        }
+
+        Map<String, String> response = new HashMap<>();
+        response.put("mensaje", resultado);
+
+        return ResponseEntity.ok(response);
     }
 }

@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { MedicosComponent } from './medicos-component';
 
 describe('MedicosComponent', () => {
@@ -7,13 +7,17 @@ describe('MedicosComponent', () => {
   let fixture: ComponentFixture<MedicosComponent>;
 
   beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [MedicosComponent],
-    }).compileComponents();
 
+    await TestBed.configureTestingModule({
+      imports: [
+        MedicosComponent,
+        HttpClientTestingModule
+      ]
+
+    }).compileComponents();
     fixture = TestBed.createComponent(MedicosComponent);
     component = fixture.componentInstance;
-    await fixture.whenStable();
+    fixture.detectChanges();
   });
 
   it('should create', () => {
