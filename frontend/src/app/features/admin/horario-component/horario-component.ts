@@ -41,18 +41,20 @@ export class HorarioComponent implements OnInit {
     private svc: HorarioMedicoService,
     private cdr: ChangeDetectorRef,
     private toast: GlobalToast,
-  ) {}
+  ) { }
 
   medicos: Medico[] = [];
   medicosFiltrados: Medico[] = [];
   medicosMostrados: Medico[] = [];
   consultorios: Consultorio[] = [];
   horariosPorMedico: Record<number, HorarioMedico[]> = {};
+  medicoIdParaBorrar: number | null = null;
 
   terminoBusqueda = '';
   filtroEspecialidad = '';
 
   displayModal = false;
+  displayDelete = false;
   modoEdicion = false;
   horarioEditandoId: number | null = null;
 
@@ -125,7 +127,6 @@ export class HorarioComponent implements OnInit {
       },
       error: (err) => {
         console.error(err);
-        // Error silencioso al cargar horarios individuales para no saturar de toasts
       },
     });
   }
@@ -185,36 +186,41 @@ export class HorarioComponent implements OnInit {
     this.displayModal = true;
   }
 
+  abrirConfirmacion(horario: HorarioMedico, medicoId: number): void {
+    this.horarioEditandoId = horario.id;
+    this.medicoIdParaBorrar = medicoId;
+    this.displayDelete = true;
+  }
+
   abrirEditarTurno(horario: HorarioMedico, medicoId: number): void {
     this.modoEdicion = true;
     this.horarioEditandoId = horario.id;
+    this.displayModal = false;
+
     this.horarioForm = {
-      medicoId,
-      consultorioId: this.consultorios[0]?.id ?? 0,
+      medicoId: medicoId,
+      consultorioId: horario.consultorio?.id ?? 0,
       dia: horario.dia,
       horaInicio: horario.horaInicio.slice(0, 5),
       horaFin: horario.horaFin.slice(0, 5),
     };
-    this.displayModal = true;
+
+    Promise.resolve().then(() => {
+      this.displayModal = true;
+      this.cdr.markForCheck();
+    });
   }
 
   guardar(): void {
-    if (!this.horarioForm.horaInicio || !this.horarioForm.horaFin) {
-      this.toast.warn('Por favor completa la hora de inicio y fin.', {
-        summary: 'Campos incompletos',
-      });
-      return;
-    }
-
     if (this.modoEdicion && this.horarioEditandoId !== null) {
-      this.svc.toggleActivo(this.horarioEditandoId).subscribe({
-        next: () => this.crearNuevo(),
-        error: (err) => {
-          console.error(err);
-          this.toast.error('No se pudo actualizar el turno. Intenta de nuevo.', {
-            summary: 'Error al modificar',
-          });
+      this.svc.actualizarHorario(this.horarioEditandoId, this.horarioForm).subscribe({
+        next: (res) => {
+          this.cargarHorarios(this.horarioForm.medicoId);
+          this.displayModal = false;
+          this.toast.success('Horario actualizado correctamente');
+          this.cdr.markForCheck();
         },
+        error: (err) => this.toast.error('Error al actualizar')
       });
     } else {
       this.crearNuevo();
@@ -250,21 +256,17 @@ export class HorarioComponent implements OnInit {
     });
   }
 
-  eliminarTurno(horario: HorarioMedico, medicoId: number): void {
-    this.svc.toggleActivo(horario.id).subscribe({
-      next: () => {
-        this.cargarHorarios(medicoId);
-        this.cdr.markForCheck();
-        this.toast.success('El turno fue eliminado correctamente.', {
-          summary: 'Turno eliminado',
-        });
-      },
-      error: (err) => {
-        console.error(err);
-        this.toast.error('No se pudo eliminar el turno. Intenta de nuevo.', {
-          summary: 'Error al eliminar',
-        });
-      },
-    });
+  confirmarEliminado(): void {
+    if (this.horarioEditandoId && this.medicoIdParaBorrar) {
+      this.svc.toggleActivo(this.horarioEditandoId).subscribe({
+        next: () => {
+          this.cargarHorarios(this.medicoIdParaBorrar!);
+          this.displayDelete = false;
+          this.toast.success('Eliminado correctamente');
+          this.cdr.markForCheck();
+        },
+        error: (err) => console.error(err)
+      });
+    }
   }
 }
