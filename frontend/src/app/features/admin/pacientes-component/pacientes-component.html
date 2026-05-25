@@ -1,1 +1,241 @@
-<p>pacientes-component works!</p>
+<div class="p-1">
+  <div class="bg-white rounded-3xl shadow-sm border border-blue-100/50 p-8 mb-6">
+    <div class="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-5">
+      <div>
+        <h3 class="text-4xl font-bold text-[#329791] mb-2">
+          Gestión de Pacientes
+        </h3>
+        <p class="text-gray-600 text-sm">
+          Administración completa del padrón de pacientes
+        </p>
+      </div>
+
+      <div class="flex flex-col sm:flex-row gap-3 items-center w-full lg:w-auto">
+        <div class="relative w-full sm:w-80">
+          <i class="pi pi-search absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 text-sm"></i>
+          <input
+            type="text"
+            [(ngModel)]="terminoBusqueda"
+            (input)="filtrar()"
+            placeholder="Buscar paciente (Nombre, DNI)..."
+            class="w-full pl-11 pr-4 h-12 rounded-xl border-2 border-gray-200 focus:border-[#329791] focus:ring-4 focus:ring-[#329791]/10 transition-all outline-none text-sm bg-white" />
+        </div>
+
+        <button
+          (click)="openNuevo()"
+          class="h-[48px] px-5 rounded-xl bg-[#329791] hover:bg-[#267c77] text-white font-bold text-sm transition-all shadow-sm cursor-pointer flex items-center gap-2 justify-center w-full sm:w-auto">
+          <i class="pi pi-plus"></i>
+          Nuevo Paciente
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden">
+    <p-table
+      [value]="pacientesFiltrados"
+      [paginator]="true"
+      [rows]="10"
+      [rowsPerPageOptions]="[5,10,20]"
+      [responsiveLayout]="'scroll'"
+      [loading]="loading"
+      class="min-w-full">
+
+      <ng-template pTemplate="header">
+        <tr class="bg-[#e4f1f1]/20 border-b border-[#e4f1f1]/10">
+          <th class="text-left px-6 py-4 text-xs font-black uppercase tracking-wider text-[#329791]">Paciente</th>
+          <th class="text-left px-6 py-4 text-xs font-black uppercase tracking-wider text-[#329791]">DNI</th>
+          <th class="text-left px-6 py-4 text-xs font-black uppercase tracking-wider text-[#329791]">Contacto</th>
+          <th class="text-center px-6 py-4 text-xs font-black uppercase tracking-wider text-[#329791]">Estado</th>
+          <th class="text-center px-6 py-4 text-xs font-black uppercase tracking-wider text-[#329791]">Acciones</th>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="body" let-p>
+        <tr class="border-b border-gray-100 hover:bg-[#329791]/[0.03] transition-all">
+          <td class="px-6 py-5">
+            <div class="flex items-center gap-4">
+              <div>
+                <h5 class="font-bold text-gray-800 text-sm">
+                  {{ p.nombre }} {{ p.apellidoPaterno }} {{ p.apellidoMaterno }}
+                </h5>
+                <p class="text-xs text-gray-400 mt-1">Registrado</p>
+              </div>
+            </div>
+          </td>
+
+          <td class="px-6 py-5">
+            <div class="font-bold text-gray-700 text-sm">{{ p.dni }}</div>
+          </td>
+
+          <td class="px-6 py-5">
+            <div class="space-y-2 text-sm text-gray-700">
+              <div class="flex items-center gap-2">
+                <i class="pi pi-phone text-[#329791] text-xs"></i>
+                {{ p.telefono || '---' }}
+              </div>
+              <div class="flex items-center gap-2">
+                <i class="pi pi-envelope text-[#329791] text-xs"></i>
+                <span class="truncate max-w-[220px] block">{{ p.email || '---' }}</span>
+              </div>
+            </div>
+          </td>
+
+          <td class="px-6 py-5 text-center">
+            <span [ngClass]="p.activo ? 'bg-green-100 text-green-700 px-4 py-2 rounded-full text-xs font-bold' : 'bg-red-100 text-red-700 px-4 py-2 rounded-full text-xs font-bold'">
+              {{ p.activo ? 'ACTIVO' : 'INACTIVO' }}
+            </span>
+          </td>
+
+          <td class="px-6 py-5">
+            <div class="flex items-center justify-center gap-2">
+              <button (click)="openEditar(p)" class="w-10 h-10 rounded-xl bg-blue-100 hover:bg-blue-200 text-blue-700 flex items-center justify-center cursor-pointer transition-all">
+                <i class="pi pi-pencil"></i>
+              </button>
+
+              <button (click)="toggleActivo(p)" class="px-4 py-2 rounded-xl text-white text-sm font-bold transition-all cursor-pointer" [ngClass]="p.activo ? 'bg-red-500 hover:bg-red-600' : 'bg-[#329791] hover:bg-[#267c77]'">
+                {{ p.activo ? 'Desactivar' : 'Activar' }}
+              </button>
+
+              <button (click)="eliminar(p)" class="w-10 h-10 rounded-xl bg-red-50 hover:bg-red-100 text-red-600 flex items-center justify-center cursor-pointer transition-all" title="Eliminar Permanentemente">
+                <i class="pi pi-trash"></i>
+              </button>
+            </div>
+          </td>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="emptymessage">
+        <tr>
+          <td colspan="5" class="text-center py-20 text-gray-400">
+            <i class="pi pi-user-minus text-6xl mb-4 block"></i>
+            <p class="font-semibold text-lg">No se encontraron pacientes</p>
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
+
+  <p-dialog
+    [header]="modoEdicion ? 'Editar Paciente' : 'Registrar Nuevo Paciente'"
+    [(visible)]="mostrarModal"
+    [modal]="true"
+    [style]="{ width: '750px' }"
+    [draggable]="false"
+    [resizable]="false">
+
+    <div class="grid grid-cols-2 gap-4 mt-4">
+      <div>
+        <label class="text-xs font-semibold text-gray-600 block mb-1">Nombre *</label>
+        <input
+          type="text"
+          [(ngModel)]="nuevoPaciente.nombre"
+          placeholder="Nombre"
+          class="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-[#267c77] outline-none transition-all" />
+      </div>
+
+      <div>
+        <label class="text-xs font-semibold text-gray-600 block mb-1">DNI *</label>
+        <input
+          type="text"
+          [(ngModel)]="nuevoPaciente.dni"
+          placeholder="DNI"
+          maxlength="8"
+          class="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-[#267c77] outline-none transition-all" />
+      </div>
+
+      <div>
+        <label class="text-xs font-semibold text-gray-600 block mb-1">Apellido Paterno *</label>
+        <input
+          type="text"
+          [(ngModel)]="nuevoPaciente.apellidoPaterno"
+          placeholder="Apellido Paterno"
+          class="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-[#267c77] outline-none transition-all" />
+      </div>
+
+      <div>
+        <label class="text-xs font-semibold text-gray-600 block mb-1">Apellido Materno *</label>
+        <input
+          type="text"
+          [(ngModel)]="nuevoPaciente.apellidoMaterno"
+          placeholder="Apellido Materno"
+          class="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-[#267c77] outline-none transition-all" />
+      </div>
+
+      <div>
+        <label class="text-xs font-semibold text-gray-600 block mb-1">Teléfono</label>
+        <input
+          type="text"
+          [(ngModel)]="nuevoPaciente.telefono"
+          placeholder="Teléfono"
+          maxlength="9"
+          class="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-[#267c77] outline-none transition-all" />
+      </div>
+
+      <div>
+        <label class="text-xs font-semibold text-gray-600 block mb-1">Dirección *</label>
+        <input
+          type="text"
+          [(ngModel)]="nuevoPaciente.direccion"
+          placeholder="Dirección"
+          class="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-[#267c77] outline-none transition-all" />
+      </div>
+
+      <div>
+        <label class="text-xs font-semibold text-gray-600 block mb-1">Correo Electrónico</label>
+        <input
+          type="email"
+          [(ngModel)]="nuevoPaciente.email"
+          placeholder="ejemplo@correo.com"
+          class="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-[#267c77] outline-none transition-all" />
+      </div>
+
+      <div class="col-span-2 sm:col-span-1">
+        <label class="text-xs font-semibold text-gray-600 block mb-1">Fecha de Nacimiento</label>
+        <input
+          type="date"
+          [(ngModel)]="nuevoPaciente.fechaNacimiento"
+          class="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-[#267c77] outline-none transition-all" />
+      </div>
+
+      <div class="flex flex-col">
+        <label class="text-xs font-semibold text-gray-600 block mb-1">Género *</label>
+        <select [(ngModel)]="nuevoPaciente.genero" class="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-[#267c77] outline-none">
+          <option [ngValue]="null">Seleccione género</option>
+          <option [value]="'MASCULINO'">Masculino</option>
+          <option [value]="'FEMENINO'">Femenino</option>
+        </select>
+      </div>
+
+      <div class="flex flex-col">
+        <label class="text-xs font-semibold text-gray-600 block mb-1">Grupo Sanguíneo *</label>
+        <select [(ngModel)]="nuevoPaciente.grupoSanguineo" class="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-[#267c77] outline-none">
+          <option [ngValue]="null">Seleccione grupo</option>
+          <option [value]="'O_POSITIVO'">O+</option>
+          <option [value]="'O_NEGATIVO'">O-</option>
+          <option [value]="'A_POSITIVO'">A+</option>
+          <option [value]="'A_NEGATIVO'">A-</option>
+          <option [value]="'B_POSITIVO'">B+</option>
+          <option [value]="'B_NEGATIVO'">B-</option>
+          <option [value]="'AB_POSITIVO'">AB+</option>
+          <option [value]="'AB_NEGATIVO'">AB-</option>
+        </select>
+      </div>
+    </div>
+
+    <ng-template pTemplate="footer">
+      <div class="flex justify-end gap-3 pt-4">
+        <button
+          (click)="mostrarModal = false"
+          class="px-5 py-2.5 rounded-xl bg-red-500 hover:bg-red-600 text-white font-bold cursor-pointer transition-all">
+          Cancelar
+        </button>
+        <button
+          (click)="guardar()"
+          class="px-5 py-2.5 rounded-xl bg-[#329791] hover:bg-[#267c77] text-white font-bold cursor-pointer transition-all">
+          {{ modoEdicion ? 'Actualizar' : 'Guardar' }}
+        </button>
+      </div>
+    </ng-template>
+  </p-dialog>
+</div>

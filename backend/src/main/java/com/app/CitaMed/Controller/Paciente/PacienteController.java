@@ -17,7 +17,15 @@ public class PacienteController {
     private final PacienteService pacienteService;
 
     @GetMapping
-    public ResponseEntity<List<Paciente>> findAll() {
+    public ResponseEntity<?> findAll(
+            @org.springframework.web.bind.annotation.RequestParam(required = false) Integer page,
+            @org.springframework.web.bind.annotation.RequestParam(required = false) Integer size
+    ) {
+        if (page != null && size != null) {
+            org.springframework.data.domain.Pageable pageable = org.springframework.data.domain.PageRequest.of(page, size);
+            org.springframework.data.domain.Page<Paciente> result = pacienteService.findAll(pageable);
+            return ResponseEntity.ok(result);
+        }
         return ResponseEntity.ok(pacienteService.findAll());
     }
 
@@ -36,18 +44,34 @@ public class PacienteController {
     }
 
     @PostMapping
-    public ResponseEntity<String> save(@RequestBody PacienteDTO dto) {
+    public ResponseEntity<java.util.Map<String, String>> save(@RequestBody @jakarta.validation.Valid PacienteDTO dto) {
         String resultado = pacienteService.save(dto);
         if (!resultado.equals("Paciente registrado correctamente"))
-            return ResponseEntity.badRequest().body(resultado);
-        return ResponseEntity.status(HttpStatus.CREATED).body(resultado);
+            return ResponseEntity.badRequest().body(java.util.Map.of("mensaje", resultado));
+        return ResponseEntity.status(HttpStatus.CREATED).body(java.util.Map.of("mensaje", resultado));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<String> update(@PathVariable Long id, @RequestBody PacienteDTO dto) {
+    public ResponseEntity<java.util.Map<String, String>> update(@PathVariable Long id, @RequestBody @jakarta.validation.Valid PacienteDTO dto) {
         String resultado = pacienteService.update(id, dto);
         if (resultado.equals("Paciente no encontrado"))
             return ResponseEntity.notFound().build();
-        return ResponseEntity.ok(resultado);
+        return ResponseEntity.ok(java.util.Map.of("mensaje", resultado));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<java.util.Map<String, String>> delete(@PathVariable Long id) {
+        String resultado = pacienteService.delete(id);
+        if (resultado.equals("Paciente no encontrado"))
+            return ResponseEntity.notFound().build();
+        return ResponseEntity.ok(java.util.Map.of("mensaje", resultado));
+    }
+
+    @PatchMapping("/{id}/estado")
+    public ResponseEntity<java.util.Map<String, String>> toggleEstado(@PathVariable Long id) {
+        String resultado = pacienteService.toggleEstado(id);
+        if (resultado.equals("Paciente no encontrado"))
+            return ResponseEntity.notFound().build();
+        return ResponseEntity.ok(java.util.Map.of("mensaje", resultado));
     }
 }

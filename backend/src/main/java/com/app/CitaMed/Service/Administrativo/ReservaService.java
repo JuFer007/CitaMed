@@ -88,23 +88,40 @@ public class ReservaService {
 
     @Transactional
     public String procesarReserva(ReservaDTO dto) {
-        Paciente paciente = pacienteRepository.findByDni(dto.getDni());
+        Paciente paciente = pacienteRepository.findByDniAndActivoTrue(dto.getDni());
         if (paciente == null) {
-            paciente = new Paciente();
-            paciente.setNombre(dto.getNombre().toUpperCase());
-            paciente.setApellidoPaterno(dto.getApellidoPaterno().toUpperCase());
-            paciente.setApellidoMaterno(dto.getApellidoMaterno().toUpperCase());
-            paciente.setDni(dto.getDni());
-            paciente.setTelefono(dto.getTelefono());
-            paciente.setEmail(dto.getEmail());
-            paciente.setDireccion(dto.getDireccion());
-            paciente.setFechaNacimiento(dto.getFechaNacimiento());
-            paciente.setGenero(Genero.valueOf(dto.getGenero()));
-            paciente.setGrupoSanguineo(GrupoSanguineo.valueOf(dto.getGrupoSanguineo()));
-            pacienteRepository.save(paciente);
-            HistorialMedico historial = new HistorialMedico();
-            historial.setPaciente(paciente);
-            historialMedicoRepository.save(historial);
+            // check if there's an inactive patient with same DNI
+            Paciente posibleInactivo = pacienteRepository.findByDni(dto.getDni());
+            if (posibleInactivo != null) {
+                // reactivate and update
+                posibleInactivo.setActivo(true);
+                posibleInactivo.setNombre(dto.getNombre().toUpperCase());
+                posibleInactivo.setApellidoPaterno(dto.getApellidoPaterno().toUpperCase());
+                posibleInactivo.setApellidoMaterno(dto.getApellidoMaterno().toUpperCase());
+                posibleInactivo.setTelefono(dto.getTelefono());
+                posibleInactivo.setEmail(dto.getEmail());
+                posibleInactivo.setDireccion(dto.getDireccion());
+                posibleInactivo.setFechaNacimiento(dto.getFechaNacimiento());
+                posibleInactivo.setGenero(Genero.valueOf(dto.getGenero()));
+                posibleInactivo.setGrupoSanguineo(GrupoSanguineo.valueOf(dto.getGrupoSanguineo()));
+                paciente = pacienteRepository.save(posibleInactivo);
+            } else {
+                paciente = new Paciente();
+                paciente.setNombre(dto.getNombre().toUpperCase());
+                paciente.setApellidoPaterno(dto.getApellidoPaterno().toUpperCase());
+                paciente.setApellidoMaterno(dto.getApellidoMaterno().toUpperCase());
+                paciente.setDni(dto.getDni());
+                paciente.setTelefono(dto.getTelefono());
+                paciente.setEmail(dto.getEmail());
+                paciente.setDireccion(dto.getDireccion());
+                paciente.setFechaNacimiento(dto.getFechaNacimiento());
+                paciente.setGenero(Genero.valueOf(dto.getGenero()));
+                paciente.setGrupoSanguineo(GrupoSanguineo.valueOf(dto.getGrupoSanguineo()));
+                pacienteRepository.save(paciente);
+                HistorialMedico historial = new HistorialMedico();
+                historial.setPaciente(paciente);
+                historialMedicoRepository.save(historial);
+            }
         }
 
         Medico medico = medicoRepository.findById(dto.getMedicoId()).orElseThrow(() -> new RuntimeException("Médico no encontrado"));

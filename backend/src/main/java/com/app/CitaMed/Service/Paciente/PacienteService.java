@@ -16,7 +16,12 @@ public class PacienteService {
     private final HistorialMedicoRepository historialMedicoRepository;
 
     public List<Paciente> findAll() {
-        return pacienteRepository.findAll();
+        return pacienteRepository.findByActivoTrue();
+    }
+
+    // Pageable version for clients
+    public org.springframework.data.domain.Page<Paciente> findAll(org.springframework.data.domain.Pageable pageable) {
+        return pacienteRepository.findByActivoTrue(pageable);
     }
 
     public Paciente findById(Long id) {
@@ -24,7 +29,7 @@ public class PacienteService {
     }
 
     public Paciente findByDni(String dni) {
-        return pacienteRepository.findByDni(dni);
+        return pacienteRepository.findByDniAndActivoTrue(dni);
     }
 
     public String save(PacienteDTO dto) {
@@ -62,5 +67,23 @@ public class PacienteService {
         paciente.setEmail(dto.getEmail());
         pacienteRepository.save(paciente);
         return "Paciente actualizado correctamente";
+    }
+
+    public String delete(Long id) {
+        Paciente paciente = pacienteRepository.findById(id).orElse(null);
+        if (paciente == null) {
+            return "Paciente no encontrado";
+        }
+        paciente.setActivo(false);
+        pacienteRepository.save(paciente);
+        return "Paciente eliminado correctamente";
+    }
+
+    public String toggleEstado(Long id) {
+        Paciente paciente = pacienteRepository.findById(id).orElse(null);
+        if (paciente == null) return "Paciente no encontrado";
+        paciente.setActivo(paciente.getActivo() == null ? false : !paciente.getActivo());
+        pacienteRepository.save(paciente);
+        return paciente.getActivo() ? "Paciente activado" : "Paciente desactivado";
     }
 }

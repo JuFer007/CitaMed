@@ -67,4 +67,7 @@ public class Paciente {
     @JsonIgnore
     @OneToOne(mappedBy = "paciente", cascade = CascadeType.ALL)
     private HistorialMedico historialMedico;
+
+    // Soft delete flag
+    private Boolean activo = true;
 }

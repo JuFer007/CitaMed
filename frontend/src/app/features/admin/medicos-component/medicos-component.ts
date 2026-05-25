@@ -28,6 +28,8 @@ import {
   Accessibility,
   User,
 } from 'lucide-angular';
+import { PaginatorModule } from 'primeng/paginator';
+import { TableModule } from 'primeng/table';
 
 @Component({
   selector: 'app-medicos',
@@ -38,10 +40,11 @@ import {
     HttpClientModule,
     DialogModule,
     ButtonModule,
+    TableModule,
+    PaginatorModule,
     LucideAngularModule,
   ],
   templateUrl: './medicos-component.html',
-  styleUrls: ['./medicos-component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MedicosComponent implements OnInit {
