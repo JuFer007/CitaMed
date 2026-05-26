@@ -1,0 +1,44 @@
+export interface Cita {
+  id: number;
+  paciente: {
+    id: number;
+    nombre: string;
+    apellidoPaterno: string;
+    apellidoMaterno: string;
+    dni: string;
+  };
+  medico: {
+    id: number;
+    nombre: string;
+    apellidoPaterno: string;
+    apellidoMaterno: string;
+    especialidad: {
+      id: number;
+      nombre: string;
+    };
+  };
+  consultorio: {
+    id: number;
+    numero: string;
+    descripcion: string;
+  };
+  fechaHora: string;
+  motivoConsulta: string;
+  estado: EstadoCita;
+}
+
+export interface CitaDTO {
+  pacienteId: number;
+  medicoId: number;
+  consultorioId: number;
+  fechaHora: string;
+  motivoConsulta: string;
+}
+
+export enum EstadoCita {
+  PROGRAMADA = 'PROGRAMADA',
+  ATENDIDA = 'ATENDIDA',
+  CANCELADA = 'CANCELADA',
+  NO_ASISTIO = 'NO_ASISTIO'
+}
+
