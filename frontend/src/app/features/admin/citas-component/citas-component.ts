@@ -45,7 +45,6 @@ interface FiltroEstado {
   styleUrl: './citas-component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-
 export class CitasComponent implements OnInit {
   citas: CitaDetalle[] = [];
   citasFiltradas: CitaDetalle[] = [];
@@ -63,7 +62,7 @@ export class CitasComponent implements OnInit {
   mostrarReprogramarModal = false;
   modoEdicion = false;
 
-  citaForm: CitaDTO = this.resetCitaForm();
+  nuevaCita: CitaDTO = this.resetCitaForm();
   fechaHoraCita: Date | null = null;
   especialidadSeleccionada: number | null = null;
 
@@ -185,27 +184,10 @@ export class CitasComponent implements OnInit {
   abrirNuevaCita(): void {
     this.modoEdicion = false;
     this.citaEditandoId = null;
-    this.citaForm = this.resetCitaForm();
+    this.nuevaCita = this.resetCitaForm();
     this.fechaHoraCita = null;
     this.especialidadSeleccionada = null;
     this.medicosFiltrados = [...this.medicos];
-    this.mostrarModal = true;
-  }
-
-  abrirEditarCita(cita: CitaDetalle): void {
-    this.modoEdicion = true;
-    this.citaEditandoId = cita.id;
-    this.especialidadSeleccionada = null;
-    this.medicosFiltrados = [...this.medicos];
-
-    this.citaForm = {
-      pacienteId: cita.pacienteId,
-      medicoId:   cita.medicoId,
-      consultorioId: cita.consultorioId,
-      fechaHora:  cita.fechaHora,
-      motivoConsulta: cita.motivoConsulta,
-    };
-    this.fechaHoraCita = new Date(cita.fechaHora);
     this.mostrarModal = true;
   }
 
@@ -221,7 +203,7 @@ export class CitasComponent implements OnInit {
   }
 
   onEspecialidadChange(): void {
-    this.citaForm.medicoId = 0;
+    this.nuevaCita.medicoId = 0;
     if (!this.especialidadSeleccionada) {
       this.medicosFiltrados = [...this.medicos];
     } else {
@@ -235,21 +217,21 @@ export class CitasComponent implements OnInit {
   }
 
   guardarCita(): void {
-    if (!this.citaForm.pacienteId)   { this.toast.warn('Seleccione un paciente');    return; }
-    if (!this.citaForm.medicoId)     { this.toast.warn('Seleccione un médico');      return; }
-    if (!this.citaForm.consultorioId){ this.toast.warn('Seleccione un consultorio'); return; }
-    if (!this.fechaHoraCita)         { this.toast.warn('Seleccione fecha y hora');   return; }
-    if (!this.citaForm.motivoConsulta.trim()) { this.toast.warn('Ingrese el motivo'); return; }
+    if (!this.nuevaCita.pacienteId)    { this.toast.warn('Seleccione un paciente');    return; }
+    if (!this.nuevaCita.medicoId)      { this.toast.warn('Seleccione un médico');      return; }
+    if (!this.nuevaCita.consultorioId) { this.toast.warn('Seleccione un consultorio'); return; }
+    if (!this.fechaHoraCita)           { this.toast.warn('Seleccione fecha y hora');   return; }
+    if (!this.nuevaCita.motivoConsulta.trim()) { this.toast.warn('Ingrese el motivo'); return; }
 
-    this.citaForm.fechaHora = this.fechaHoraCita.toISOString();
+    this.nuevaCita.fechaHora = this.fechaHoraCita.toISOString();
 
     if (this.modoEdicion && this.citaEditandoId) {
-      this.citaService.actualizar(this.citaEditandoId, this.citaForm).subscribe({
+      this.citaService.actualizar(this.citaEditandoId, this.nuevaCita).subscribe({
         next: (res) => { this.toast.success(res); this.cerrarModalYRecargar(); },
         error: (err) => this.toast.error(err.error || 'Error al actualizar la cita'),
       });
     } else {
-      this.citaService.registrar(this.citaForm).subscribe({
+      this.citaService.registrar(this.nuevaCita).subscribe({
         next: (res) => { this.toast.success(res); this.cerrarModalYRecargar(); },
         error: (err) => this.toast.error(err.error || 'Error al registrar la cita'),
       });
@@ -262,13 +244,18 @@ export class CitasComponent implements OnInit {
       return;
     }
     this.citaService.reprogramar(this.citaSeleccionada.id, this.nuevaFechaReprogramacion.toISOString()).subscribe({
-      next: (res) => { this.toast.success(res); this.mostrarReprogramarModal = false; this.cargarCitas(); },
+      next: (res) => {
+        this.toast.success(res);
+        this.mostrarReprogramarModal = false;
+        this.cargarCitas();
+      },
       error: (err) => this.toast.error(err.error || 'Error al reprogramar'),
     });
   }
 
   cancelarCita(cita: CitaDetalle): void {
-    if (!confirm(`¿Cancelar la cita de ${cita.pacienteNombre} ${cita.pacienteApellidoPaterno}?`)) return;
+    const nombre = `${cita.pacienteNombre} ${cita.pacienteApellidoPaterno}`;
+    if (!confirm(`¿Cancelar la cita de ${nombre}?`)) return;
     this.citaService.cancelar(cita.id).subscribe({
       next: (res) => { this.toast.success(res); this.cargarCitas(); },
       error: (err) => this.toast.error(err.error || 'Error al cancelar'),
@@ -298,23 +285,34 @@ export class CitasComponent implements OnInit {
     return { pacienteId: 0, medicoId: 0, consultorioId: 0, fechaHora: '', motivoConsulta: '' };
   }
 
-  nombreCompleto(nombre: string, ap: string, am: string): string {
-    return `${nombre} ${ap} ${am}`;
+  /** Construye nombre completo de paciente desde campos planos del DTO */
+  nombrePaciente(cita: CitaDetalle): string {
+    return `${cita.pacienteNombre} ${cita.pacienteApellidoPaterno} ${cita.pacienteApellidoMaterno}`;
+  }
+
+  /** Construye nombre completo de médico desde campos planos del DTO */
+  nombreMedico(cita: CitaDetalle): string {
+    return `${cita.medicoNombre} ${cita.medicoApellidoPaterno} ${cita.medicoApellidoMaterno}`;
+  }
+
+  /** Nombre completo para paciente/medico desde objeto Medico o Paciente en listas del formulario */
+  obtenerNombreCompleto(entidad: any): string {
+    if (!entidad) return '';
+    return `${entidad.nombre ?? ''} ${entidad.apellidoPaterno ?? ''} ${entidad.apellidoMaterno ?? ''}`.trim();
   }
 
   obtenerClaseEstado(estado: EstadoCita): string {
     const map: Record<EstadoCita, string> = {
-      [EstadoCita.PROGRAMADA]: 'bg-teal-light text-teal-dark',
-      [EstadoCita.ATENDIDA]:   'bg-green-bg text-green-text',
-      [EstadoCita.CANCELADA]:  'bg-red-bg text-red-text',
-      [EstadoCita.NO_ASISTIO]: 'bg-amber-bg text-amber-text',
+      [EstadoCita.PROGRAMADA]: 'bg-teal-100 text-teal-800',
+      [EstadoCita.ATENDIDA]:   'bg-green-100 text-green-800',
+      [EstadoCita.CANCELADA]:  'bg-red-100 text-red-800',
+      [EstadoCita.NO_ASISTIO]: 'bg-amber-100 text-amber-800',
     };
     return map[estado] ?? '';
   }
 
-  puedeReprogramar  = (c: CitaDetalle) => c.estado === EstadoCita.PROGRAMADA;
-  puedeCancelar     = (c: CitaDetalle) => c.estado === EstadoCita.PROGRAMADA;
-  puedeCompletar    = (c: CitaDetalle) => c.estado === EstadoCita.PROGRAMADA;
+  puedeReprogramar     = (c: CitaDetalle) => c.estado === EstadoCita.PROGRAMADA;
+  puedeCancelar        = (c: CitaDetalle) => c.estado === EstadoCita.PROGRAMADA;
+  puedeCompletar       = (c: CitaDetalle) => c.estado === EstadoCita.PROGRAMADA;
   puedeMarcarNoAsistio = (c: CitaDetalle) => c.estado === EstadoCita.PROGRAMADA;
-  puedeEditar       = (c: CitaDetalle) => c.estado === EstadoCita.PROGRAMADA;
 }

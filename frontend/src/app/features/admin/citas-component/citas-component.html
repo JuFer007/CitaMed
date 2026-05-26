@@ -1,4 +1,3 @@
-<!-- frontend/src/app/features/admin/citas-component/citas-component.html -->
 <div class="p-1">
   <!-- HEADER -->
   <div class="bg-white rounded-3xl shadow-sm border border-blue-100/50 p-8 mb-6">
@@ -57,7 +56,7 @@
           class="w-full h-12 px-4 rounded-xl border-2 border-gray-200 focus:border-[#329791] focus:ring-4 focus:ring-[#329791]/10 transition-all outline-none text-sm bg-white">
           <option [ngValue]="null">Todos los médicos</option>
           <option *ngFor="let m of medicos" [ngValue]="m.id">
-            {{ obtenerNombreCompleto(m) }} - {{ m.especialidad.nombre }}
+            {{ obtenerNombreCompleto(m) }} — {{ m.especialidad?.nombre }}
           </option>
         </select>
       </div>
@@ -107,7 +106,7 @@
       [value]="citasFiltradas"
       [paginator]="true"
       [rows]="10"
-      [rowsPerPageOptions]="[5,10,20,50]"
+      [rowsPerPageOptions]="[5, 10, 20, 50]"
       [responsiveLayout]="'scroll'"
       class="min-w-full">
 
@@ -124,24 +123,25 @@
 
       <ng-template pTemplate="body" let-cita>
         <tr class="border-b border-gray-100 hover:bg-[#329791]/[0.03] transition-all">
-          <!-- Paciente -->
+
+          <!-- Paciente — usa campos planos del DTO -->
           <td class="px-6 py-5">
             <div>
               <h5 class="font-bold text-gray-800 text-sm">
-                {{ obtenerNombreCompleto(cita.paciente) }}
+                {{ nombrePaciente(cita) }}
               </h5>
-              <p class="text-xs text-gray-400 mt-1">DNI: {{ cita.paciente.dni }}</p>
+              <p class="text-xs text-gray-400 mt-1">DNI: {{ cita.pacienteDni }}</p>
             </div>
           </td>
 
-          <!-- Médico -->
+          <!-- Médico — usa campos planos del DTO -->
           <td class="px-6 py-5">
             <div>
               <h5 class="font-semibold text-gray-700 text-sm">
-                {{ obtenerNombreCompleto(cita.medico) }}
+                {{ nombreMedico(cita) }}
               </h5>
               <span class="inline-block px-2 py-0.5 rounded-full bg-[#329791]/10 text-[#329791] text-xs font-semibold mt-1">
-                {{ cita.medico.especialidad.nombre }}
+                {{ cita.medicoEspecialidad }}
               </span>
             </div>
           </td>
@@ -149,10 +149,10 @@
           <!-- Consultorio -->
           <td class="px-6 py-5">
             <div class="font-semibold text-gray-700 text-sm">
-              Consultorio {{ cita.consultorio.numero }}
+              Consultorio {{ cita.consultorioNumero }}
             </div>
             <div class="text-xs text-gray-400">
-              {{ cita.consultorio.descripcion }}
+              {{ cita.consultorioDescripcion }}
             </div>
           </td>
 
@@ -240,7 +240,9 @@
   </div>
 </div>
 
-<!-- MODAL: NUEVA CITA -->
+<!-- ══════════════════════════════════════════
+     MODAL: NUEVA / EDITAR CITA
+══════════════════════════════════════════ -->
 <p-dialog
   header="Registrar Nueva Cita"
   [(visible)]="mostrarModal"
@@ -250,6 +252,19 @@
   [resizable]="false">
 
   <div class="grid grid-cols-2 gap-4 mt-4">
+
+    <!-- Filtro por especialidad (opcional, facilita búsqueda de médico) -->
+    <div class="col-span-2">
+      <label class="text-xs font-semibold text-gray-600 block mb-2">Filtrar médico por especialidad</label>
+      <select
+        [(ngModel)]="especialidadSeleccionada"
+        (change)="onEspecialidadChange()"
+        class="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-[#329791] outline-none transition-all">
+        <option [ngValue]="null">Todas las especialidades</option>
+        <option *ngFor="let e of especialidades" [ngValue]="e.id">{{ e.nombre }}</option>
+      </select>
+    </div>
+
     <!-- Paciente -->
     <div class="col-span-2">
       <label class="text-xs font-semibold text-gray-600 block mb-2">Paciente *</label>
@@ -258,7 +273,7 @@
         class="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-[#329791] outline-none transition-all">
         <option [ngValue]="0">Seleccione un paciente</option>
         <option *ngFor="let p of pacientes" [ngValue]="p.id">
-          {{ obtenerNombreCompleto(p) }} - {{ p.dni }}
+          {{ obtenerNombreCompleto(p) }} — {{ p.dni }}
         </option>
       </select>
     </div>
@@ -270,8 +285,8 @@
         [(ngModel)]="nuevaCita.medicoId"
         class="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-[#329791] outline-none transition-all">
         <option [ngValue]="0">Seleccione un médico</option>
-        <option *ngFor="let m of medicos" [ngValue]="m.id">
-          {{ obtenerNombreCompleto(m) }} - {{ m.especialidad.nombre }}
+        <option *ngFor="let m of medicosFiltrados" [ngValue]="m.id">
+          {{ obtenerNombreCompleto(m) }} — {{ m.especialidad?.nombre }}
         </option>
       </select>
     </div>
@@ -284,7 +299,7 @@
         class="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-[#329791] outline-none transition-all">
         <option [ngValue]="0">Seleccione consultorio</option>
         <option *ngFor="let c of consultorios" [ngValue]="c.id">
-          Consultorio {{ c.numero }} - {{ c.descripcion }}
+          Consultorio {{ c.numero }} — {{ c.descripcion }}
         </option>
       </select>
     </div>
@@ -337,7 +352,9 @@
   </ng-template>
 </p-dialog>
 
-<!-- MODAL: DETALLE DE CITA -->
+<!-- ══════════════════════════════════════════
+     MODAL: DETALLE DE CITA
+══════════════════════════════════════════ -->
 <p-dialog
   header="Detalle de Cita"
   [(visible)]="mostrarDetalleModal"
@@ -347,6 +364,7 @@
   [resizable]="false">
 
   <div *ngIf="citaSeleccionada" class="space-y-4">
+
     <!-- Estado -->
     <div class="bg-[#e4f1f1]/20 rounded-xl p-4 border-l-4 border-[#329791]">
       <div class="flex items-center justify-between">
@@ -359,83 +377,67 @@
       </div>
     </div>
 
-    <!-- Información del Paciente -->
+    <!-- Paciente -->
     <div class="border-b border-gray-200 pb-4">
       <h4 class="text-sm font-bold text-[#329791] mb-3 uppercase tracking-wide">
-        <i class="pi pi-user mr-2"></i>
-        Paciente
+        <i class="pi pi-user mr-2"></i>Paciente
       </h4>
       <div class="space-y-2">
         <div class="flex justify-between">
           <span class="text-sm text-gray-600">Nombre:</span>
-          <span class="text-sm font-semibold text-gray-800">
-            {{ obtenerNombreCompleto(citaSeleccionada.paciente) }}
-          </span>
+          <span class="text-sm font-semibold text-gray-800">{{ nombrePaciente(citaSeleccionada) }}</span>
         </div>
         <div class="flex justify-between">
           <span class="text-sm text-gray-600">DNI:</span>
-          <span class="text-sm font-semibold text-gray-800">
-            {{ citaSeleccionada.paciente.dni }}
-          </span>
+          <span class="text-sm font-semibold text-gray-800">{{ citaSeleccionada.pacienteDni }}</span>
         </div>
       </div>
     </div>
 
-    <!-- Información del Médico -->
+    <!-- Médico -->
     <div class="border-b border-gray-200 pb-4">
       <h4 class="text-sm font-bold text-[#329791] mb-3 uppercase tracking-wide">
-        <i class="pi pi-id-card mr-2"></i>
-        Médico Asignado
+        <i class="pi pi-id-card mr-2"></i>Médico Asignado
       </h4>
       <div class="space-y-2">
         <div class="flex justify-between">
           <span class="text-sm text-gray-600">Nombre:</span>
-          <span class="text-sm font-semibold text-gray-800">
-            {{ obtenerNombreCompleto(citaSeleccionada.medico) }}
-          </span>
+          <span class="text-sm font-semibold text-gray-800">{{ nombreMedico(citaSeleccionada) }}</span>
         </div>
         <div class="flex justify-between">
           <span class="text-sm text-gray-600">Especialidad:</span>
-          <span class="text-sm font-semibold text-gray-800">
-            {{ citaSeleccionada.medico.especialidad.nombre }}
-          </span>
+          <span class="text-sm font-semibold text-gray-800">{{ citaSeleccionada.medicoEspecialidad }}</span>
         </div>
       </div>
     </div>
 
-    <!-- Detalles de la Cita -->
+    <!-- Detalles -->
     <div class="border-b border-gray-200 pb-4">
       <h4 class="text-sm font-bold text-[#329791] mb-3 uppercase tracking-wide">
-        <i class="pi pi-calendar mr-2"></i>
-        Detalles de la Cita
+        <i class="pi pi-calendar mr-2"></i>Detalles de la Cita
       </h4>
       <div class="space-y-2">
         <div class="flex justify-between">
           <span class="text-sm text-gray-600">Fecha:</span>
-          <span class="text-sm font-semibold text-gray-800">
-            {{ citaSeleccionada.fechaHora | date:'dd/MM/yyyy' }}
-          </span>
+          <span class="text-sm font-semibold text-gray-800">{{ citaSeleccionada.fechaHora | date:'dd/MM/yyyy' }}</span>
         </div>
         <div class="flex justify-between">
           <span class="text-sm text-gray-600">Hora:</span>
-          <span class="text-sm font-semibold text-gray-800">
-            {{ citaSeleccionada.fechaHora | date:'HH:mm' }}
-          </span>
+          <span class="text-sm font-semibold text-gray-800">{{ citaSeleccionada.fechaHora | date:'HH:mm' }}</span>
         </div>
         <div class="flex justify-between">
           <span class="text-sm text-gray-600">Consultorio:</span>
           <span class="text-sm font-semibold text-gray-800">
-            {{ citaSeleccionada.consultorio.numero }} - {{ citaSeleccionada.consultorio.descripcion }}
+            {{ citaSeleccionada.consultorioNumero }} — {{ citaSeleccionada.consultorioDescripcion }}
           </span>
         </div>
       </div>
     </div>
 
-    <!-- Motivo de Consulta -->
+    <!-- Motivo -->
     <div>
       <h4 class="text-sm font-bold text-[#329791] mb-2 uppercase tracking-wide">
-        <i class="pi pi-file-edit mr-2"></i>
-        Motivo de Consulta
+        <i class="pi pi-file-edit mr-2"></i>Motivo de Consulta
       </h4>
       <p class="text-sm text-gray-700 bg-gray-50 p-3 rounded-lg">
         {{ citaSeleccionada.motivoConsulta }}
@@ -454,7 +456,9 @@
   </ng-template>
 </p-dialog>
 
-<!-- MODAL: REPROGRAMAR CITA -->
+<!-- ══════════════════════════════════════════
+     MODAL: REPROGRAMAR CITA
+══════════════════════════════════════════ -->
 <p-dialog
   header="Reprogramar Cita"
   [(visible)]="mostrarReprogramarModal"
@@ -464,12 +468,13 @@
   [resizable]="false">
 
   <div *ngIf="citaSeleccionada" class="space-y-4">
-    <!-- Información actual -->
+
+    <!-- Info actual -->
     <div class="bg-amber-50 border-l-4 border-amber-500 p-4 rounded-lg">
       <h5 class="text-sm font-bold text-amber-800 mb-2">Cita Actual</h5>
       <div class="space-y-1">
         <p class="text-sm text-amber-700">
-          <strong>Paciente:</strong> {{ obtenerNombreCompleto(citaSeleccionada.paciente) }}
+          <strong>Paciente:</strong> {{ nombrePaciente(citaSeleccionada) }}
         </p>
         <p class="text-sm text-amber-700">
           <strong>Fecha actual:</strong> {{ citaSeleccionada.fechaHora | date:'dd/MM/yyyy HH:mm' }}
@@ -479,9 +484,7 @@
 
     <!-- Nueva fecha -->
     <div>
-      <label class="text-sm font-semibold text-gray-700 block mb-2">
-        Nueva Fecha y Hora *
-      </label>
+      <label class="text-sm font-semibold text-gray-700 block mb-2">Nueva Fecha y Hora *</label>
       <p-datepicker
         [(ngModel)]="nuevaFechaReprogramacion"
         [showTime]="true"
