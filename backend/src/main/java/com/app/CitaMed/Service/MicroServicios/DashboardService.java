@@ -156,8 +156,8 @@ public class DashboardService {
 
         try {
             DashboardDTO stats = new DashboardDTO(
-                    citaRepository.countByFechaHoraBetween(inicioHoy, finHoy),
-                    citaRepository.countByFechaHoraBetween(inicioAyer, finAyer),
+                    citaRepository.countByFechaHoraBetweenAndEstadoNot(inicioHoy, finHoy, EstadoCita.CANCELADA),
+                    citaRepository.countByFechaHoraBetweenAndEstadoNot(inicioAyer, finAyer, EstadoCita.CANCELADA),
                     citaRepository.pacientesActivos(inicioMes, finMes),
                     citaRepository.pacientesActivos(inicioMesAnt, finMesAnt),
                     pagoRepository.ingresos(inicioMes, finMes),

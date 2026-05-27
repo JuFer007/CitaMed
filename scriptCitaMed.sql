@@ -10,11 +10,9 @@ INSERT INTO Usuarios (user_name, password, rol, activo) VALUES
 ('marcelo.alarcon',    '$2a$10$800I/8HGwCkjx0iApGb/kevpKOnZ1jp2UjTTWCg9CKaUNKdFhoywa', 'ADMIN',          true),
 ('cristian.huaman',    '$2a$10$800I/8HGwCkjx0iApGb/kevpKOnZ1jp2UjTTWCg9CKaUNKdFhoywa', 'ADMIN',          true),
 ('junior.zumaeta',     '$2a$10$800I/8HGwCkjx0iApGb/kevpKOnZ1jp2UjTTWCg9CKaUNKdFhoywa', 'ADMIN',          true),
--- Recepcionistas
 ('recep01',            '$2a$10$800I/8HGwCkjx0iApGb/kevpKOnZ1jp2UjTTWCg9CKaUNKdFhoywa', 'RECEPCIONISTA',  true),
 ('recep02',            '$2a$10$800I/8HGwCkjx0iApGb/kevpKOnZ1jp2UjTTWCg9CKaUNKdFhoywa', 'RECEPCIONISTA',  true),
 ('recep03',            '$2a$10$800I/8HGwCkjx0iApGb/kevpKOnZ1jp2UjTTWCg9CKaUNKdFhoywa', 'RECEPCIONISTA',  false),
--- Médicos
 ('med.garcia',         '$2a$10$800I/8HGwCkjx0iApGb/kevpKOnZ1jp2UjTTWCg9CKaUNKdFhoywa', 'MEDICO',         true),
 ('med.torres',         '$2a$10$800I/8HGwCkjx0iApGb/kevpKOnZ1jp2UjTTWCg9CKaUNKdFhoywa', 'MEDICO',         true),
 ('med.ramirez',        '$2a$10$800I/8HGwCkjx0iApGb/kevpKOnZ1jp2UjTTWCg9CKaUNKdFhoywa', 'MEDICO',         true),
@@ -26,7 +24,6 @@ INSERT INTO Usuarios (user_name, password, rol, activo) VALUES
 ('med.rivas',          '$2a$10$800I/8HGwCkjx0iApGb/kevpKOnZ1jp2UjTTWCg9CKaUNKdFhoywa', 'MEDICO',         true),
 ('med.pinto',          '$2a$10$800I/8HGwCkjx0iApGb/kevpKOnZ1jp2UjTTWCg9CKaUNKdFhoywa', 'MEDICO',         true),
 ('med.aguilar',        '$2a$10$800I/8HGwCkjx0iApGb/kevpKOnZ1jp2UjTTWCg9CKaUNKdFhoywa', 'MEDICO',         true),
--- Enfermeros
 ('enf.lopez',          '$2a$10$800I/8HGwCkjx0iApGb/kevpKOnZ1jp2UjTTWCg9CKaUNKdFhoywa', 'ENFERMERO',      true),
 ('enf.perez',          '$2a$10$800I/8HGwCkjx0iApGb/kevpKOnZ1jp2UjTTWCg9CKaUNKdFhoywa', 'ENFERMERO',      true),
 ('enf.ruiz',           '$2a$10$800I/8HGwCkjx0iApGb/kevpKOnZ1jp2UjTTWCg9CKaUNKdFhoywa', 'ENFERMERO',      true),
@@ -133,7 +130,6 @@ INSERT INTO horarios_medicos (dia, hora_inicio, hora_fin, activo, medico_id, con
 ('LUNES',     '09:00:00', '14:00:00', true,  7,  2),
 ('MIERCOLES', '09:00:00', '14:00:00', true,  8,  2),
 ('VIERNES',   '09:00:00', '13:00:00', true,  9,  1),
--- ✅ AGREGADO: médico 10 (Gabriela Pinto - Medicina General)
 ('LUNES',     '08:00:00', '13:00:00', true,  10, 1),
 ('MIERCOLES', '08:00:00', '13:00:00', true,  10, 2),
 ('VIERNES',   '08:00:00', '13:00:00', true,  10, 2);
@@ -182,81 +178,81 @@ INSERT INTO Historiales_Medicos (paciente_id) VALUES
 -- ========================
 -- 9. CITAS
 -- ========================
-INSERT INTO Citas (paciente_id, medico_id, consultorio_id, fecha_hora, motivo_consulta, estado) VALUES
-(1,  1,  1,  '2025-08-04 08:00:00', 'Dolor de cabeza persistente y mareos',      'ATENDIDA'),
-(2,  2,  4,  '2025-08-05 09:00:00', 'Revision de presion arterial alta',          'ATENDIDA'),
-(3,  3,  6,  '2025-08-05 14:00:00', 'Control pediatrico de nino de 5 anos',       'ATENDIDA'),
-(4,  4,  8,  '2025-08-06 08:00:00', 'Consulta por irregularidades menstruales',   'ATENDIDA'),
-(5,  5,  10, '2025-08-06 09:00:00', 'Dolor en rodilla derecha tras caida',        'ATENDIDA'),
-(6,  6,  11, '2025-08-07 15:00:00', 'Episodios de migrana frecuentes',            'ATENDIDA'),
-(7,  1,  1,  '2025-08-07 08:00:00', 'Tos persistente y fiebre leve',              'ATENDIDA'),
-(8,  2,  4,  '2025-08-08 09:00:00', 'Palpitaciones y cansancio',                  'ATENDIDA'),
-(9,  7,  2,  '2025-08-11 09:00:00', 'Dermatitis en brazos',                       'ATENDIDA'),
-(10, 8,  2,  '2025-08-12 09:00:00', 'Fatiga extrema y aumento de peso',           'ATENDIDA'),
-(11, 9,  1,  '2025-08-12 08:00:00', 'Nauseas y dolor abdominal',                  'ATENDIDA'),
-(12, 1,  2,  '2025-08-13 08:00:00', 'Chequeo medico general',                     'ATENDIDA'),
-(13, 3,  6,  '2025-08-13 14:00:00', 'Fiebre alta en nino de 8 anos',              'ATENDIDA'),
-(14, 4,  9,  '2025-08-14 08:00:00', 'Control de embarazo mes 5',                  'ATENDIDA'),
-(15, 5,  10, '2025-08-14 08:00:00', 'Dolor lumbar cronico',                       'ATENDIDA'),
-(16, 10, 1,  '2025-08-18 08:00:00', 'Resfriado y dolor de garganta',              'ATENDIDA'),
-(17, 6,  11, '2025-08-19 15:00:00', 'Entumecimiento en extremidades',             'ATENDIDA'),
-(18, 2,  5,  '2025-08-19 09:00:00', 'Control post-operatorio cardiaco',           'ATENDIDA'),
-(19, 1,  1,  '2025-08-20 08:00:00', 'Gastritis y acidez estomacal',               'ATENDIDA'),
-(20, 4,  8,  '2025-08-20 08:00:00', 'Revision de quiste ovarico',                 'ATENDIDA'),
-(21, 3,  6,  '2025-08-21 14:00:00', 'Vacunacion y control de crecimiento',        'ATENDIDA'),
-(22, 9,  1,  '2025-08-21 08:00:00', 'Colon irritable, control mensual',           'ATENDIDA'),
-(23, 5,  10, '2025-08-25 08:00:00', 'Esguince de tobillo izquierdo',              'ATENDIDA'),
-(24, 7,  2,  '2025-08-26 09:00:00', 'Acne y problemas en piel grasa',             'ATENDIDA'),
-(25, 8,  2,  '2025-08-26 09:00:00', 'Diabetes tipo 2, control trimestral',        'ATENDIDA'),
-(26, 10, 2,  '2025-08-27 09:00:00', 'Dolor de espalda y fatiga',                  'ATENDIDA'),
-(27, 6,  12, '2025-08-27 15:00:00', 'Vertigo y perdida de equilibrio',            'ATENDIDA'),
-(28, 1,  1,  '2025-08-28 08:00:00', 'Presion alta y dolor de cabeza',             'ATENDIDA'),
-(29, 3,  6,  '2025-09-01 14:00:00', 'Control de asma infantil',                   'ATENDIDA'),
-(30, 2,  4,  '2025-09-02 09:00:00', 'Arritmia, control semestral',                'ATENDIDA'),
-(1,  10, 1,  '2026-06-10 08:00:00', 'Control medico trimestral',                  'PROGRAMADA'),
-(5,  5,  10, '2026-06-11 08:00:00', 'Revision de fractura curada',                'PROGRAMADA'),
-(15, 8,  2,  '2026-06-11 09:00:00', 'Hipotiroidismo, control mensual',            'PROGRAMADA'),
-(22, 9,  1,  '2026-06-14 08:00:00', 'Gastroenterologia, seguimiento',             'PROGRAMADA'),
-(28, 2,  4,  '2026-06-15 09:00:00', 'Hipertension, ajuste de tratamiento',        'PROGRAMADA');
 
+INSERT INTO Citas (paciente_id, medico_id, consultorio_id, fecha_hora, motivo_consulta, estado) VALUES
+(1,  1,  1,  '2026-05-04 08:00:00', 'Dolor de cabeza persistente y mareos',      'ATENDIDA'), -- ID 1
+(2,  2,  4,  '2026-05-05 09:00:00', 'Revision de presion arterial alta',         'ATENDIDA'), -- ID 2
+(3,  3,  6,  '2026-05-05 14:00:00', 'Control pediatrico de nino de 5 anos',       'ATENDIDA'), -- ID 3
+(4,  4,  8,  '2026-05-06 08:00:00', 'Consulta por irregularidades menstruales',   'ATENDIDA'), -- ID 4
+(5,  5,  10, '2026-05-06 09:00:00', 'Dolor en rodilla derecha tras caida',        'ATENDIDA'), -- ID 5
+(6,  6,  11, '2026-05-07 15:00:00', 'Episodios de migrana frecuentes',            'ATENDIDA'), -- ID 6
+(7,  1,  1,  '2026-05-07 08:00:00', 'Tos persistente y fiebre leve',              'ATENDIDA'), -- ID 7
+(8,  2,  4,  '2026-05-08 09:00:00', 'Palpitaciones y cansancio',                  'ATENDIDA'), -- ID 8
+(1,  10, 1,  '2026-05-10 08:00:00', 'Control medico trimestral',                  'ATENDIDA'), -- ID 9
+(9,  7,  2,  '2026-05-11 09:00:00', 'Dermatitis en brazos',                       'ATENDIDA'), -- ID 10
+(5,  5,  10, '2026-05-11 08:00:00', 'Revision de fractura curada',                'ATENDIDA'), -- ID 11
+(15, 8,  2,  '2026-05-11 09:00:00', 'Hipotiroidismo, control mensual',            'ATENDIDA'), -- ID 12
+(10, 8,  2,  '2026-05-12 09:00:00', 'Fatiga extrema y aumento de peso',            'ATENDIDA'), -- ID 13
+(11, 9,  1,  '2026-05-12 08:00:00', 'Nauseas y dolor abdominal',                  'ATENDIDA'), -- ID 14
+(12, 1,  2,  '2026-05-13 08:00:00', 'Chequeo medico general',                     'ATENDIDA'), -- ID 15
+(13, 3,  6,  '2026-05-13 14:00:00', 'Fiebre alta en nino de 8 anos',              'ATENDIDA'), -- ID 16
+(14, 4,  9,  '2026-05-14 08:00:00', 'Control de embarazo mes 5',                  'ATENDIDA'), -- ID 17
+(15, 5,  10, '2026-05-14 08:00:00', 'Dolor lumbar cronico',                       'ATENDIDA'), -- ID 18
+(22, 9,  1,  '2026-05-14 08:00:00', 'Gastroenterologia, seguimiento',             'ATENDIDA'), -- ID 19
+(28, 2,  4,  '2026-05-15 09:00:00', 'Hipertension, ajuste de tratamiento',        'ATENDIDA'), -- ID 20
+(16, 10, 1,  '2026-05-18 08:00:00', 'Resfriado y dolor de garganta',              'ATENDIDA'), -- ID 21
+(17, 6,  11, '2026-05-19 15:00:00', 'Entumecimiento en extremidades',             'ATENDIDA'), -- ID 22
+(18, 2,  5,  '2026-05-19 09:00:00', 'Control post-operatorio cardiaco',           'ATENDIDA'), -- ID 23
+(19, 1,  1,  '2026-05-20 08:00:00', 'Gastritis y acidez estomacal',               'ATENDIDA'), -- ID 24
+(20, 4,  8,  '2026-05-20 08:00:00', 'Revision de quiste ovarico',                 'ATENDIDA'), -- ID 25
+(21, 3,  6,  '2026-05-21 14:00:00', 'Vacunacion y control de crecimiento',        'ATENDIDA'), -- ID 26
+(22, 9,  1,  '2026-05-21 08:00:00', 'Colon irritable, control mensual',            'ATENDIDA'), -- ID 27
+(23, 5,  10, '2026-05-25 08:00:00', 'Esguince de tobillo izquierdo',              'ATENDIDA'), -- ID 28
+(24, 7,  2,  '2026-05-26 09:00:00', 'Acne y problemas en piel grasa',              'ATENDIDA'), -- ID 29
+(25, 8,  2,  '2026-05-26 09:00:00', 'Diabetes tipo 2, control trimestral',        'ATENDIDA'), -- ID 30
+(10, 2,  2,  '2026-05-27 09:00:00', 'Dolor de espalda y fatiga',                  'PROGRAMADA'), -- ID 31
+(6,  6,  12, '2026-05-27 15:00:00', 'Vertigo y perdida de equilibrio',            'PROGRAMADA'), -- ID 32
+(28, 1,  1,  '2026-05-28 08:00:00', 'Presion alta y dolor de cabeza',             'PROGRAMADA'), -- ID 33
+(3,  3,  6,  '2026-05-29 14:00:00', 'Control de asma infantil',                   'PROGRAMADA'), -- ID 34
+(2,  2,  4,  '2026-05-30 09:00:00', 'Arritmia, control semestral',                'PROGRAMADA'); -- ID 35
 -- ========================
 -- 10. PAGOS
 -- ========================
-INSERT INTO Pagos (cita_id, monto, metodo_pago, estado, fecha_pago) VALUES
-(1,  80.00,  'EFECTIVO',      'PAGADO', '2025-08-04 08:05:00'),
-(2,  120.00, 'TARJETA',       'PAGADO', '2025-08-05 09:10:00'),
-(3,  90.00,  'EFECTIVO',      'PAGADO', '2025-08-05 14:05:00'),
-(4,  100.00, 'TRANSFERENCIA', 'PAGADO', '2025-08-06 08:05:00'),
-(5,  110.00, 'EFECTIVO',      'PAGADO', '2025-08-06 09:05:00'),
-(6,  130.00, 'TARJETA',       'PAGADO', '2025-08-07 15:05:00'),
-(7,  80.00,  'EFECTIVO',      'PAGADO', '2025-08-07 08:05:00'),
-(8,  120.00, 'EFECTIVO',      'PAGADO', '2025-08-08 09:05:00'),
-(9,  100.00, 'TARJETA',       'PAGADO', '2025-08-11 09:05:00'),
-(10, 150.00, 'TRANSFERENCIA', 'PAGADO', '2025-08-12 09:05:00'),
-(11, 90.00,  'EFECTIVO',      'PAGADO', '2025-08-12 08:05:00'),
-(12, 80.00,  'EFECTIVO',      'PAGADO', '2025-08-13 08:05:00'),
-(13, 90.00,  'TARJETA',       'PAGADO', '2025-08-13 14:05:00'),
-(14, 100.00, 'EFECTIVO',      'PAGADO', '2025-08-14 08:05:00'),
-(15, 110.00, 'TRANSFERENCIA', 'PAGADO', '2025-08-14 08:05:00'),
-(16, 80.00,  'EFECTIVO',      'PAGADO', '2025-08-18 08:05:00'),
-(17, 130.00, 'TARJETA',       'PAGADO', '2025-08-19 15:05:00'),
-(18, 120.00, 'TARJETA',       'PAGADO', '2025-08-19 09:05:00'),
-(19, 80.00,  'EFECTIVO',      'PAGADO', '2025-08-20 08:05:00'),
-(20, 100.00, 'EFECTIVO',      'PAGADO', '2025-08-20 08:05:00'),
-(21, 90.00,  'EFECTIVO',      'PAGADO', '2025-08-21 14:05:00'),
-(22, 90.00,  'TARJETA',       'PAGADO', '2025-08-21 08:05:00'),
-(23, 110.00, 'EFECTIVO',      'PAGADO', '2025-08-25 08:05:00'),
-(24, 100.00, 'TARJETA',       'PAGADO', '2025-08-26 09:05:00'),
-(25, 150.00, 'TRANSFERENCIA', 'PAGADO', '2025-08-26 09:05:00'),
-(26, 80.00,  'EFECTIVO',      'PAGADO', '2025-08-27 09:05:00'),
-(27, 130.00, 'TARJETA',       'PAGADO', '2025-08-27 15:05:00'),
-(28, 80.00,  'EFECTIVO',      'PAGADO', '2025-08-28 08:05:00'),
-(29, 90.00,  'EFECTIVO',      'PAGADO', '2025-09-01 14:05:00'),
-(30, 120.00, 'TARJETA',       'PAGADO', '2025-09-02 09:05:00');
+SET FOREIGN_KEY_CHECKS = 0;
+TRUNCATE TABLE Pagos;
+SET FOREIGN_KEY_CHECKS = 1;
 
--- ========================
--- 11. ELIMINADO: ConsultasMedicas ya no existe
--- ========================
+INSERT INTO Pagos (cita_id, monto, metodo_pago, estado, fecha_pago) VALUES
+(1,  80.00,  'EFECTIVO',      'PAGADO', '2026-05-04 08:05:00'),
+(2,  120.00, 'TARJETA',       'PAGADO', '2026-05-05 09:10:00'),
+(3,  90.00,  'EFECTIVO',      'PAGADO', '2026-05-05 14:05:00'),
+(4,  100.00, 'TRANSFERENCIA', 'PAGADO', '2026-05-06 08:05:00'),
+(5,  110.00, 'EFECTIVO',      'PAGADO', '2026-05-06 09:05:00'),
+(6,  130.00, 'TARJETA',       'PAGADO', '2026-05-07 15:05:00'),
+(7,  80.00,  'EFECTIVO',      'PAGADO', '2026-05-07 08:05:00'),
+(8,  120.00, 'EFECTIVO',      'PAGADO', '2026-05-08 09:05:00'),
+(9,  100.00, 'TARJETA',       'PAGADO', '2026-05-10 08:05:00'),
+(10, 150.00, 'TRANSFERENCIA', 'PAGADO', '2026-05-11 09:05:00'),
+(11, 90.00,  'EFECTIVO',      'PAGADO', '2026-05-11 08:05:00'),
+(12, 80.00,  'EFECTIVO',      'PAGADO', '2026-05-11 09:05:00'),
+(13, 90.00,  'TARJETA',       'PAGADO', '2026-05-12 09:05:00'),
+(14, 100.00, 'EFECTIVO',      'PAGADO', '2026-05-12 08:05:00'),
+(15, 110.00, 'TRANSFERENCIA', 'PAGADO', '2026-05-13 08:05:00'),
+(16, 80.00,  'EFECTIVO',      'PAGADO', '2026-05-13 14:05:00'),
+(17, 130.00, 'TARJETA',       'PAGADO', '2026-05-14 08:05:00'),
+(18, 120.00, 'TARJETA',       'PAGADO', '2026-05-14 08:05:00'),
+(19, 80.00,  'EFECTIVO',      'PAGADO', '2026-05-14 08:05:00'),
+(20, 100.00, 'EFECTIVO',      'PAGADO', '2026-05-15 09:05:00'),
+(21, 90.00,  'EFECTIVO',      'PAGADO', '2026-05-18 08:05:00'),
+(22, 90.00,  'TARJETA',       'PAGADO', '2026-05-19 15:05:00'),
+(23, 110.00, 'EFECTIVO',      'PAGADO', '2026-05-19 09:05:00'),
+(24, 100.00, 'TARJETA',       'PAGADO', '2026-05-20 08:05:00'),
+(25, 150.00, 'TRANSFERENCIA', 'PAGADO', '2026-05-20 08:05:00'),
+(26, 80.00,  'EFECTIVO',      'PAGADO', '2026-05-21 14:05:00'),
+(27, 130.00, 'TARJETA',       'PAGADO', '2026-05-21 08:05:00'),
+(28, 80.00,  'EFECTIVO',      'PAGADO', '2026-05-25 08:05:00'),
+(29, 90.00,  'EFECTIVO',      'PAGADO', '2026-05-26 09:05:00'),
+(30, 120.00, 'TARJETA',       'PAGADO', '2026-05-26 09:05:00');
 
 -- ========================
 -- 12. DIAGNOSTICOS
@@ -293,9 +289,3 @@ INSERT INTO Diagnosticos (enfermedad, descripcion, receta, indicaciones, cita_id
 ('ASMA BRONQUIAL',                     'Asma intermitente en nino con FEV1 80% del predicho',                          'Salbutamol inhalador 100mcg c/4-6h en crisis / Budesonida inhalada 200mcg',                              'Max 4 inhalaciones por crisis. Enjuagar boca tras cada uso.',                            29),
 ('FIBRILACION AURICULAR',              'FA paroxistica en seguimiento con anticoagulacion oral',                      'Warfarina 5mg/dia / Digoxina 0.125mg/dia',                                                               'Control INR mensual. Controlar pulso antes de digoxina. Evitar AINES.',                  30);
 
--- ========================
--- 13. ELIMINADO: Tratamientos ya no existe
--- ========================
--- ========================
--- 14. ELIMINADO: Medicamentos ya no existe
--- ========================
