@@ -100,6 +100,9 @@ public class PacienteService {
         paciente.setTelefono(dto.getTelefono());
         paciente.setDireccion(dto.getDireccion());
         paciente.setEmail(dto.getEmail());
+        paciente.setFechaNacimiento(dto.getFechaNacimiento());
+        paciente.setGenero(dto.getGenero());
+        paciente.setGrupoSanguineo(dto.getGrupoSanguineo());
         pacienteRepository.save(paciente);
         return "Paciente actualizado correctamente";
     }

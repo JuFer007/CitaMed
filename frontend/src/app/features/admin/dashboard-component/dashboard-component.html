@@ -1,175 +1,172 @@
 <div class="flex-1 overflow-y-auto p-1">
-    <!-- Page header -->
-    <div class="flex items-center justify-between mb-5">
-        <div class="text-[18px] font-semibold text-navy">
-            Resumen general
-        </div>
-        <div class="text-[12px] text-muted">
-            {{ hoy | date:"EEEE, dd 'de' MMMM 'de' y" }}
-        </div>
+  <!-- Page header -->
+  <div class="flex items-center justify-between mb-5">
+    <div class="text-[18px] font-semibold text-navy">
+      Resumen general
     </div>
+    <div class="text-[12px] text-muted">
+      {{ hoy | date:"EEEE, dd 'de' MMMM 'de' y" }}
+    </div>
+  </div>
 
-    <!-- ── STAT CARDS ── -->
-    <div class="grid grid-cols-3 gap-3 mb-4">
-        <!-- Citas hoy -->
-        <div class="bg-white rounded-[10px] border border-border p-4 flex flex-col gap-1.5">
-            <div class="w-9 h-9 rounded-lg bg-teal-light flex items-center justify-center mb-0.5">
-                <span class="material-symbols-outlined text-teal-dark text-[18px]">calendar_month</span>
-            </div>
-            <div class="text-[11px] text-muted uppercase tracking-[0.07em] font-medium">
-                Citas hoy
-            </div>
-            <div class="text-[26px] font-semibold text-navy leading-none">
-                {{ stats.citasHoy }}
-            </div>
-            <div class="text-[11px] text-muted flex items-center gap-1">
+  <!-- ── STAT CARDS ── -->
+  <div class="grid grid-cols-6 gap-3 mb-4">
+    <!-- Citas hoy -->
+    <div class="bg-white rounded-[10px] border border-border p-4 flex flex-col gap-1.5">
+      <div class="w-9 h-9 rounded-lg bg-teal-light flex items-center justify-center mb-0.5">
+        <span class="material-symbols-outlined text-teal-dark text-[18px]">calendar_month</span>
+      </div>
+      <div class="text-[11px] text-muted uppercase tracking-[0.07em] font-medium">
+        Citas hoy
+      </div>
+      <div class="text-[26px] font-semibold text-navy leading-none">
+        {{ stats.citasHoy }}
+      </div>
+      <div class="text-[11px] text-muted flex items-center gap-1">
                 <span [ngClass]="statsTrend.citasUp ? 'text-green-text' : 'text-red-text'" class="font-semibold">
                 {{ statsTrend.citasUp ? '↑' : '↓' }}
-                {{ statsDiff.citas }}
+                  {{ statsDiff.citas }}
                 </span>
-                vs ayer
-            </div>
-        </div>
+        vs ayer
+      </div>
+    </div>
 
-        <!-- Ingresos -->
-        <div class="bg-white rounded-[10px] border border-border p-4 flex flex-col gap-1.5">
-            <div class="w-9 h-9 rounded-lg bg-amber-bg flex items-center justify-center mb-0.5">
-                <span class="material-symbols-outlined text-amber-text text-[18px]">payments</span>
-            </div>
-            <div class="text-[11px] text-muted uppercase tracking-[0.07em] font-medium">
-                Ingresos del mes
-            </div>
-            <div class="text-[26px] font-semibold text-navy leading-none">
-                S/ {{ stats.ingresoMes }}
-            </div>
-            <div class="text-[11px] text-muted flex items-center gap-1">
+    <!-- Ingresos -->
+    <div class="bg-white rounded-[10px] border border-border p-4 flex flex-col gap-1.5">
+      <div class="w-9 h-9 rounded-lg bg-amber-bg flex items-center justify-center mb-0.5">
+        <span class="material-symbols-outlined text-amber-text text-[18px]">payments</span>
+      </div>
+      <div class="text-[11px] text-muted uppercase tracking-[0.07em] font-medium">
+        Ingresos del mes
+      </div>
+      <div class="text-[26px] font-semibold text-navy leading-none">
+        S/ {{ stats.ingresoMes }}
+      </div>
+      <div class="text-[11px] text-muted flex items-center gap-1">
                 <span
-                [ngClass]="ingresosPorcentaje >= 0 ? 'text-green-text' : 'text-red-text'"
-                class="font-semibold">
+                  [ngClass]="ingresosPorcentaje >= 0 ? 'text-green-text' : 'text-red-text'"
+                  class="font-semibold">
                 {{ ingresosPorcentaje >= 0 ? '↑' : '↓' }}
-                {{ ingresosPorcentaje | number:'1.0-0' }}%
+                  {{ ingresosPorcentaje | number:'1.0-0' }}%
                 </span>
-                vs mes anterior
-            </div>
-        </div>
+        vs mes anterior
+      </div>
+    </div>
 
-        <!-- Canceladas -->
-        <div class="bg-white rounded-[10px] border border-border p-4 flex flex-col gap-1.5">
-            <div class="w-9 h-9 rounded-lg bg-red-bg flex items-center justify-center mb-0.5">
-                <span class="material-symbols-outlined text-red-text text-[18px]">event_busy</span>
-            </div>
-            <div class="text-[11px] text-muted uppercase tracking-[0.07em] font-medium">
-                Citas canceladas
-            </div>
-            <div class="text-[26px] font-semibold text-navy leading-none">
-                {{ stats.canceladasSemana }}
-            </div>
-            <div class="text-[11px] text-muted flex items-center gap-1">
+    <!-- Canceladas -->
+    <div class="bg-white rounded-[10px] border border-border p-4 flex flex-col gap-1.5">
+      <div class="w-9 h-9 rounded-lg bg-red-bg flex items-center justify-center mb-0.5">
+        <span class="material-symbols-outlined text-red-text text-[18px]">event_busy</span>
+      </div>
+      <div class="text-[11px] text-muted uppercase tracking-[0.07em] font-medium">
+        Citas canceladas
+      </div>
+      <div class="text-[26px] font-semibold text-navy leading-none">
+        {{ stats.canceladasSemana }}
+      </div>
+      <div class="text-[11px] text-muted flex items-center gap-1">
                 <span [ngClass]="statsTrend.canceladasUp ? 'text-red-text' : 'text-green-text'" class="font-semibold">
                 {{ statsTrend.canceladasUp ? '↑' : '↓' }}
-                {{ statsDiff.canceladas }}
+                  {{ statsDiff.canceladas }}
                 </span>
-                vs semana pasada
-            </div>
-        </div>
+        vs semana pasada
+      </div>
+    </div>
+    <!-- Total pacientes -->
+    <div class="bg-white rounded-[10px] border border-border p-4 flex flex-col gap-1.5">
+      <div class="w-9 h-9 rounded-lg bg-blue-100 flex items-center justify-center mb-0.5">
+        <span class="material-symbols-outlined text-blue-600 text-[18px]">group</span>
+      </div>
+      <div class="text-[11px] text-muted uppercase tracking-[0.07em] font-medium">
+        Total de pacientes
+      </div>
+      <div class="text-[26px] font-semibold text-navy leading-none">
+        {{ stats.totalPacientes }}
+      </div>
     </div>
 
-    <!-- ── SECOND ROW: Total patients, doctors, appointments ── -->
-    <div class="grid grid-cols-3 gap-3 mb-4">
-        <!-- Total pacientes -->
-        <div class="bg-white rounded-[10px] border border-border p-4 flex flex-col gap-1.5">
-            <div class="w-9 h-9 rounded-lg bg-blue-100 flex items-center justify-center mb-0.5">
-                <span class="material-symbols-outlined text-blue-600 text-[18px]">group</span>
-            </div>
-            <div class="text-[11px] text-muted uppercase tracking-[0.07em] font-medium">
-                Total de pacientes
-            </div>
-            <div class="text-[26px] font-semibold text-navy leading-none">
-                {{ stats.totalPacientes }}
-            </div>
-        </div>
-
-        <!-- Total médicos -->
-        <div class="bg-white rounded-[10px] border border-border p-4 flex flex-col gap-1.5">
-            <div class="w-9 h-9 rounded-lg bg-purple-100 flex items-center justify-center mb-0.5">
-                <span class="material-symbols-outlined text-purple-600 text-[18px]">stethoscope</span>
-            </div>
-            <div class="text-[11px] text-muted uppercase tracking-[0.07em] font-medium">
-                Total de médicos
-            </div>
-            <div class="text-[26px] font-semibold text-navy leading-none">
-                {{ stats.totalMedicos }}
-            </div>
-        </div>
-
-        <!-- Total citas programadas -->
-        <div class="bg-white rounded-[10px] border border-border p-4 flex flex-col gap-1.5">
-            <div class="w-9 h-9 rounded-lg bg-orange-100 flex items-center justify-center mb-0.5">
-                <span class="material-symbols-outlined text-orange-600 text-[18px]">event_note</span>
-            </div>
-            <div class="text-[11px] text-muted uppercase tracking-[0.07em] font-medium">
-                Total de citas programadas
-            </div>
-            <div class="text-[26px] font-semibold text-navy leading-none">
-                {{ stats.totalCitas }}
-            </div>
-        </div>
+    <!-- Total médicos -->
+    <div class="bg-white rounded-[10px] border border-border p-4 flex flex-col gap-1.5">
+      <div class="w-9 h-9 rounded-lg bg-purple-100 flex items-center justify-center mb-0.5">
+        <span class="material-symbols-outlined text-purple-600 text-[18px]">stethoscope</span>
+      </div>
+      <div class="text-[11px] text-muted uppercase tracking-[0.07em] font-medium">
+        Total de médicos
+      </div>
+      <div class="text-[26px] font-semibold text-navy leading-none">
+        {{ stats.totalMedicos }}
+      </div>
     </div>
 
-    <!-- ── Últimas citas + Barras especialidades ── -->
-    <div class="grid grid-cols-[2fr_1fr] gap-3.5 mb-3.5">
-        <!-- Últimas citas -->
-        <div class="bg-white rounded-[10px] border border-border p-[18px]">
-            <div class="flex items-center justify-between mb-3.5">
-                <span class="text-[13px] font-semibold text-navy">Últimas citas</span>
-                <span routerLink="/admin/citas" class="text-[12px] text-teal-dark font-medium cursor-pointer hover:underline">
+    <!-- Total citas programadas -->
+    <div class="bg-white rounded-[10px] border border-border p-4 flex flex-col gap-1.5">
+      <div class="w-9 h-9 rounded-lg bg-orange-100 flex items-center justify-center mb-0.5">
+        <span class="material-symbols-outlined text-orange-600 text-[18px]">event_note</span>
+      </div>
+      <div class="text-[11px] text-muted uppercase tracking-[0.07em] font-medium">
+        Total de citas programadas
+      </div>
+      <div class="text-[26px] font-semibold text-navy leading-none">
+        {{ stats.totalCitas }}
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ── Últimas citas + Barras especialidades ── -->
+  <div class="grid grid-cols-[2fr_1fr] gap-3.5 mb-3.5">
+    <!-- Últimas citas -->
+    <div class="bg-white rounded-[10px] border border-border p-[18px]">
+      <div class="flex items-center justify-between mb-3.5">
+        <span class="text-[13px] font-semibold text-navy">Últimas citas</span>
+        <span routerLink="/admin/citas" class="text-[12px] text-teal-dark font-medium cursor-pointer hover:underline">
                     Ver todas →
                 </span>
-            </div>
-            <table class="w-full border-collapse">
-                <thead>
-                    <tr>
-                        <th
-                            class="text-[10px] text-muted uppercase tracking-[0.08em] pb-1.5 px-2.5 border-b border-border text-left font-semibold">
-                            Paciente
-                        </th>
-                        <th
-                            class="text-[10px] text-muted uppercase tracking-[0.08em] pb-1.5 px-2.5 border-b border-border text-left font-semibold">
-                            Médico
-                        </th>
-                        <th
-                            class="text-[10px] text-muted uppercase tracking-[0.08em] pb-1.5 px-2.5 border-b border-border text-left font-semibold">
-                            Especialidad
-                        </th>
-                        <th
-                            class="text-[10px] text-muted uppercase tracking-[0.08em] pb-1.5 px-2.5 border-b border-border text-left font-semibold">
-                            Fecha
-                        </th>
-                        <th
-                            class="text-[10px] text-muted uppercase tracking-[0.08em] pb-1.5 px-2.5 border-b border-border text-left font-semibold">
-                            Estado
-                        </th>
-                    </tr>
-                </thead>
+      </div>
+      <table class="w-full border-collapse">
+        <thead>
+        <tr>
+          <th
+            class="text-[10px] text-muted uppercase tracking-[0.08em] pb-1.5 px-2.5 border-b border-border text-left font-semibold">
+            Paciente
+          </th>
+          <th
+            class="text-[10px] text-muted uppercase tracking-[0.08em] pb-1.5 px-2.5 border-b border-border text-left font-semibold">
+            Médico
+          </th>
+          <th
+            class="text-[10px] text-muted uppercase tracking-[0.08em] pb-1.5 px-2.5 border-b border-border text-left font-semibold">
+            Especialidad
+          </th>
+          <th
+            class="text-[10px] text-muted uppercase tracking-[0.08em] pb-1.5 px-2.5 border-b border-border text-left font-semibold">
+            Fecha
+          </th>
+          <th
+            class="text-[10px] text-muted uppercase tracking-[0.08em] pb-1.5 px-2.5 border-b border-border text-left font-semibold">
+            Estado
+          </th>
+        </tr>
+        </thead>
 
-                <tbody>
-                    <tr *ngFor="let cita of ultimasCitas" class="hover:bg-bg">
-                        <td class="py-2 px-2.5 border-b border-border text-[12px] font-medium">
-                            {{ cita.paciente }}
-                        </td>
-                        <td class="py-2 px-2.5 border-b border-border text-[12px]">
-                            {{ cita.medico }}
-                        </td>
-                        <td class="py-2 px-2.5 border-b border-border text-[12px]">
-                            {{ cita.especialidad }}
-                        </td>
-                        <td class="py-2 px-2.5 border-b border-border text-[12px] text-muted">
-                            {{ cita.fecha | date:'dd/MM/yyyy HH:mm' }}
-                        </td>
-                        <td class="py-2 px-2.5 border-b border-border">
+        <tbody>
+        <tr *ngFor="let cita of ultimasCitas" class="hover:bg-bg">
+          <td class="py-2 px-2.5 border-b border-border text-[12px] font-medium">
+            {{ cita.paciente }}
+          </td>
+          <td class="py-2 px-2.5 border-b border-border text-[12px]">
+            {{ cita.medico }}
+          </td>
+          <td class="py-2 px-2.5 border-b border-border text-[12px]">
+            {{ cita.especialidad }}
+          </td>
+          <td class="py-2 px-2.5 border-b border-border text-[12px] text-muted">
+            {{ cita.fecha | date:'dd/MM/yyyy HH:mm' }}
+          </td>
+          <td class="py-2 px-2.5 border-b border-border">
                             <span
-                                class="inline-block text-[10px] font-semibold px-2.5 py-0.5 rounded-full"
-                                [ngClass]="{
+                              class="inline-block text-[10px] font-semibold px-2.5 py-0.5 rounded-full"
+                              [ngClass]="{
                                 'bg-green-bg text-green-text': cita.estado === 'ATENDIDA',
                                 'bg-teal-light text-teal-dark': cita.estado === 'PROGRAMADA',
                                 'bg-red-bg text-red-text': cita.estado === 'CANCELADA',
@@ -177,171 +174,172 @@
                                 }">
                                 {{ cita.estado }}
                             </span>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
 
-        <!-- Especialidades más solicitadas -->
-        <div class="bg-white rounded-[10px] border border-border p-[18px]">
-            <div class="flex items-center justify-between mb-3.5">
+    <!-- Especialidades más solicitadas -->
+    <div class="bg-white rounded-[10px] border border-border p-[18px]">
+      <div class="flex items-center justify-between mb-3.5">
                 <span class="text-[13px] font-semibold text-navy">
                     Especialidades más solicitadas
                 </span>
-            </div>
-            <div class="space-y-3">
-                <div *ngFor="let item of especialidades">
-                    <div class="flex items-center justify-between mb-1">
+      </div>
+      <div class="space-y-3">
+        <div *ngFor="let item of especialidades">
+          <div class="flex items-center justify-between mb-1">
                         <span class="text-[12px] text-navy font-medium">
                             {{ item.especialidad }}
                         </span>
-                        <span class="text-[11px] text-muted">
+            <span class="text-[11px] text-muted">
                             {{ item.total }}
                         </span>
-                    </div>
-                    <div class="w-full bg-gray-100 rounded-full h-2 overflow-hidden">
-                        <div
-                            class="bg-teal-dark h-2 rounded-full"
-                            [style.width.%]="item.total * 10">
-                        </div>
-                    </div>
-                </div>
+          </div>
+          <div class="w-full bg-gray-100 rounded-full h-2 overflow-hidden">
+            <div
+              class="bg-teal-dark h-2 rounded-full"
+              [style.width.%]="item.total * 10">
             </div>
+          </div>
         </div>
+      </div>
     </div>
+  </div>
 
-    <!-- ── Agenda + Médicos + Pagos ── -->
-    <div class="grid grid-cols-2 gap-3.5 mb-3.5">
-        <!-- Agenda del día -->
-        <div class="bg-white rounded-[10px] border border-border p-[18px] h-full flex flex-col">
-            <div class="flex items-center justify-between mb-3.5">
-                <span class="text-[13px] font-semibold text-navy">Agenda de hoy</span>
-            </div>
+  <!-- ── Agenda + Médicos + Pagos ── -->
+  <div class="grid grid-cols-2 gap-3.5 mb-3.5">
+    <!-- Agenda del día -->
+    <div class="bg-white rounded-[10px] border border-border p-[18px] h-full flex flex-col">
+      <div class="flex items-center justify-between mb-3.5">
+        <span class="text-[13px] font-semibold text-navy">Agenda de hoy</span>
+      </div>
 
-            <!-- SI HAY CITAS -->
-            <div *ngIf="agendaHoy.length > 0; else sinAgenda"
-                class="grid grid-cols-4 gap-2">
-                <div *ngFor="let item of agendaHoy"
-                    class="bg-teal-light border border-border rounded-lg p-2.5">
-                    <div class="text-[10px] text-teal-dark font-semibold">
-                        {{ item.hora }}
-                    </div>
-                    <div class="text-[12px] text-navy mt-0.5 font-medium truncate">
-                        {{ item.paciente }}
-                    </div>
-                    <div class="text-[10px] text-muted mt-px truncate">
-                        {{ item.detalle }}
-                    </div>
-                </div>
-            </div>
+      <!-- SI HAY CITAS -->
+      <div *ngIf="agendaHoy.length > 0; else sinAgenda"
+           class="grid grid-cols-4 gap-2">
+        <div *ngFor="let item of agendaHoy"
+             class="bg-teal-light border border-border rounded-lg p-2.5">
+          <div class="text-[10px] text-teal-dark font-semibold">
+            {{ item.hora }}
+          </div>
+          <div class="text-[12px] text-navy mt-0.5 font-medium truncate">
+            {{ item.paciente }}
+          </div>
+          <div class="text-[10px] text-muted mt-px truncate">
+            {{ item.detalle }}
+          </div>
+        </div>
+      </div>
 
-            <!-- SI NO HAY CITAS -->
-            <ng-template #sinAgenda>
-                <div
-                    class="flex-1 w-full flex flex-col items-center justify-center border border-dashed border-border rounded-lg bg-bg text-center px-4">
+      <!-- SI NO HAY CITAS -->
+      <ng-template #sinAgenda>
+        <div
+          class="flex-1 w-full flex flex-col items-center justify-center border border-dashed border-border rounded-lg bg-bg text-center px-4">
                     <span class="material-symbols-outlined text-[52px] text-subtle mb-3">
                         event_busy
                     </span>
-                    <div class="text-[16px] font-semibold text-navy">
-                        No hay citas disponibles hoy
-                    </div>
-                    <div class="text-[12px] text-muted mt-1">
-                        La agenda se encuentra libre por el momento.
-                    </div>
-                </div>
-            </ng-template>
+          <div class="text-[16px] font-semibold text-navy">
+            No hay citas disponibles hoy
+          </div>
+          <div class="text-[12px] text-muted mt-1">
+            La agenda se encuentra libre por el momento.
+          </div>
+        </div>
+      </ng-template>
+    </div>
+
+    <!-- Panel derecho: médicos + pagos -->
+    <div class="flex flex-col gap-3.5">
+      <!-- Médicos activos -->
+      <div class="bg-white rounded-[10px] border border-border p-[18px]">
+        <div class="flex items-center justify-between mb-3.5">
+          <span class="text-[13px] font-semibold text-navy">Médicos activos</span>
+          <span routerLink="/admin/medicos"
+                class="text-[12px] text-teal-dark font-medium cursor-pointer hover:underline">
+                        Ver todos →
+                    </span>
         </div>
 
-        <!-- Panel derecho: médicos + pagos -->
-        <div class="flex flex-col gap-3.5">
-            <!-- Médicos activos -->
-            <div class="bg-white rounded-[10px] border border-border p-[18px]">
-                <div class="flex items-center justify-between mb-3.5">
-                    <span class="text-[13px] font-semibold text-navy">Médicos activos</span>
-                    <span routerLink="/admin/medicos" class="text-[12px] text-teal-dark font-medium cursor-pointer hover:underline">
+        <table class="w-full border-collapse">
+          <thead>
+          <tr>
+            <th
+              class="text-[10px] text-muted uppercase tracking-[0.08em] pb-1.5 px-2.5 border-b border-border text-left font-semibold">
+              Médico
+            </th>
+            <th
+              class="text-[10px] text-muted uppercase tracking-[0.08em] pb-1.5 px-2.5 border-b border-border text-left font-semibold">
+              Especialidad
+            </th>
+            <th
+              class="text-[10px] text-muted uppercase tracking-[0.08em] pb-1.5 px-2.5 border-b border-border text-right font-semibold">
+              Citas
+            </th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr *ngFor="let item of medicos" class="hover:bg-bg">
+            <td class="py-2 px-2.5 border-b border-border">
+              <div class="flex items-center gap-2">
+                <div
+                  class="w-[26px] h-[26px] rounded-full bg-teal text-white flex items-center justify-center text-[10px] font-semibold flex-shrink-0">
+                  {{ item.iniciales }}
+                </div>
+                <div>
+                  <div class="text-[12px] font-medium text-navy">
+                    {{ item.medico }}
+                  </div>
+                  <div class="text-[11px] text-muted">
+                    {{ item.cmp }}
+                  </div>
+                </div>
+              </div>
+            </td>
+            <td class="py-2 px-2.5 border-b border-border text-[12px]">
+              {{ item.especialidad }}
+            </td>
+            <td
+              class="py-2 px-2.5 border-b border-border text-right font-semibold text-[12px]">
+              {{ item.citas }}
+            </td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Últimos pagos -->
+      <div class="bg-white rounded-[10px] border border-border p-[18px]">
+        <div class="flex items-center justify-between mb-3.5">
+          <span class="text-[13px] font-semibold text-navy">Últimos pagos</span>
+          <span routerLink="/admin/pagos" class="text-[12px] text-teal-dark font-medium cursor-pointer hover:underline">
                         Ver todos →
                     </span>
-                </div>
-
-                <table class="w-full border-collapse">
-                    <thead>
-                        <tr>
-                            <th
-                                class="text-[10px] text-muted uppercase tracking-[0.08em] pb-1.5 px-2.5 border-b border-border text-left font-semibold">
-                                Médico
-                            </th>
-                            <th
-                                class="text-[10px] text-muted uppercase tracking-[0.08em] pb-1.5 px-2.5 border-b border-border text-left font-semibold">
-                                Especialidad
-                            </th>
-                            <th
-                                class="text-[10px] text-muted uppercase tracking-[0.08em] pb-1.5 px-2.5 border-b border-border text-right font-semibold">
-                                Citas
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr *ngFor="let item of medicos" class="hover:bg-bg">
-                            <td class="py-2 px-2.5 border-b border-border">
-                                <div class="flex items-center gap-2">
-                                    <div
-                                        class="w-[26px] h-[26px] rounded-full bg-teal text-white flex items-center justify-center text-[10px] font-semibold flex-shrink-0">
-                                        {{ item.iniciales }}
-                                    </div>
-                                    <div>
-                                        <div class="text-[12px] font-medium text-navy">
-                                            {{ item.medico }}
-                                        </div>
-                                        <div class="text-[11px] text-muted">
-                                            {{ item.cmp }}
-                                        </div>
-                                    </div>
-                                </div>
-                            </td>
-                            <td class="py-2 px-2.5 border-b border-border text-[12px]">
-                                {{ item.especialidad }}
-                            </td>
-                            <td
-                                class="py-2 px-2.5 border-b border-border text-right font-semibold text-[12px]">
-                                {{ item.citas }}
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-
-            <!-- Últimos pagos -->
-            <div class="bg-white rounded-[10px] border border-border p-[18px]">
-                <div class="flex items-center justify-between mb-3.5">
-                    <span class="text-[13px] font-semibold text-navy">Últimos pagos</span>
-                    <span routerLink="/admin/pagos" class="text-[12px] text-teal-dark font-medium cursor-pointer hover:underline">
-                        Ver todos →
-                    </span>
-                </div>
-                <div *ngFor="let p of pagos; let last = last"
-                    class="flex items-center justify-between py-2 border-b border-border"
-                    [class.border-b]="!last">
-                    <!-- IZQUIERDA -->
-                    <div class="flex flex-col">
+        </div>
+        <div *ngFor="let p of pagos; let last = last"
+             class="flex items-center justify-between py-2 border-b border-border"
+             [class.border-b]="!last">
+          <!-- IZQUIERDA -->
+          <div class="flex flex-col">
                         <span class="text-[12px] font-medium text-navy">
                             {{ p.paciente }}
                         </span>
-                        <span class="text-[11px] text-muted">
+            <span class="text-[11px] text-muted">
                             {{ p.metodo }} · Cita #{{ p.citaId }}
                         </span>
-                    </div>
-                    <!-- DERECHA -->
-                    <div class="text-right">
-                        <div class="text-[13px] font-semibold text-navy">
-                            S/ {{ p.monto | number:'1.2-2' }}
-                        </div>
-                        <div class="text-[10px] text-green-text font-semibold">
-                            {{ p.estado }}
-                        </div>
-                    </div>
-                </div>
+          </div>
+          <!-- DERECHA -->
+          <div class="text-right">
+            <div class="text-[13px] font-semibold text-navy">
+              S/ {{ p.monto | number:'1.2-2' }}
             </div>
+            <div class="text-[10px] text-green-text font-semibold">
+              {{ p.estado }}
+            </div>
+          </div>
         </div>
+      </div>
     </div>
+  </div>
 </div>

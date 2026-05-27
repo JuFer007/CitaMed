@@ -178,6 +178,11 @@ INSERT INTO Historiales_Medicos (paciente_id) VALUES
 -- ========================
 -- 9. CITAS
 -- ========================
+SET FOREIGN_KEY_CHECKS = 0;
+TRUNCATE TABLE Diagnosticos;
+TRUNCATE TABLE Pagos;
+TRUNCATE TABLE Citas;
+SET FOREIGN_KEY_CHECKS = 1;
 
 INSERT INTO Citas (paciente_id, medico_id, consultorio_id, fecha_hora, motivo_consulta, estado) VALUES
 (1,  1,  1,  '2026-05-04 08:00:00', 'Dolor de cabeza persistente y mareos',      'ATENDIDA'), -- ID 1
@@ -218,10 +223,6 @@ INSERT INTO Citas (paciente_id, medico_id, consultorio_id, fecha_hora, motivo_co
 -- ========================
 -- 10. PAGOS
 -- ========================
-SET FOREIGN_KEY_CHECKS = 0;
-TRUNCATE TABLE Pagos;
-SET FOREIGN_KEY_CHECKS = 1;
-
 INSERT INTO Pagos (cita_id, monto, metodo_pago, estado, fecha_pago) VALUES
 (1,  80.00,  'EFECTIVO',      'PAGADO', '2026-05-04 08:05:00'),
 (2,  120.00, 'TARJETA',       'PAGADO', '2026-05-05 09:10:00'),

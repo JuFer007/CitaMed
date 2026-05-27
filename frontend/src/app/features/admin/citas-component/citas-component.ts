@@ -20,6 +20,7 @@ import { Paciente } from '../../../model/Paciente';
 import { Especialidad } from '../../../model/Especialidad';
 import { GlobalToast } from '../../../core/services/global-toast';
 import { HttpClient } from '@angular/common/http';
+import { HorarioMedicoService, HorarioMedico } from '../../../core/services/horario-medico-service';
 
 interface FiltroEstado {
   label: string;
@@ -68,6 +69,7 @@ export class CitasComponent implements OnInit {
   nuevaCita: CitaDTO = this.resetCitaForm();
   fechaHoraCita: Date | null = null;
   especialidadSeleccionada: number | null = null;
+  horariosMedico: HorarioMedico[] = [];
 
   citaEditandoId: number | null = null;
 
@@ -128,6 +130,7 @@ export class CitasComponent implements OnInit {
 
   constructor(
     private citaService: CitaService,
+    private horarioMedicoService: HorarioMedicoService,
     private toast: GlobalToast,
     private cdr: ChangeDetectorRef,
     private http: HttpClient,
@@ -365,11 +368,18 @@ export class CitasComponent implements OnInit {
   abrirReprogramar(cita: CitaDetalle): void {
     this.citaSeleccionada = cita;
     this.nuevaFechaReprogramacion = new Date(cita.fechaHora);
+    this.horarioMedicoService.getHorariosPorMedico(cita.medicoId).subscribe({
+      next: (data) => {
+        this.horariosMedico = data.filter(h => h.activo);
+        this.cdr.markForCheck();
+      },
+    });
     this.mostrarReprogramarModal = true;
   }
 
   onEspecialidadChange(): void {
     this.nuevaCita.medicoId = 0;
+    this.horariosMedico = [];
     if (!this.especialidadSeleccionada) {
       this.medicosFiltrados = [...this.medicos];
     } else {
@@ -380,6 +390,44 @@ export class CitasComponent implements OnInit {
         },
       });
     }
+  }
+
+  onMedicoChange(): void {
+    this.horariosMedico = [];
+    if (this.nuevaCita.medicoId && this.nuevaCita.medicoId > 0) {
+      this.horarioMedicoService.getHorariosPorMedico(this.nuevaCita.medicoId).subscribe({
+        next: (data) => {
+          this.horariosMedico = data.filter(h => h.activo);
+          this.cdr.markForCheck();
+        },
+      });
+    }
+  }
+
+  private dateToDiaSemana(date: Date): string {
+    const dias = ['DOMINGO', 'LUNES', 'MARTES', 'MIERCOLES', 'JUEVES', 'VIERNES', 'SABADO'];
+    return dias[date.getDay()];
+  }
+
+  get horariosInfo(): string {
+    if (this.horariosMedico.length === 0) return '';
+    const agrupado = new Map<string, string[]>();
+    for (const h of this.horariosMedico) {
+      if (!agrupado.has(h.dia)) agrupado.set(h.dia, []);
+      agrupado.get(h.dia)!.push(`${h.horaInicio} - ${h.horaFin}`);
+    }
+    return Array.from(agrupado.entries())
+      .map(([dia, horas]) => `${dia}: ${horas.join(', ')}`)
+      .join(' | ');
+  }
+
+  private horarioCitaValido(fecha: Date): boolean {
+    if (this.horariosMedico.length === 0) return true;
+    const diaSemana = this.dateToDiaSemana(fecha);
+    const horaCita = `${String(fecha.getHours()).padStart(2, '0')}:${String(fecha.getMinutes()).padStart(2, '0')}`;
+    return this.horariosMedico.some(h =>
+      h.dia === diaSemana && horaCita >= h.horaInicio && horaCita <= h.horaFin
+    );
   }
 
   get now(): Date { return new Date(); }
@@ -422,6 +470,10 @@ export class CitasComponent implements OnInit {
       this.toast.warn('El motivo debe tener al menos 5 caracteres'); return;
     }
 
+    if (this.horariosMedico.length > 0 && !this.horarioCitaValido(this.fechaHoraCita)) {
+      this.toast.warn('El médico no atiende en la fecha y hora seleccionadas'); return;
+    }
+
     this.nuevaCita.fechaHora = this.fechaHoraCita.toISOString();
 
     if (this.modoEdicion && this.citaEditandoId) {
@@ -445,6 +497,9 @@ export class CitasComponent implements OnInit {
     if (this.nuevaFechaReprogramacion <= new Date()) {
       this.toast.warn('La nueva fecha debe ser posterior a la actual');
       return;
+    }
+    if (this.horariosMedico.length > 0 && !this.horarioCitaValido(this.nuevaFechaReprogramacion)) {
+      this.toast.warn('El médico no atiende en la fecha y hora seleccionadas'); return;
     }
     this.citaService.reprogramar(this.citaSeleccionada.id, this.nuevaFechaReprogramacion.toISOString()).subscribe({
       next: (res) => {

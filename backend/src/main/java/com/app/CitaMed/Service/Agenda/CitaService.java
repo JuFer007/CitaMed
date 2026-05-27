@@ -1,15 +1,18 @@
 package com.app.CitaMed.Service.Agenda;
 import com.app.CitaMed.DTO.CitaDetalleDTO;
 import com.app.CitaMed.DTO.CitaDTO;
+import com.app.CitaMed.Enums.DiaSemana;
 import com.app.CitaMed.Enums.EstadoCita;
 import com.app.CitaMed.Enums.EstadoPago;
 import com.app.CitaMed.Enums.MetodoPago;
 import com.app.CitaMed.Model.Administrativo.Pago;
 import com.app.CitaMed.Model.Agenda.Cita;
+import com.app.CitaMed.Model.Agenda.HorarioMedico;
 import com.app.CitaMed.Model.Medico.Medico;
 import com.app.CitaMed.Model.Paciente.Paciente;
 import com.app.CitaMed.Repository.Administrativo.PagoRepository;
 import com.app.CitaMed.Repository.Agenda.CitaRepository;
+import com.app.CitaMed.Repository.Agenda.HorarioMedicoRepository;
 import com.app.CitaMed.Repository.Medico.MedicoRepository;
 import com.app.CitaMed.Repository.Paciente.PacienteRepository;
 import com.app.CitaMed.Service.MicroServicios.EmailService;
@@ -17,7 +20,9 @@ import com.app.CitaMed.Util.HorarioValidator;
 import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import java.time.DayOfWeek;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -31,6 +36,7 @@ public class CitaService {
     private final MedicoRepository medicoRepository;
     private final EmailService emailService;
     private final PagoRepository pagoRepository;
+    private final HorarioMedicoRepository horarioMedicoRepository;
 
     public List<CitaDetalleDTO> findAllDetalle() {
         return citaRepository.findAllDetalle();
@@ -64,6 +70,41 @@ public class CitaService {
         return citaRepository.findByPacienteId(pacienteId);
     }
 
+    private DiaSemana toDiaSemana(DayOfWeek dayOfWeek) {
+        return switch (dayOfWeek) {
+            case MONDAY -> DiaSemana.LUNES;
+            case TUESDAY -> DiaSemana.MARTES;
+            case WEDNESDAY -> DiaSemana.MIERCOLES;
+            case THURSDAY -> DiaSemana.JUEVES;
+            case FRIDAY -> DiaSemana.VIERNES;
+            case SATURDAY -> DiaSemana.SABADO;
+            case SUNDAY -> DiaSemana.DOMINGO;
+        };
+    }
+
+    private String validarHorarioMedico(Long medicoId, LocalDateTime fechaHora) {
+        DiaSemana diaCita = toDiaSemana(fechaHora.getDayOfWeek());
+        LocalTime horaCita = fechaHora.toLocalTime();
+
+        List<HorarioMedico> horarios = horarioMedicoRepository.findByMedicoIdAndActivoTrue(medicoId);
+
+        if (horarios.isEmpty()) {
+            return "El médico no tiene horarios configurados";
+        }
+
+        boolean horarioValido = horarios.stream().anyMatch(h ->
+            h.getDia() == diaCita
+            && !horaCita.isBefore(h.getHoraInicio())
+            && !horaCita.isAfter(h.getHoraFin())
+        );
+
+        if (!horarioValido) {
+            return "El médico no atiende en la fecha y hora seleccionadas";
+        }
+
+        return null;
+    }
+
     @Transactional
     public String save(CitaDTO dto) {
         Paciente paciente = pacienteRepository.findById(dto.getPacienteId()).orElse(null);
@@ -77,6 +118,9 @@ public class CitaService {
         if (medico.getConsultorio() == null) return "El médico no tiene un consultorio asignado";
 
         try { HorarioValidator.validar(dto.getFechaHora()); } catch (IllegalArgumentException e) { return e.getMessage(); }
+
+        String errorHorario = validarHorarioMedico(dto.getMedicoId(), dto.getFechaHora());
+        if (errorHorario != null) return errorHorario;
 
         if (citaRepository.existsByMedicoIdAndFechaHoraAndEstadoNot(dto.getMedicoId(), dto.getFechaHora(), EstadoCita.CANCELADA))
             return "El médico ya tiene una cita en ese horario";
@@ -162,6 +206,9 @@ public class CitaService {
 
         try { HorarioValidator.validar(nuevaFechaHora); } catch (IllegalArgumentException e) { return e.getMessage(); }
 
+        String errorHorario = validarHorarioMedico(cita.getMedico().getId(), nuevaFechaHora);
+        if (errorHorario != null) return errorHorario;
+
         if (citaRepository.existsByMedicoIdAndFechaHoraAndEstadoNot(cita.getMedico().getId(), nuevaFechaHora, EstadoCita.CANCELADA))
             return "El médico ya tiene una cita en ese horario";
 
@@ -183,6 +230,8 @@ public class CitaService {
 
         if (dto.getFechaHora() != null && !dto.getFechaHora().equals(cita.getFechaHora())) {
             try { HorarioValidator.validar(dto.getFechaHora()); } catch (IllegalArgumentException e) { return e.getMessage(); }
+            String errorHorario = validarHorarioMedico(cita.getMedico().getId(), dto.getFechaHora());
+            if (errorHorario != null) return errorHorario;
             if (citaRepository.existsByMedicoIdAndFechaHoraAndEstadoNot(cita.getMedico().getId(), dto.getFechaHora(), EstadoCita.CANCELADA))
                 return "El médico ya tiene una cita en ese horario";
             cita.setFechaHora(dto.getFechaHora());

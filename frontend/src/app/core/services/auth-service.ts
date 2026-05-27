@@ -19,7 +19,7 @@ export class AuthService {
         localStorage.setItem('token', response.token);
         localStorage.setItem('nombreUsuario', response.nombre);
         localStorage.setItem('usuario', response.usuario);
-        localStorage.setItem('perfil', response.perfil);
+        localStorage.setItem('rol', response.perfil);
       }),
     );
   }

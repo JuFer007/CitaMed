@@ -395,6 +395,7 @@
         <label class="text-xs font-semibold text-gray-600 block mb-2">M&eacute;dico <span class="text-red-500">*</span></label>
         <select
           [(ngModel)]="nuevaCita.medicoId"
+          (change)="onMedicoChange()"
           class="w-full px-4 py-3 rounded-xl border-2 outline-none transition-all"
           [class.border-red-400]="!nuevaCita.medicoId && fechaHoraCita !== null"
           [class.border-gray-200]="nuevaCita.medicoId || fechaHoraCita === null">
@@ -404,6 +405,10 @@
             <ng-container *ngIf="m.consultorio"> &middot; Cons. {{ m.consultorio.numero }}</ng-container>
           </option>
         </select>
+        <div *ngIf="horariosMedico.length > 0" class="mt-2 text-xs text-gray-500 bg-gray-50 p-2 rounded-lg">
+          <i class="pi pi-clock mr-1"></i>
+          <strong>Horarios:</strong> {{ horariosInfo }}
+        </div>
       </div>
 
       <div>
@@ -602,6 +607,10 @@
       </p-datepicker>
       <div *ngIf="nuevaFechaReprogramacion && !esFechaFutura(nuevaFechaReprogramacion)" class="text-xs text-red-500 mt-1">
         La nueva fecha debe ser posterior a la actual
+      </div>
+      <div *ngIf="horariosMedico.length > 0" class="mt-2 text-xs text-gray-500 bg-gray-50 p-2 rounded-lg">
+        <i class="pi pi-clock mr-1"></i>
+        <strong>Horarios del m&eacute;dico:</strong> {{ horariosInfo }}
       </div>
     </div>
 
