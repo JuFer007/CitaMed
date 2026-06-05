@@ -1,5 +1,4 @@
 package com.app.CitaMed.Config;
-
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -20,6 +19,7 @@ import java.util.List;
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity(prePostEnabled = true)
+
 public class SecurityConfig {
 
     private final JwtFilter jwtFilter;

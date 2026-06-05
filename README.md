@@ -1,3 +1,18 @@
+<div align="center">
+  <img src="frontend/public/logoCitaMed.png" alt="CitaMed" width="100"/>
+  <br><br>
+  <p><strong>Sistema de gestión hotelera con reservas, administración de habitaciones, clientes, empleados, reportes y chatbot inteligente</strong></p>
+
+  ![Java](https://img.shields.io/badge/Java-ED8B00?logo=openjdk&logoColor=white)
+  ![HTML](https://img.shields.io/badge/HTML-E34F26?logo=html5&logoColor=white)
+  ![CSS](https://img.shields.io/badge/CSS-1572B6?logo=css3&logoColor=white)
+  ![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?logo=typescript&logoColor=white)
+  ![Angular](https://img.shields.io/badge/Angular-DD0031?logo=angular&logoColor=white)
+  ![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-06B6D4?logo=tailwindcss&logoColor=white)
+</div>
+
+---
+
 # Documentación CitaMed
 
 Sistema de Gestion de Consultas Medicas - CitaMed
