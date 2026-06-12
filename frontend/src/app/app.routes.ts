@@ -15,6 +15,7 @@ import { Reportes } from './features/admin/reportes/reportes';
 import { HistorialMedicoC } from './features/admin/historial-medico-c/historial-medico-c';
 import { authGuard } from './core/guards/auth.guard';
 import { Page404Component } from './shared/components/page404-component/page404-component';
+import { roleGuard } from './core/guards/role.guard';
 
 export const routes: Routes = [
   {
@@ -38,62 +39,62 @@ export const routes: Routes = [
         path: 'usuarios',
         component: UsuarioComponent,
         data: { title: 'Usuarios', roles: ['ADMIN'] },
-        canActivate: [() => import('./core/guards/role.guard').then((m) => m.roleGuard as any)],
+        canActivate: [roleGuard],
       },
       { path: 'dashboard', component: DashboardComponent, data: { title: 'Dashboard' } },
       {
         path: 'citas',
         component: CitasComponent,
         data: { title: 'Citas', roles: ['ADMIN', 'MEDICO', 'RECEPCIONISTA'] },
-        canActivate: [() => import('./core/guards/role.guard').then((m) => m.roleGuard as any)],
+        canActivate: [roleGuard],
       },
       {
         path: 'medicos',
         component: MedicosComponent,
         data: { title: 'Médicos', roles: ['ADMIN'] },
-        canActivate: [() => import('./core/guards/role.guard').then((m) => m.roleGuard as any)],
+        canActivate: [roleGuard],
       },
       {
         path: 'pacientes',
         component: PacientesComponent,
         data: { title: 'Pacientes', roles: ['ADMIN', 'MEDICO', 'RECEPCIONISTA'] },
-        canActivate: [() => import('./core/guards/role.guard').then((m) => m.roleGuard as any)],
+        canActivate: [roleGuard],
       },
       {
         path: 'especialidades',
         component: EspecialidadesComponent,
         data: { title: 'Especialidades', roles: ['ADMIN', 'MEDICO', 'RECEPCIONISTA'] },
-        canActivate: [() => import('./core/guards/role.guard').then((m) => m.roleGuard as any)],
+        canActivate: [roleGuard],
       },
       {
         path: 'horarios',
         component: HorarioComponent,
         data: { title: 'Horarios', roles: ['ADMIN', 'MEDICO'] },
-        canActivate: [() => import('./core/guards/role.guard').then((m) => m.roleGuard as any)],
+        canActivate: [roleGuard],
       },
       {
         path: 'empleados',
         component: EmpleadoComponent,
         data: { title: 'Empleados', roles: ['ADMIN'] },
-        canActivate: [() => import('./core/guards/role.guard').then((m) => m.roleGuard as any)],
+        canActivate: [roleGuard],
       },
       {
         path: 'pagos',
         component: PagosComponent,
         data: { title: 'Pagos', roles: ['ADMIN'] },
-        canActivate: [() => import('./core/guards/role.guard').then((m) => m.roleGuard as any)],
+        canActivate: [roleGuard],
       },
       {
         path: 'reportes',
         component: Reportes,
         data: { title: 'Reportes', roles: ['ADMIN'] },
-        canActivate: [() => import('./core/guards/role.guard').then((m) => m.roleGuard as any)],
+        canActivate: [roleGuard],
       },
       {
         path: 'historial-medico',
         component: HistorialMedicoC,
         data: { title: 'Historial Médico', roles: ['ADMIN'] },
-        canActivate: [() => import('./core/guards/role.guard').then((m) => m.roleGuard as any)],
+        canActivate: [roleGuard],
       },
     ],
   },
