@@ -1,17 +1,18 @@
-import { Component, CUSTOM_ELEMENTS_SCHEMA, OnInit, OnDestroy } from '@angular/core';
+import { Component, ChangeDetectorRef, CUSTOM_ELEMENTS_SCHEMA, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
-import { Subject, combineLatest } from 'rxjs';
+import { Subject, combineLatest, of } from 'rxjs';
 import {
   debounceTime,
   distinctUntilChanged,
   switchMap,
   filter,
   takeUntil,
-  catchError
+  catchError,
+  timeout,
+  finalize
 } from 'rxjs/operators';
-import { of } from 'rxjs';
 import { Especialidad } from '../../../model/Especialidad';
 import 'iconify-icon';
 
@@ -74,7 +75,7 @@ export class ContactoComponent implements OnInit, OnDestroy {
     'AB_POSITIVO', 'AB_NEGATIVO', 'O_POSITIVO', 'O_NEGATIVO'
   ];
 
-  constructor(private fb: FormBuilder, private http: HttpClient) {}
+  constructor(private fb: FormBuilder, private http: HttpClient, private cd: ChangeDetectorRef) {}
 
   ngOnInit(): void {
     this.initForms();
@@ -189,31 +190,31 @@ export class ContactoComponent implements OnInit, OnDestroy {
     this.dniEncontrado = false;
     this.pacienteExistente = false;
 
-    this.http.get<any>(`${this.apiUrl}/paciente/dni/${dni}`)
+    this.http.get<any>(`${this.baseUrl}/consulta-dni/${dni}`)
       .pipe(takeUntil(this.destroy$))
       .subscribe({
-        next: (paciente) => {
-          if (paciente) {
-            this.pacienteExistente = true;
+        next: (data) => {
+          if (data) {
             this.dniEncontrado = true;
+            this.pacienteExistente = data.existeLocal;
             this.contactoForm.patchValue({
-              nombre:          paciente.nombre,
-              apellidoPaterno: paciente.apellidoPaterno,
-              apellidoMaterno: paciente.apellidoMaterno,
-              telefono:        paciente.telefono,
-              email:           paciente.email,
-              direccion:       paciente.direccion,
-              genero:          paciente.genero,
-              grupoSanguineo:  paciente.grupoSanguineo,
-              fechaNacimiento: paciente.fechaNacimiento
+              nombre:          data.nombre || '',
+              apellidoPaterno: data.apellidoPaterno || '',
+              apellidoMaterno: data.apellidoMaterno || '',
+              telefono:        data.telefono || '',
+              email:           data.email || '',
+              direccion:       data.direccion || '',
+              genero:          data.genero || '',
+              grupoSanguineo:  data.grupoSanguineo || '',
+              fechaNacimiento: data.fechaNacimiento || ''
             });
-            this.bloquearCamposPaciente();
-          } else {
-            this.consultarReniec(dni);
+            if (data.existeLocal) {
+              this.bloquearCamposPaciente();
+            }
           }
           this.cargandoDni = false;
         },
-        error: () => this.consultarReniec(dni)
+        error: () => { this.cargandoDni = false; }
       });
   }
 
@@ -226,25 +227,6 @@ export class ContactoComponent implements OnInit, OnDestroy {
     Object.keys(this.contactoForm.controls).forEach(campo => {
       if (campo !== 'dni') this.contactoForm.get(campo)?.enable();
     });
-  }
-
-  private consultarReniec(dni: string): void {
-    this.http.get<any>(`${this.apiUrl}/reniec/dni/${dni}`)
-      .pipe(takeUntil(this.destroy$))
-      .subscribe({
-        next: (data) => {
-          if (data) {
-            this.dniEncontrado = true;
-            this.contactoForm.patchValue({
-              nombre:          data.nombres        || data.first_name   || '',
-              apellidoPaterno: data.apellidoPaterno || data.first_last_name  || '',
-              apellidoMaterno: data.apellidoMaterno || data.second_last_name || ''
-            });
-          }
-          this.cargandoDni = false;
-        },
-        error: () => { this.cargandoDni = false; }
-      });
   }
 
   // ── PASO 3: confirmar reserva ────────────────────────────────────────
@@ -272,17 +254,20 @@ export class ContactoComponent implements OnInit, OnDestroy {
       motivoConsulta:  this.reservaForm.value.motivoConsulta
     };
 
-    this.http.post<string>(`${this.baseUrl}/reserva`, payload, { responseType: 'text' as 'json' })
-      .pipe(takeUntil(this.destroy$))
+    this.http.post(this.baseUrl + '/reserva', payload, { responseType: 'text' })
+      .pipe(
+        takeUntil(this.destroy$),
+        timeout(60000),
+        finalize(() => { this.reservando = false; })
+      )
       .subscribe({
         next: () => {
           this.reservaExitosa = true;
           this.pasoActual = 3;
-          this.reservando = false;
+          this.cd.detectChanges();
         },
         error: (err) => {
           this.errorReserva = err?.error || 'Error al procesar la reserva. Intente nuevamente.';
-          this.reservando = false;
         }
       });
   }

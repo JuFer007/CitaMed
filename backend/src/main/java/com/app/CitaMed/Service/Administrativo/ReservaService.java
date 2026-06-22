@@ -25,6 +25,7 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
 @Service
@@ -63,15 +64,20 @@ public class ReservaService {
         LocalDateTime finDia = inicioDia.plusDays(1);
         DateTimeFormatter fmt = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
 
+        List<Cita> todasCitas = citaRepository
+                .findByMedicoIdInAndFechaHoraBetweenAndEstadoNot(
+                        medicoIds, inicioDia, finDia, EstadoCita.CANCELADA);
+
+        Map<Long, List<Cita>> citasPorMedico = todasCitas.stream()
+                .collect(Collectors.groupingBy(c -> c.getMedico().getId()));
+
         List<SlotDisponibleDTO> resultado = new ArrayList<>();
 
         for (Medico medico : medicos) {
             List<HorarioMedico> horarios = horariosPorMedico.get(medico.getId());
             if (horarios == null) continue;
 
-            List<Cita> citasDelDia = citaRepository
-                    .findByMedicoIdAndFechaHoraBetweenAndEstadoNot(
-                            medico.getId(), inicioDia, finDia, EstadoCita.CANCELADA);
+            List<Cita> citasDelDia = citasPorMedico.getOrDefault(medico.getId(), Collections.emptyList());
 
             Set<String> horasOcupadas = citasDelDia.stream()
                     .map(c -> c.getFechaHora().format(fmt))
@@ -178,7 +184,16 @@ public class ReservaService {
         pago.setFechaPago(LocalDateTime.now());
         pagoRepository.save(pago);
 
-        emailService.enviarConfirmacion(cita);
+        String nombrePaciente = paciente.getNombre();
+        String nombreDoctor = medico.getNombre() + " " + medico.getApellidoPaterno();
+        String especialidadNombre = medico.getEspecialidad().getNombre();
+        String emailPaciente = paciente.getEmail();
+        String fechaStr = fechaHora.format(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+        String horaStr = fechaHora.format(DateTimeFormatter.ofPattern("hh:mm a"));
+
+        CompletableFuture.runAsync(() ->
+            emailService.enviarConfirmacion(nombrePaciente, nombreDoctor, especialidadNombre, emailPaciente, fechaStr, horaStr)
+        );
         return "Reserva registrada correctamente";
     }
 

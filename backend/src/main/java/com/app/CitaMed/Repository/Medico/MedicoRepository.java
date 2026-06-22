@@ -3,6 +3,7 @@ import com.app.CitaMed.DTO.MedicoActivoDTO;
 import com.app.CitaMed.Model.Medico.Medico;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import java.util.List;
 import java.util.Optional;
@@ -13,7 +14,8 @@ public interface MedicoRepository extends JpaRepository<Medico, Long> {
     long count();
     boolean existsByDni(String dni);
 
-    List<Medico> findByEspecialidadIdAndActivoTrue(Long especialidadId);
+    @Query("SELECT m FROM Medico m JOIN FETCH m.especialidad LEFT JOIN FETCH m.consultorio WHERE m.especialidad.id = :especialidadId AND m.activo = true")
+    List<Medico> findByEspecialidadIdAndActivoTrue(@Param("especialidadId") Long especialidadId);
 
     @Query("""
             SELECT new com.app.CitaMed.DTO.MedicoActivoDTO(

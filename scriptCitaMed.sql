@@ -4,7 +4,7 @@ USE CitaMed;
 -- ========================
 -- 1. USUARIOS
 -- ========================
-INSERT INTO Usuarios (user_name, password, rol, activo) VALUES
+INSERT INTO usuarios (user_name, password, rol, activo) VALUES
 -- Admins
 ('admin01',            '$2a$10$800I/8HGwCkjx0iApGb/kevpKOnZ1jp2UjTTWCg9CKaUNKdFhoywa', 'ADMIN',          true),
 ('marcelo.alarcon',    '$2a$10$800I/8HGwCkjx0iApGb/kevpKOnZ1jp2UjTTWCg9CKaUNKdFhoywa', 'ADMIN',          true),
@@ -33,7 +33,7 @@ INSERT INTO Usuarios (user_name, password, rol, activo) VALUES
 -- ========================
 -- 2. ESPECIALIDADES
 -- ========================
-INSERT INTO Especialidades (nombre, descripcion) VALUES
+INSERT INTO especialidades (nombre, descripcion) VALUES
 ('Urología',                  'Diagnóstico y tratamiento del sistema urinario y reproductor masculino'),
 ('Reumatología',              'Tratamiento de enfermedades articulares, musculares y autoinmunes'),
 ('Medicina General',          'Atención médica primaria y consultas generales de salud'),
@@ -50,7 +50,7 @@ INSERT INTO Especialidades (nombre, descripcion) VALUES
 -- ========================
 -- 3. CONSULTORIOS 
 -- ========================
-INSERT INTO Consultorios (numero, descripcion, disponible, especialidad_id) VALUES
+INSERT INTO consultorios (numero, descripcion, disponible, especialidad_id) VALUES
 ('C-101', 'Consultorio de Medicina General N°1',  true,  1),
 ('C-102', 'Consultorio de Medicina General N°2',  true,  1),
 ('C-103', 'Consultorio de Medicina General N°3',  false, 1),
@@ -68,7 +68,7 @@ INSERT INTO Consultorios (numero, descripcion, disponible, especialidad_id) VALU
 -- 4. EMPLEADOS
 -- ========================
 
-INSERT INTO Empleados (nombre, apellido_paterno, apellido_materno, dni, telefono, direccion, email, fecha_nacimiento, genero, salario, fecha_ingreso, activo, usuario_id) VALUES
+INSERT INTO empleados (nombre, apellido_paterno, apellido_materno, dni, telefono, direccion, email, fecha_nacimiento, genero, salario, fecha_ingreso, activo, usuario_id) VALUES
 -- Integrantes del equipo (ADMIN) apuntando a IDs 2, 3, 4
 ('MARCELO ARIEL',  'ALARCON',   'MANAY',    '74100001', '987000001', 'Av. Los Desarrolladores 101, Chiclayo', 'marcelo.alarcon@citamed.com',  '1999-05-15', 'MASCULINO', 4500.00, '2024-01-01', true,  2),
 ('CRISTIAN',       'HUAMAN',    'CRUZ',     '74100002', '987000002', 'Jr. Full Stack 202, Chiclayo',          'cristian.huaman@citamed.com',  '1999-08-22', 'MASCULINO', 4500.00, '2024-01-01', true,  3),
@@ -88,7 +88,7 @@ INSERT INTO Empleados (nombre, apellido_paterno, apellido_materno, dni, telefono
 -- ========================
 -- 5. MEDICOS
 -- ========================
-INSERT INTO Medicos (nombre, apellido_paterno, apellido_materno, dni, telefono, direccion, email, fecha_nacimiento, genero, numero_colegiatura, activo, especialidad_id, usuario_id, consultorio_id) VALUES
+INSERT INTO medicos (nombre, apellido_paterno, apellido_materno, dni, telefono, direccion, email, fecha_nacimiento, genero, numero_colegiatura, activo, especialidad_id, usuario_id, consultorio_id) VALUES
 ('LUIS',      'GARCIA',   'MONTOYA',  '12345601', '912345601', 'Av. Pardo 101, Chiclayo',            'luis.garcia@citamed.com',    '1978-05-12', 'MASCULINO', 'CMP-045231', true,  1,  8,  1),
 ('ROSA',      'TORRES',   'GUTIERREZ','12345602', '912345602', 'Jr. Colon 202, Chiclayo',            'rosa.torres@citamed.com',    '1980-09-18', 'FEMENINO',  'CMP-038742', true,  2,  9,  2),
 ('MIGUEL',    'RAMIREZ',  'DELGADO',  '12345603', '912345603', 'Calle Real 303, Chiclayo',           'miguel.ramirez@citamed.com', '1975-03-27', 'MASCULINO', 'CMP-029183', true,  3,  10, 1),
@@ -102,7 +102,7 @@ INSERT INTO Medicos (nombre, apellido_paterno, apellido_materno, dni, telefono, 
 -- ========================
 -- 5b. ASEGURAR QUE TODOS LOS MEDICOS TENGAN CONSULTORIO
 -- ========================
-UPDATE Medicos SET consultorio_id = 1 WHERE consultorio_id IS NULL;
+UPDATE medicos SET consultorio_id = 1 WHERE consultorio_id IS NULL;
 
 -- ========================
 -- 6. HORARIOS MEDICOS (CORREGIDO - agregado médico 10)
@@ -134,7 +134,7 @@ INSERT INTO horarios_medicos (dia, hora_inicio, hora_fin, activo, medico_id, con
 -- ========================
 -- 7. PACIENTES
 -- ========================
-INSERT INTO Pacientes (nombre, apellido_paterno, apellido_materno, dni, telefono, direccion, email, fecha_nacimiento, genero, grupo_sanguineo, activo) VALUES
+INSERT INTO pacientes (nombre, apellido_paterno, apellido_materno, dni, telefono, direccion, email, fecha_nacimiento, genero, grupo_sanguineo, activo) VALUES
 ('JUAN CARLOS',      'QUISPE',      'MAMANI',     '71234501', '951234501', 'Av. Agricultura 101, Chiclayo',      'jc.quispe@gmail.com',              '1990-02-14', 'MASCULINO', 'O_POSITIVO', TRUE),
 ('MARIA ELENA',      'SOTO',        'VARGAS',     '71234502', '951234502', 'Jr. Los Alamos 202, Chiclayo',       'maria.soto@gmail.com',             '1985-06-23', 'FEMENINO',  'A_POSITIVO', TRUE),
 ('PEDRO PABLO',      'HUAMAN',      'QUISPE',     '71234503', '951234503', 'Calle Los Fresnos 303, Chiclayo',    'pedro.huaman@gmail.com',           '1978-11-05', 'MASCULINO', 'B_POSITIVO', TRUE),
@@ -168,7 +168,7 @@ INSERT INTO Pacientes (nombre, apellido_paterno, apellido_materno, dni, telefono
 -- ========================
 -- 8. HISTORIALES MEDICOS
 -- ========================
-INSERT INTO Historiales_Medicos (paciente_id) VALUES
+INSERT INTO historiales_medicos (paciente_id) VALUES
 (1),(2),(3),(4),(5),(6),(7),(8),(9),(10),
 (11),(12),(13),(14),(15),(16),(17),(18),(19),(20),
 (21),(22),(23),(24),(25),(26),(27),(28),(29),(30);
@@ -177,7 +177,7 @@ INSERT INTO Historiales_Medicos (paciente_id) VALUES
 -- 9. CITAS
 -- ========================
 
-INSERT INTO Citas (paciente_id, medico_id, consultorio_id, fecha_hora, motivo_consulta, estado) VALUES
+INSERT INTO citas (paciente_id, medico_id, consultorio_id, fecha_hora, motivo_consulta, estado) VALUES
 (1,  1,  1,  '2026-05-04 08:00:00', 'Dolor de cabeza persistente y mareos',      'ATENDIDA'), -- ID 1
 (2,  2,  4,  '2026-05-05 09:00:00', 'Revision de presion arterial alta',         'ATENDIDA'), -- ID 2
 (3,  3,  6,  '2026-05-05 14:00:00', 'Control pediatrico de nino de 5 anos',       'ATENDIDA'), -- ID 3
@@ -216,7 +216,7 @@ INSERT INTO Citas (paciente_id, medico_id, consultorio_id, fecha_hora, motivo_co
 -- ========================
 -- 10. PAGOS
 -- ========================
-INSERT INTO Pagos (cita_id, monto, metodo_pago, estado, fecha_pago) VALUES
+INSERT INTO pagos (cita_id, monto, metodo_pago, estado, fecha_pago) VALUES
 (1,  80.00,  'EFECTIVO',      'PAGADO', '2026-05-04 08:05:00'),
 (2,  120.00, 'TARJETA',       'PAGADO', '2026-05-05 09:10:00'),
 (3,  90.00,  'EFECTIVO',      'PAGADO', '2026-05-05 14:05:00'),
@@ -251,7 +251,7 @@ INSERT INTO Pagos (cita_id, monto, metodo_pago, estado, fecha_pago) VALUES
 -- ========================
 -- 12. DIAGNOSTICOS
 -- ========================
-INSERT INTO Diagnosticos (enfermedad, descripcion, receta, indicaciones, cita_id) VALUES
+INSERT INTO diagnosticos (enfermedad, descripcion, receta, indicaciones, cita_id) VALUES
 ('CEFALEA TENSIONAL',                  'Dolor de cabeza de tipo tensional sin signos neurologicos focales',              'Ibuprofeno 400mg / Paracetamol 500mg',                                                                   'Reposo relativo, evitar pantallas, hidratacion. Tomar cada 8 horas con alimentos.',      1),
 ('HIPERTENSION ARTERIAL',              'HTA grado 2, en control farmacologico con enalapril',                            'Enalapril 10mg cada 12h / Hidroclorotiazida 12.5mg',                                                     'Dieta hiposodica, ejercicio moderado diario. No suspender sin consultar.',                2),
 ('DESARROLLO NORMAL',                  'Nino sano, desarrollo psicomotor adecuado para 5 anos',                         'Vitamina D 1000UI / Vitamina C 500mg',                                                                  'Dieta equilibrada, actividad fisica regular. Suplemento vitaminico.',                     3),
