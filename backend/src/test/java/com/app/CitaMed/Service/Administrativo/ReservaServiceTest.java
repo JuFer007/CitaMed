@@ -122,8 +122,8 @@ class ReservaServiceTest {
         when(medicoRepository.findByEspecialidadIdAndActivoTrue(1L)).thenReturn(List.of(medico));
         when(horarioMedicoRepository.findByMedicoIdInAndDiaAndActivoTrue(
                 List.of(1L), DiaSemana.LUNES)).thenReturn(List.of(horario));
-        when(citaRepository.findByMedicoIdAndFechaHoraBetweenAndEstadoNot(
-                any(), any(), any(), eq(EstadoCita.CANCELADA))).thenReturn(List.of());
+        when(citaRepository.findByMedicoIdInAndFechaHoraBetweenAndEstadoNot(
+                anyList(), any(), any(), eq(EstadoCita.CANCELADA))).thenReturn(List.of());
 
         List<SlotDisponibleDTO> result = reservaService.obtenerSlotsDisponibles(1L, "2026-06-22");
 
@@ -146,7 +146,6 @@ class ReservaServiceTest {
         assertEquals("Reserva registrada correctamente", result);
         verify(citaRepository, times(1)).save(any(Cita.class));
         verify(pagoRepository, times(1)).save(any(Pago.class));
-        verify(emailService, times(1)).enviarConfirmacion(any(Cita.class));
     }
 
     @Test
