@@ -1,10 +1,6 @@
 pipeline {
     agent any
 
-    environment {
-        DOCKER_HUB_USER = 'cristiaann19' 
-    }
-
     stages {
         stage('Checkout') {
             steps {
@@ -13,27 +9,23 @@ pipeline {
         }
 
         stage('Backend - Build & Test') {
-            agent {
-                docker { 
-                    image 'maven:3.9.6-eclipse-temurin-21' 
-                    args '-v $HOME/.m2:/root/.m2'
-                }
-            }
             steps {
                 dir('backend') {
                     echo 'Compilando el Backend (Spring Boot con Java 21)...'
-                    sh 'mvn clean package -DskipTests=false'
+                    // Usamos el wrapper de Maven (mvnw) o Gradle (gradlew) que viene en tu proyecto.
+                    // Esto descarga automáticamente la versión correcta de Java/Maven sin pedirle nada a Docker.
+                    sh 'chmod +x mvnw'
+                    sh './mvnw clean package -DskipTests=false'
                 }
             }
         }
 
         stage('Frontend - Build & Test') {
-            agent {
-                docker { image 'node:18-alpine' }
-            }
             steps {
                 dir('frontend') {
                     echo 'Instalando dependencias y compilando Frontend (Angular)...'
+                    // Usamos comandos globales. Nota: Tu contenedor de Jenkins debe tener Node instalado, 
+                    // o puedes configurar Node en "Manage Jenkins -> Tools" y llamarlo aquí.
                     sh 'npm install'
                     sh 'npm run build -- --configuration=production'
                 }
