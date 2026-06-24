@@ -1,7 +1,5 @@
 pipeline {
-    agent {
-        label 'master' || 'built-in'
-    }
+    agent any
 
     environment {
         DOCKER_HUB_USER = 'cristiaann19' 
@@ -16,19 +14,15 @@ pipeline {
 
         stage('Backend - Build & Test') {
             agent {
-                // Usamos una imagen oficial de Maven optimizada con Java 21
                 docker { 
                     image 'maven:3.9.6-eclipse-temurin-21' 
-                    args '-v $HOME/.m2:/root/.m2' // Caché para acelerar futuras descargas
+                    args '-v $HOME/.m2:/root/.m2'
                 }
             }
             steps {
                 dir('backend') {
                     echo 'Compilando el Backend (Spring Boot con Java 21)...'
-                    
-                    // Si usas MAVEN, descomenta la siguiente línea:
                     sh 'mvn clean package -DskipTests=false'
-                    
                 }
             }
         }
@@ -43,12 +37,6 @@ pipeline {
                     sh 'npm install'
                     sh 'npm run build -- --configuration=production'
                 }
-            }
-        }
-
-        stage('Dockerize & Push (Opcional)') {
-            steps {
-                echo 'Etapa lista para construir tus imágenes de Docker si lo deseas.'
             }
         }
     }
