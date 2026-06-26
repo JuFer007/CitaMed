@@ -85,7 +85,7 @@
         Reportes
       </a>
     }
-    @if (isRecepcionistaView()) {
+    @if (isAdminView() || isRecepcionistaView()) {
       <a routerLink="/admin/pagos" routerLinkActive="bg-teal !text-white"
          class="flex items-center gap-2.5 px-2.5 py-2 mx-2 rounded-[7px] text-white/52 text-[13px] hover:bg-white/[0.07] hover:text-white/90 transition-all">
         <span class="material-symbols-outlined text-[17px] flex-shrink-0">payments</span>
@@ -100,7 +100,7 @@
     <div class="mt-auto border-t border-white/[0.08] p-2">
       <button style="color: white;"
               (click)="cerrarSesion()"
-              class="flex items-center cursor-pointer gap-3 p-3 py-2.5 hover:text-red-500 w-full group relative rounded-lg hover:bg-red-400/10 transition-colors">
+              class="flex items-center cursor-pointer gap-3 p-3 py-2.5 hover:text-teal w-full group relative rounded-lg hover:bg-teal/10 transition-colors">
         <span style="color: white;" class="material-symbols-outlined text-[17px] flex-shrink-0">logout</span>
         Cerrar sesión
       </button>

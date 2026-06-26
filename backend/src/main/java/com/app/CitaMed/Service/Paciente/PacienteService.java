@@ -27,6 +27,10 @@ public class PacienteService {
                 .toList();
     }
 
+    public org.springframework.data.domain.Page<Paciente> findAllByIdsPaginated(List<Long> ids, String termino, boolean incluirInactivos, org.springframework.data.domain.Pageable pageable) {
+        return pacienteRepository.buscarPorIds(ids, termino, incluirInactivos, pageable);
+    }
+
     public org.springframework.data.domain.Page<Paciente> findAll(org.springframework.data.domain.Pageable pageable) {
         return pacienteRepository.findByActivoTrue(pageable);
     }

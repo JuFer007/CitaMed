@@ -1,7 +1,7 @@
 <div align="center">
   <img src="frontend/public/logoCitaMed.png" alt="CitaMed" width="100"/>
   <br><br>
-  <p><strong>Sistema de gestión hotelera con reservas, administración de habitaciones, clientes, empleados, reportes y chatbot inteligente</strong></p>
+  <p><strong>Sistema de gestión de consultas médicas con citas, pacientes, médicos, historial clínico y reportes</strong></p>
 
   ![Java](https://img.shields.io/badge/Java-ED8B00?logo=openjdk&logoColor=white)
   ![HTML](https://img.shields.io/badge/HTML-E34F26?logo=html5&logoColor=white)
@@ -177,6 +177,31 @@ Funcionalidades:
 
 ---
 
+---
+
+## 9. Historial Medico
+
+Consulta del historial clinico completo de los pacientes, con descarga de PDF.
+
+Listado de pacientes e historial:
+
+![historial](capturas/historialMedico.png)
+
+Modal con detalle de atenciones y diagnosticos | PDF generado del historial medico
+:---:|:---:
+![modal](capturas/modalHistorialmEDICO.png) | ![pdf](capturas/pdfHistorialMedico.png)
+
+Funcionalidades:
+- Listar pacientes con busqueda por nombre o DNI
+- Ver historial completo (citas + diagnosticos) en modal
+- Detalle de cada consulta con diagnostico, receta e indicaciones
+- Descargar PDF del historial medico
+- PDF se abre en nueva pestana con nombre estandarizado
+- Acceso por roles ADMIN / MEDICO / RECEPCIONISTA
+- Filtra solo pacientes del medico cuando el rol es MEDICO
+
+---
+
 ## Resumen de Funcionalidades
 
 | Modulo | Estado |
@@ -189,6 +214,7 @@ Funcionalidades:
 | Especialidades CRUD | Completo |
 | Citas CRUD | Completo (+ estados) |
 | Horarios | Completo |
+| Historial Medico | Completo (+ PDF) |
 | Seguridad | Roles ADMIN / MEDICO / RECEPCIONISTA |
 | Backend API | Spring Boot + JPA + MySQL |
 | Frontend | Angular + PrimeNG + Tailwind |

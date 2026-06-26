@@ -93,7 +93,7 @@ export const routes: Routes = [
       {
         path: 'historial-medico',
         component: HistorialMedicoC,
-        data: { title: 'Historial Médico', roles: ['ADMIN'] },
+        data: { title: 'Historial Médico', roles: ['ADMIN', 'MEDICO', 'RECEPCIONISTA'] },
         canActivate: [roleGuard],
       },
     ],

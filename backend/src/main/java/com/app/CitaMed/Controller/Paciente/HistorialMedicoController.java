@@ -1,5 +1,6 @@
 package com.app.CitaMed.Controller.Paciente;
 
+import com.app.CitaMed.DTO.HistorialMedicoDetalleDTO;
 import com.app.CitaMed.Model.Paciente.HistorialMedico;
 import com.app.CitaMed.Service.Paciente.HistorialMedicoService;
 import lombok.RequiredArgsConstructor;
@@ -12,7 +13,6 @@ import java.util.List;
 @CrossOrigin(origins = "*")
 @RequestMapping("/api/historialMedico")
 @RequiredArgsConstructor
-
 public class HistorialMedicoController {
     private final HistorialMedicoService historialMedicoService;
 
@@ -35,5 +35,13 @@ public class HistorialMedicoController {
     @GetMapping
     public ResponseEntity<List<HistorialMedico>> findAll() {
         return ResponseEntity.ok(historialMedicoService.findAll());
+    }
+
+    @GetMapping("/paciente/{pacienteId}/completo")
+    public ResponseEntity<HistorialMedicoDetalleDTO> obtenerHistorialCompleto(@PathVariable Long pacienteId) {
+        HistorialMedicoDetalleDTO historial = historialMedicoService.obtenerHistorialCompleto(pacienteId);
+        if (historial == null)
+            return ResponseEntity.notFound().build();
+        return ResponseEntity.ok(historial);
     }
 }

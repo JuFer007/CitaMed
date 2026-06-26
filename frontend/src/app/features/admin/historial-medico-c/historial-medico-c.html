@@ -1,1 +1,230 @@
-<p>historial-medico-c works!</p>
+<div class="hm-wrap">
+  <!-- HEADER card like pacientes module -->
+  <div class="hm-header-card">
+    <div class="hm-header-inner">
+      <div>
+        <h3 class="hm-title">Historial Médico</h3>
+        <p class="hm-subtitle">Consulta el historial clínico completo de los pacientes registrados</p>
+      </div>
+      <div class="hm-header-actions">
+        <div class="hm-search">
+          <i class="pi pi-search hm-search-icon"></i>
+          <input
+            type="text"
+            [(ngModel)]="terminoBusqueda"
+            (input)="buscarPacientes(0)"
+            placeholder="Buscar paciente (Nombre, DNI)..."
+            class="hm-search-input" />
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TABLE -->
+  <div class="hm-table-card">
+    <div class="hm-table-header">
+      <div class="htr-col" style="flex:2.2">Paciente</div>
+      <div class="htr-col" style="flex:1.2">Contacto</div>
+      <div class="htr-col" style="flex:0.9">DNI</div>
+      <div class="htr-col" style="flex:0.7; text-align:center">Género</div>
+      <div class="htr-col" style="flex:0.7; text-align:center">Grupo S.</div>
+      <div class="htr-col" style="flex:0.7; text-align:center">Estado</div>
+      <div class="htr-col" style="flex:1; text-align:center">Acciones</div>
+    </div>
+
+    <div class="hm-table-body">
+      @for (p of pacientes; track p.id) {
+        <div class="hm-row">
+          <div class="hm-cell" style="flex:2.2">
+            <div class="cell-patient">
+              <div class="cell-avatar">{{ getInitials(p.nombre, p.apellidoPaterno, p.apellidoMaterno) }}</div>
+              <div class="cell-patient-info">
+                <span class="cell-name">{{ p.nombre }} {{ p.apellidoPaterno }} {{ p.apellidoMaterno }}</span>
+                <span class="cell-sub">{{ p.genero === 'MASCULINO' ? 'Masculino' : p.genero === 'FEMENINO' ? 'Femenino' : 'No especificado' }}</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="hm-cell" style="flex:1.2">
+            <div class="cell-text">{{ p.telefono || '---' }}</div>
+            <div class="cell-subtext">{{ p.email || '' }}</div>
+          </div>
+
+          <div class="hm-cell" style="flex:0.9"><span class="cell-dni">{{ p.dni }}</span></div>
+
+          <div class="hm-cell" style="flex:0.7; text-align:center">
+            <span class="cell-gen" [class.gen-f]="p.genero === 'FEMENINO'" [class.gen-m]="p.genero === 'MASCULINO'" [class.gen-o]="!p.genero || (p.genero !== 'FEMENINO' && p.genero !== 'MASCULINO')">
+              {{ p.genero === 'MASCULINO' ? 'M' : p.genero === 'FEMENINO' ? 'F' : '—' }}
+            </span>
+          </div>
+
+          <div class="hm-cell" style="flex:0.7; text-align:center">
+            <span class="cell-blood">{{ p.grupoSanguineo || '—' }}</span>
+          </div>
+
+          <div class="hm-cell" style="flex:0.7">
+            <span class="status-row">
+              <span class="status-dot"></span>
+              <span class="status-text">Activo</span>
+            </span>
+          </div>
+
+          <div class="hm-cell" style="flex:1; text-align:center">
+            <div class="cell-actions">
+              <button class="action-btn action-view" (click)="abrirHistorial(p)" title="Ver historial">
+                <i class="pi pi-eye"></i>
+              </button>
+              <button class="action-btn action-download" (click)="descargarHistorial(p)" title="Descargar PDF">
+                <i class="pi pi-download"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+      } @empty {
+        <div class="hm-empty">
+          <i class="pi pi-users hm-empty-icon"></i>
+          <p>No se encontraron pacientes</p>
+        </div>
+      }
+    </div>
+
+    <!-- PAGINATION -->
+    <div class="hm-pagination">
+      <span class="page-info">Mostrando {{ pacientes.length }} de {{ totalRecords }} pacientes</span>
+      <div class="page-btns">
+        <button class="page-btn" (click)="onPage({first: (page-1)*size, rows: size})" [disabled]="page === 0">
+          <i class="pi pi-chevron-left" style="font-size:12px"></i>
+        </button>
+        @for (n of [].constructor(totalPages); track $index) {
+          <button class="page-btn" [class.active]="$index === page" (click)="onPage({first: $index*size, rows: size})">{{ $index + 1 }}</button>
+        }
+        <button class="page-btn" (click)="onPage({first: (page+1)*size, rows: size})" [disabled]="(page+1)*size >= totalRecords">
+          <i class="pi pi-chevron-right" style="font-size:12px"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- HISTORY MODAL -->
+  <p-dialog
+    [header]="historial ? (historial.paciente.nombre + ' ' + historial.paciente.apellidoPaterno + ' — Historial completo') : 'Historial Médico'"
+    [(visible)]="mostrarHistorial"
+    [modal]="true"
+    [style]="{ width: '95vw', maxWidth: '1200px' }"
+    [draggable]="false"
+    [resizable]="false"
+    [maximizable]="true">
+
+    @if (cargandoHistorial) {
+      <div class="modal-loading">
+        <div class="modal-spinner"></div>
+        <p>Cargando historial médico...</p>
+      </div>
+    } @else if (historial) {
+      <div class="modal-body">
+        <div class="modal-patient-card">
+          <div class="mpc-avatar">{{ getInitials(historial.paciente.nombre, historial.paciente.apellidoPaterno, historial.paciente.apellidoMaterno) }}</div>
+          <div class="mpc-info">
+            <h3>{{ historial.paciente.nombre }} {{ historial.paciente.apellidoPaterno }} {{ historial.paciente.apellidoMaterno }}</h3>
+            <div class="mpc-tags">
+              <span>DNI {{ historial.paciente.dni }}</span>
+              <span>{{ historial.paciente.genero || '—' }}</span>
+              <span>{{ historial.paciente.grupoSanguineo || '—' }}</span>
+              <span>{{ historial.paciente.telefono || '—' }}</span>
+            </div>
+          </div>
+          <button class="mpc-download" (click)="descargarHistorialActual()">
+            <i class="pi pi-download" style="font-size:14px"></i>
+            PDF
+          </button>
+        </div>
+
+        <div class="modal-info-grid">
+          <div><span class="mig-label">Email</span><span class="mig-value">{{ historial.paciente.email || '—' }}</span></div>
+          <div><span class="mig-label">Dirección</span><span class="mig-value">{{ historial.paciente.direccion || '—' }}</span></div>
+          <div><span class="mig-label">Fecha nacimiento</span><span class="mig-value">{{ historial.paciente.fechaNacimiento ? (historial.paciente.fechaNacimiento | date:'dd/MM/yyyy') : '—' }}</span></div>
+          <div><span class="mig-label">Total atenciones</span><span class="mig-value">{{ historial.citas.length }}</span></div>
+        </div>
+
+        <h4 class="modal-section-title">Historial de atenciones</h4>
+
+        <div class="modal-table-scroll">
+          <table class="modal-table">
+            <thead>
+              <tr>
+                <th>Fecha</th>
+                <th>Médico</th>
+                <th>Especialidad</th>
+                <th>Consultorio</th>
+                <th>Motivo</th>
+                <th>Estado</th>
+                <th style="text-align:center">Diagnóstico</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (c of historial.citas; track c.citaId) {
+                <tr (click)="verDetalleCita(c)" class="modal-tr">
+                  <td><span class="td-date">{{ c.fechaHora | date:'dd/MM/yyyy' }}</span><span class="td-time">{{ c.fechaHora | date:'HH:mm' }}</span></td>
+                  <td><span class="td-doctor">{{ c.medicoNombre }} {{ c.medicoApellidoPaterno }}</span></td>
+                  <td>{{ c.medicoEspecialidad }}</td>
+                  <td>N° {{ c.consultorioNumero }}</td>
+                  <td><span class="td-motivo">{{ c.motivoConsulta }}</span></td>
+                  <td><span class="td-estado {{ estadoClass(c.estado) }}">{{ c.estado }}</span></td>
+                  <td style="text-align:center">
+                    @if (c.diagnostico) {
+                      <span class="td-dx-tag">{{ c.diagnostico.enfermedad }}</span>
+                    } @else {
+                      <span class="td-no-dx">—</span>
+                    }
+                  </td>
+                </tr>
+              } @empty {
+                <tr><td colspan="7" class="td-empty">El paciente no tiene citas registradas</td></tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      </div>
+    }
+
+    <ng-template pTemplate="footer">
+      <button class="hm-btn hm-btn-secondary" (click)="mostrarHistorial = false">Cerrar</button>
+    </ng-template>
+  </p-dialog>
+
+  <!-- DETAIL DIALOG -->
+  <p-dialog
+    header="Detalle de consulta"
+    [(visible)]="mostrarDetalle"
+    [modal]="true"
+    [style]="{ width: '90vw', maxWidth: '600px' }"
+    [draggable]="false"
+    [resizable]="false">
+
+    @if (citaSeleccionada) {
+      <div class="dd-body">
+        <div class="dd-grid">
+          <div><span class="dd-lbl">Fecha</span><span class="dd-val">{{ citaSeleccionada.fechaHora | date:'dd/MM/yyyy HH:mm' }}</span></div>
+          <div><span class="dd-lbl">Consultorio</span><span class="dd-val">N° {{ citaSeleccionada.consultorioNumero }}</span></div>
+          <div class="full"><span class="dd-lbl">Médico</span><span class="dd-val">{{ citaSeleccionada.medicoNombre }} {{ citaSeleccionada.medicoApellidoPaterno }} {{ citaSeleccionada.medicoApellidoMaterno }}</span></div>
+          <div class="full"><span class="dd-lbl">Especialidad</span><span class="dd-val">{{ citaSeleccionada.medicoEspecialidad }}</span></div>
+          <div class="full"><span class="dd-lbl">Motivo de consulta</span><span class="dd-val">{{ citaSeleccionada.motivoConsulta }}</span></div>
+        </div>
+        @if (citaSeleccionada.diagnostico) {
+          <div class="dd-dx">
+            <h5>Diagnóstico</h5>
+            <div class="dd-dx-card">
+              <div><span class="dd-lbl">Enfermedad</span><span class="dd-val strong">{{ citaSeleccionada.diagnostico.enfermedad }}</span></div>
+              @if (citaSeleccionada.diagnostico.descripcion) { <div><span class="dd-lbl">Descripción</span><span class="dd-val">{{ citaSeleccionada.diagnostico.descripcion }}</span></div> }
+              @if (citaSeleccionada.diagnostico.receta) { <div><span class="dd-lbl">Receta</span><span class="dd-val pre">{{ citaSeleccionada.diagnostico.receta }}</span></div> }
+              @if (citaSeleccionada.diagnostico.indicaciones) { <div><span class="dd-lbl">Indicaciones</span><span class="dd-val pre">{{ citaSeleccionada.diagnostico.indicaciones }}</span></div> }
+            </div>
+          </div>
+        }
+      </div>
+    }
+    <ng-template pTemplate="footer">
+      <button class="hm-btn hm-btn-primary" (click)="mostrarDetalle = false">Cerrar</button>
+    </ng-template>
+  </p-dialog>
+</div>

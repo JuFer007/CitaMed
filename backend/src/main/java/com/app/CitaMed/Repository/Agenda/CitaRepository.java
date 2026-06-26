@@ -26,6 +26,8 @@ public interface CitaRepository extends JpaRepository<Cita, Long> {
 
     List<Cita> findByPacienteId(Long pacienteId);
 
+    List<Cita> findByPacienteIdOrderByFechaHoraDesc(Long pacienteId);
+
     @Query("SELECT COUNT(c) FROM Cita c WHERE c.medico.id = :medicoId " +
            "AND c.estado <> :estadoCancelada " +
            "AND c.fechaHora < :nuevaFin " +

@@ -35,11 +35,14 @@ public class PacienteController {
     ) {
         if (SecurityUtil.isMedico()) {
             Medico medico = medicoRepository.findByUsuarioUserName(SecurityUtil.getCurrentUsername()).orElse(null);
-            if (medico != null) {
-                List<Long> pacienteIds = citaRepository.findPacienteIdsByMedicoId(medico.getId());
-                return ResponseEntity.ok(pacienteService.findAllByIds(pacienteIds));
+            if (medico == null) return ResponseEntity.ok(List.of());
+            List<Long> pacienteIds = citaRepository.findPacienteIdsByMedicoId(medico.getId());
+            if (pacienteIds.isEmpty()) return ResponseEntity.ok(org.springframework.data.domain.Page.empty());
+            if (page != null && size != null) {
+                Pageable pageable = PageRequest.of(page, size, Sort.by("nombre").ascending());
+                return ResponseEntity.ok(pacienteService.findAllByIdsPaginated(pacienteIds, termino, incluirInactivos, pageable));
             }
-            return ResponseEntity.ok(List.of());
+            return ResponseEntity.ok(pacienteService.findAllByIds(pacienteIds));
         }
         if (page != null && size != null) {
             Pageable pageable = PageRequest.of(page, size, Sort.by("nombre").ascending());
