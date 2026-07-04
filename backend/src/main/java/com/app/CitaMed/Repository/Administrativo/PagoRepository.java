@@ -23,4 +23,10 @@ public interface PagoRepository extends JpaRepository<Pago, Long> {
     "p.cita.paciente.apellidoPaterno), p.metodoPago, p.cita.id, p.monto, p.estado) " +
     "FROM Pago p ORDER BY p.fechaPago DESC limit 4")
     List<UltimoPagoDTO> ultimosPagos(Pageable pageable);
+    @Query(value = "SELECT MONTH(fecha_pago) AS mes, COALESCE(SUM(monto),0) AS total " +
+            "FROM pagos " +
+            "WHERE YEAR(fecha_pago) = :anio " +
+            "GROUP BY MONTH(fecha_pago) " +
+            "ORDER BY MONTH(fecha_pago)", nativeQuery = true)
+    List<Object[]> ingresosPorMesNative(@Param("anio") int anio);
 }

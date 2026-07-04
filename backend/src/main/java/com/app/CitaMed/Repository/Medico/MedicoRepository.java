@@ -7,6 +7,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import java.util.List;
 import java.util.Optional;
+import org.springframework.data.domain.Pageable;
 
 @Repository
 
@@ -34,6 +35,24 @@ public interface MedicoRepository extends JpaRepository<Medico, Long> {
             ORDER BY COUNT(c) DESC
             """)
     List<MedicoActivoDTO> medicosActivos();
+    @Query("""
+            SELECT new com.app.CitaMed.DTO.MedicoActivoDTO(
+            SUBSTRING(c.medico.nombre,1,1),
+            CONCAT(c.medico.nombre,' ',c.medico.apellidoPaterno),
+            c.medico.numeroColegiatura,
+            c.medico.especialidad.nombre,
+            COUNT(c)
+            )
+            FROM Cita c
+            WHERE YEAR(c.fechaHora) = :anio
+            GROUP BY c.medico.id,
+            c.medico.nombre,
+            c.medico.apellidoPaterno,
+            c.medico.numeroColegiatura,
+            c.medico.especialidad.nombre
+            ORDER BY COUNT(c) DESC
+            """)
+    List<MedicoActivoDTO> medicosMasActivosPorAnio(@Param("anio") int anio, Pageable pageable);
 
     Optional<Medico> findByUsuarioUserName(String userName);
 }
