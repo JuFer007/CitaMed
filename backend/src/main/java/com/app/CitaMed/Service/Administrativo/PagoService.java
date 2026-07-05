@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
+import com.app.CitaMed.DTO.PagoDetalleDTO;
 import java.util.List;
 
 @Service
@@ -25,6 +26,10 @@ public class PagoService {
 
     public Pago findById(Long id) {
         return pagoRepository.findById(id).orElse(null);
+    }
+
+    public List<PagoDetalleDTO> findAllDetalle() {
+        return pagoRepository.findAllDetalle();
     }
 
     @Transactional

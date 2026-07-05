@@ -661,7 +661,7 @@ export class CitasComponent implements OnInit {
 
   puedeReprogramar = (c: CitaDetalle) => c.estado === EstadoCita.PROGRAMADA;
   puedeCancelar = (c: CitaDetalle) => c.estado === EstadoCita.PROGRAMADA;
-  puedeCompletar = (c: CitaDetalle) => c.estado === EstadoCita.PROGRAMADA;
+  puedeCompletar = (_c: CitaDetalle) => false;
   puedeMarcarNoAsistio = (c: CitaDetalle) => c.estado === EstadoCita.PROGRAMADA;
 
   // Validation helpers for HTML

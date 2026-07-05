@@ -6,7 +6,7 @@ import com.app.CitaMed.Model.Medico.Medico;
 import com.app.CitaMed.Repository.Agenda.HorarioMedicoRepository;
 import com.app.CitaMed.Repository.Medico.MedicoRepository;
 import com.app.CitaMed.Service.Agenda.HorarioMedicoService;
-import com.app.CitaMed.Util.SecurityUtil;
+import com.app.CitaMed.Config.SecurityUtil;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

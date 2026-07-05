@@ -28,6 +28,16 @@ public class DiagnosticoController {
         return ResponseEntity.ok(d);
     }
 
+    @PostMapping("/atender")
+    public ResponseEntity<String> atender(@RequestBody @Valid DiagnosticoDTO dto) {
+        String resultado = diagnosticoService.atender(dto);
+        if (resultado.equals("Cita no encontrada"))
+            return ResponseEntity.badRequest().body(resultado);
+        if (resultado.equals("La cita ya tiene un diagnóstico registrado"))
+            return ResponseEntity.badRequest().body(resultado);
+        return ResponseEntity.status(HttpStatus.CREATED).body(resultado);
+    }
+
     @PostMapping
     public ResponseEntity<String> save(@RequestBody @Valid DiagnosticoDTO dto) {
         String resultado = diagnosticoService.save(dto);

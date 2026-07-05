@@ -1,5 +1,6 @@
 package com.app.CitaMed.Controller.Administrativo;
 import com.app.CitaMed.DTO.PagoDTO;
+import com.app.CitaMed.DTO.PagoDetalleDTO;
 import com.app.CitaMed.Model.Administrativo.Pago;
 import com.app.CitaMed.Service.Administrativo.PagoService;
 import jakarta.validation.Valid;
@@ -20,6 +21,11 @@ public class PagoController {
     @GetMapping
     public ResponseEntity<List<Pago>> findAll() {
         return ResponseEntity.ok(pagoService.findAll());
+    }
+
+    @GetMapping("/detalle")
+    public ResponseEntity<List<PagoDetalleDTO>> findAllDetalle() {
+        return ResponseEntity.ok(pagoService.findAllDetalle());
     }
 
     @GetMapping("/{id}")

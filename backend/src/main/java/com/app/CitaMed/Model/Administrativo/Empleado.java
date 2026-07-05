@@ -1,6 +1,6 @@
 package com.app.CitaMed.Model.Administrativo;
 import com.app.CitaMed.Enums.Genero;
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
@@ -14,7 +14,6 @@ import java.time.LocalDate;
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-@Inheritance(strategy = InheritanceType.JOINED)
 @Table(name = "empleados")
 
 public class Empleado {
@@ -56,7 +55,7 @@ public class Empleado {
     @Past(message = "La fecha de nacimiento debe ser pasada")
     private LocalDate fechaNacimiento;
 
-    @NotBlank(message = "El género es obligatorio")
+    @NotNull(message = "El género es obligatorio")
     @Enumerated(EnumType.STRING)
     private Genero genero;
 
@@ -71,6 +70,6 @@ public class Empleado {
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "usuario_id")
-    @JsonIgnore
+    @JsonIgnoreProperties({"password"})
     private Usuario usuario;
 }

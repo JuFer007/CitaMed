@@ -1,37 +1,32 @@
 package com.app.CitaMed.Service.MicroServicios;
 import com.app.CitaMed.Model.Agenda.Cita;
+import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
-import org.springframework.web.reactive.function.client.WebClient;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 
-import java.time.Duration;
 import java.time.format.DateTimeFormatter;
-import java.util.*;
 import java.util.logging.Logger;
+import org.springframework.scheduling.annotation.Async;
 
 @Service
 @RequiredArgsConstructor
-@Component
-
 public class EmailService {
     private static final Logger LOG = Logger.getLogger(EmailService.class.getName());
 
+    private final JavaMailSender mailSender;
     private final TemplateEngine templateEngine;
 
-    @Value("${brevo.api.key}")
-    private String apiKey;
-
-    @Value("${brevo.url}")
-    private String url;
+    @Value("${spring.mail.username}")
+    private String fromEmail;
 
     private final DateTimeFormatter fmtFecha = DateTimeFormatter.ofPattern("dd/MM/yyyy");
     private final DateTimeFormatter fmtHora = DateTimeFormatter.ofPattern("hh:mm a");
 
-    // ── Método sobrecargado con Strings planos (sin entidades JPA) ──
     public void enviarConfirmacion(String nombre, String doctor, String especialidad, String email, String fecha, String hora) {
         try {
             Context context = new Context();
@@ -48,7 +43,6 @@ public class EmailService {
         }
     }
 
-    // ── Métodos originales con Cita (se mantienen para otras partes del sistema) ──
     public void enviarConfirmacion(Cita cita) {
         enviarConfirmacion(
                 cita.getPaciente().getNombre(),
@@ -94,26 +88,30 @@ public class EmailService {
         }
     }
 
+    @Async
+    public void enviarRespuestaConsulta(String nombre, String email, String mensajeOriginal, String respuesta) {
+        try {
+            Context context = new Context();
+            context.setVariable("nombre", nombre);
+            context.setVariable("mensajeOriginal", mensajeOriginal);
+            context.setVariable("respuesta", respuesta);
+
+            String html = templateEngine.process("email/respuesta-consulta", context);
+            enviarCorreo(email, "Respuesta a tu consulta - CitaMed", html);
+        } catch (Exception e) {
+            LOG.warning("Error enviando respuesta de consulta: " + e.getMessage());
+        }
+    }
+
     public void enviarCorreo(String destino, String asunto, String html) {
         try {
-            WebClient.builder()
-                    .baseUrl(url)
-                    .defaultHeader("api-key", apiKey)
-                    .build()
-                    .post()
-                    .bodyValue(Map.of(
-                            "sender", Map.of(
-                                    "name", "CitaMed",
-                                    "email", "juniorfernandozumaetagolac@gmail.com"
-                            ),
-                            "to", List.of(Map.of("email", destino)),
-                            "subject", asunto,
-                            "htmlContent", html
-                    ))
-                    .retrieve()
-                    .bodyToMono(String.class)
-                    .timeout(Duration.ofSeconds(10))
-                    .block();
+            MimeMessage message = mailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
+            helper.setFrom(fromEmail);
+            helper.setTo(destino);
+            helper.setSubject(asunto);
+            helper.setText(html, true);
+            mailSender.send(message);
         } catch (Exception e) {
             LOG.warning("Error enviando correo a " + destino + ": " + e.getMessage());
         }

@@ -29,7 +29,15 @@
         </span>
       </button>
 
-      <button (click)="scrollToSection('contacto')"
+      <button (click)="scrollToSection('reserva')"
+        class="relative group cursor-pointer text-xs uppercase tracking-[0.18em] font-semibold text-black transition-all duration-300 bg-transparent border-none">
+        Reserva
+        <span
+          class="absolute left-0 -bottom-1 h-[2px] w-0 bg-[#36b2ac] rounded-full transition-all duration-300 group-hover:w-full">
+        </span>
+      </button>
+
+      <button (click)="scrollToSection('consultas')"
         class="relative group cursor-pointer text-xs uppercase tracking-[0.18em] font-semibold text-black transition-all duration-300 bg-transparent border-none">
         Contacto
         <span
@@ -71,7 +79,12 @@
       Nuestros doctores
     </button>
 
-    <button (click)="scrollToSection('contacto')"
+    <button (click)="scrollToSection('reserva')"
+      class="text-left text-[10px] uppercase tracking-[0.2em] font-medium text-[#6b7280] hover:text-[#36b2ac] transition-colors bg-transparent border-none cursor-pointer">
+      Reserva
+    </button>
+
+    <button (click)="scrollToSection('consultas')"
       class="text-left text-[10px] uppercase tracking-[0.2em] font-medium text-[#6b7280] hover:text-[#36b2ac] transition-colors bg-transparent border-none cursor-pointer">
       Contacto
     </button>

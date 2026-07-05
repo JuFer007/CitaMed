@@ -11,7 +11,9 @@ import { EspecialidadesComponent } from './features/admin/especialidades-compone
 import { HorarioComponent } from './features/admin/horario-component/horario-component';
 import { EmpleadoComponent } from './features/admin/empleado-component/empleado-component';
 import { PagosComponent } from './features/admin/pagos-component/pagos-component';
+import { ConsultasComponent } from './features/admin/consultas-component/consultas-component';
 import { Reportes } from './features/admin/reportes/reportes';
+import { DiagnosticosComponent } from './features/admin/diagnosticos/diagnosticos-component';
 import { HistorialMedicoC } from './features/admin/historial-medico-c/historial-medico-c';
 import { authGuard } from './core/guards/auth.guard';
 import { Page404Component } from './shared/components/page404-component/page404-component';
@@ -21,7 +23,7 @@ export const routes: Routes = [
   {
     path: 'inicio',
     component: HomeComponent,
-    title: 'Citamed - Bienvenidos',
+    title: 'CitaMed - Home',
   },
   {
     path: 'login',
@@ -31,7 +33,7 @@ export const routes: Routes = [
   {
     path: 'admin',
     component: DashboardLayout,
-    title: 'Dashboard',
+    title: 'CitaMed - Dashboard',
     canActivate: [authGuard],
     children: [
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
@@ -46,6 +48,12 @@ export const routes: Routes = [
         path: 'citas',
         component: CitasComponent,
         data: { title: 'Citas', roles: ['ADMIN', 'MEDICO', 'RECEPCIONISTA'] },
+        canActivate: [roleGuard],
+      },
+      {
+        path: 'diagnosticos',
+        component: DiagnosticosComponent,
+        data: { title: 'Diagnósticos', roles: ['ADMIN', 'MEDICO'] },
         canActivate: [roleGuard],
       },
       {
@@ -82,6 +90,12 @@ export const routes: Routes = [
         path: 'pagos',
         component: PagosComponent,
         data: { title: 'Pagos', roles: ['ADMIN'] },
+        canActivate: [roleGuard],
+      },
+      {
+        path: 'consultas',
+        component: ConsultasComponent,
+        data: { title: 'Consultas', roles: ['ADMIN', 'MEDICO', 'RECEPCIONISTA'] },
         canActivate: [roleGuard],
       },
       {

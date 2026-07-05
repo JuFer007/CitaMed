@@ -1,4 +1,5 @@
 package com.app.CitaMed.Repository.Administrativo;
+import com.app.CitaMed.DTO.PagoDetalleDTO;
 import com.app.CitaMed.DTO.UltimoPagoDTO;
 import com.app.CitaMed.Model.Administrativo.Pago;
 import org.springframework.data.domain.Pageable;
@@ -23,4 +24,13 @@ public interface PagoRepository extends JpaRepository<Pago, Long> {
     "p.cita.paciente.apellidoPaterno), p.metodoPago, p.cita.id, p.monto, p.estado) " +
     "FROM Pago p ORDER BY p.fechaPago DESC limit 4")
     List<UltimoPagoDTO> ultimosPagos(Pageable pageable);
+
+    @Query("SELECT new com.app.CitaMed.DTO.PagoDetalleDTO(p.id, " +
+    "CONCAT(p.cita.paciente.nombre, ' ', p.cita.paciente.apellidoPaterno), " +
+    "p.cita.paciente.dni, p.cita.fechaHora, p.cita.id, " +
+    "CONCAT('DR. ', p.cita.medico.nombre, ' ', p.cita.medico.apellidoPaterno), " +
+    "p.cita.medico.especialidad.nombre, " +
+    "p.metodoPago, p.monto, p.estado) " +
+    "FROM Pago p ORDER BY p.fechaPago DESC")
+    List<PagoDetalleDTO> findAllDetalle();
 }

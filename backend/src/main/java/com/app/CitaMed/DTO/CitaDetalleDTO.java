@@ -27,4 +27,5 @@ public class CitaDetalleDTO {
     private LocalDateTime fechaHora;
     private String motivoConsulta;
     private EstadoCita estado;
+    private boolean tieneDiagnostico;
 }

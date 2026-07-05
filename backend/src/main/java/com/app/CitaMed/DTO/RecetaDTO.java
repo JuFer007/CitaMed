@@ -14,6 +14,8 @@ public class RecetaDTO {
     public String medico;
     public String especialidad;
     public String diagnostico;
+    public String enfermedad;
+    public String descripcion;
     public String receta;
     public String indicaciones;
     public String fecha;

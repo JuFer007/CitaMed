@@ -21,21 +21,25 @@
             class="w-full pl-11 pr-4 h-12 rounded-xl border-2 border-gray-200 focus:border-[#329791] focus:ring-4 focus:ring-[#329791]/10 transition-all outline-none text-sm bg-white" />
         </div>
 
-        <label class="flex items-center gap-2 cursor-pointer text-sm text-gray-600 whitespace-nowrap">
-          <input
-            type="checkbox"
-            [(ngModel)]="incluirInactivos"
-            (change)="filtrar()"
-            class="w-4 h-4 rounded border-gray-300 text-[#329791] focus:ring-[#329791]" />
-          Mostrar inactivos
-        </label>
+        @if (!esSoloLectura) {
+          <label class="flex items-center gap-2 cursor-pointer text-sm text-gray-600 whitespace-nowrap">
+            <input
+              type="checkbox"
+              [(ngModel)]="incluirInactivos"
+              (change)="filtrar()"
+              class="w-4 h-4 rounded border-gray-300 text-[#329791] focus:ring-[#329791]" />
+            Mostrar inactivos
+          </label>
+        }
 
-        <button
-          (click)="openNuevo()"
-          class="h-[48px] px-5 rounded-xl bg-[#329791] hover:bg-[#267c77] text-white font-bold text-sm transition-all shadow-sm cursor-pointer flex items-center gap-2 justify-center w-full sm:w-auto">
-          <i class="pi pi-plus"></i>
-          Nuevo Paciente
-        </button>
+        @if (!esSoloLectura) {
+          <button
+            (click)="openNuevo()"
+            class="h-[48px] px-5 rounded-xl bg-[#329791] hover:bg-[#267c77] text-white font-bold text-sm transition-all shadow-sm cursor-pointer flex items-center gap-2 justify-center w-full sm:w-auto">
+            <i class="pi pi-plus"></i>
+            Nuevo Paciente
+          </button>
+        }
       </div>
     </div>
   </div>
@@ -102,25 +106,28 @@
 
           <td class="px-6 py-5">
             <div class="flex items-center justify-center gap-2">
-              <button (click)="openEditar(p)"
-                      class="w-10 h-10 rounded-xl bg-blue-100 hover:bg-blue-200 text-blue-700 flex items-center justify-center cursor-pointer transition-all"
-                      title="Editar Paciente">
-                <i class="pi pi-pencil"></i>
-              </button>
+              @if (esSoloLectura) {
+                <span class="text-xs text-gray-400 italic">Solo lectura</span>
+              } @else {
+                <button (click)="openEditar(p)"
+                        class="w-10 h-10 rounded-xl bg-blue-100 hover:bg-blue-200 text-blue-700 flex items-center justify-center cursor-pointer transition-all"
+                        title="Editar Paciente">
+                  <i class="pi pi-pencil"></i>
+                </button>
 
-              <button (click)="toggleActivo(p)"
-                      class="px-4 py-2 rounded-xl text-white text-sm font-bold transition-all cursor-pointer"
-                      [ngClass]="p.activo ? 'bg-red-500 hover:bg-red-600' : 'bg-[#329791] hover:bg-[#267c77]'"
-                      title="Desactivar Paciente"
-              >
-                <i class="pi pi-user-minus text-sm"></i>
-              </button>
+                <button (click)="toggleActivo(p)"
+                        class="px-4 py-2 rounded-xl text-white text-sm font-bold transition-all cursor-pointer"
+                        [ngClass]="p.activo ? 'bg-red-500 hover:bg-red-600' : 'bg-[#329791] hover:bg-[#267c77]'"
+                        title="Desactivar Paciente">
+                  <i class="pi pi-user-minus text-sm"></i>
+                </button>
 
-              <button (click)="eliminar(p)"
-                      class="w-10 h-10 rounded-xl bg-red-50 hover:bg-red-100 text-red-600 flex items-center justify-center cursor-pointer transition-all"
-                      title="Eliminar Permanentemente">
-                <i class="pi pi-trash"></i>
-              </button>
+                <button (click)="eliminar(p)"
+                        class="w-10 h-10 rounded-xl bg-red-50 hover:bg-red-100 text-red-600 flex items-center justify-center cursor-pointer transition-all"
+                        title="Eliminar Permanentemente">
+                  <i class="pi pi-trash"></i>
+                </button>
+              }
             </div>
           </td>
         </tr>
@@ -251,13 +258,15 @@
         <button
           (click)="mostrarModal = false"
           class="px-5 py-2.5 rounded-xl bg-red-500 hover:bg-red-600 text-white font-bold cursor-pointer transition-all">
-          Cancelar
+          Cerrar
         </button>
-        <button
-          (click)="guardar()"
-          class="px-5 py-2.5 rounded-xl bg-[#329791] hover:bg-[#267c77] text-white font-bold cursor-pointer transition-all">
-          {{ modoEdicion ? 'Actualizar' : 'Guardar' }}
-        </button>
+        @if (!esSoloLectura) {
+          <button
+            (click)="guardar()"
+            class="px-5 py-2.5 rounded-xl bg-[#329791] hover:bg-[#267c77] text-white font-bold cursor-pointer transition-all">
+            {{ modoEdicion ? 'Actualizar' : 'Guardar' }}
+          </button>
+        }
       </div>
     </ng-template>
   </p-dialog>

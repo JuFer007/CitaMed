@@ -28,6 +28,7 @@ public class EspecialidadService {
         if (especialidad == null) return "Especialidad no encontrada";
         especialidad.setNombre(dto.getNombre());
         especialidad.setDescripcion(dto.getDescripcion());
+        especialidad.setPrecio(dto.getPrecio());
         especialidadRepository.save(especialidad);
         return "Especialidad actualizada correctamente";
     }

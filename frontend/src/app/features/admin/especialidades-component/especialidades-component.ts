@@ -43,7 +43,7 @@ export class EspecialidadesComponent implements OnInit {
   mostrarModal = false;
   modoEdicion = false;
   especialidadEditandoId: number | null = null;
-  especialidadForm: { nombre: string; descripcion: string } = { nombre: '', descripcion: '' };
+  especialidadForm: { nombre: string; descripcion: string; precio: number } = { nombre: '', descripcion: '', precio: 0 };
 
   mostrarConfirmarDelete = false;
   especialidadEliminando: Especialidad | null = null;
@@ -138,20 +138,25 @@ export class EspecialidadesComponent implements OnInit {
   abrirNueva(): void {
     this.modoEdicion = false;
     this.especialidadEditandoId = null;
-    this.especialidadForm = { nombre: '', descripcion: '' };
+    this.especialidadForm = { nombre: '', descripcion: '', precio: 0 };
     this.mostrarModal = true;
   }
 
   abrirEditar(esp: Especialidad): void {
     this.modoEdicion = true;
     this.especialidadEditandoId = esp.id;
-    this.especialidadForm = { nombre: esp.nombre, descripcion: esp.descripcion };
+    this.especialidadForm = { nombre: esp.nombre, descripcion: esp.descripcion, precio: esp.precio };
     this.mostrarModal = true;
   }
 
   guardar(): void {
     if (!this.especialidadForm.nombre.trim()) {
       this.toast.warn('El nombre de la especialidad es obligatorio');
+      return;
+    }
+
+    if (this.especialidadForm.precio <= 0) {
+      this.toast.warn('El precio debe ser un valor positivo');
       return;
     }
 

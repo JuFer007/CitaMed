@@ -1,6 +1,7 @@
 package com.app.CitaMed.Model.Medico;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -26,4 +27,7 @@ public class Especialidad {
 
     @Size(max = 200, message = "La descripción no puede superar los 200 caracteres")
     private String descripcion;
+
+    @NotNull(message = "El precio de la especialidad es obligatorio")
+    private Double precio;
 }

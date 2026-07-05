@@ -1,0 +1,227 @@
+<div class="p-1">
+  <!-- HEADER -->
+  <div class="bg-white rounded-3xl shadow-sm border border-blue-100/50 p-8 mb-6">
+    <div class="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-5">
+      <div>
+        <h3 class="text-[32px] font-extrabold leading-[1.1] text-[#329791] mb-[6px]">
+          Bandeja de Consultas
+        </h3>
+        <p class="text-gray-600 text-sm">
+          Consultas y mensajes enviados por pacientes desde la p&aacute;gina web
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ERROR -->
+  <div *ngIf="error" class="bg-red-50 border-l-4 border-red-500 p-4 rounded-lg mb-6">
+    <p class="text-red-700 text-sm">{{ error }}</p>
+  </div>
+
+  <!-- TABLA -->
+  <div class="bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden">
+    <p-table
+      #dt
+      [value]="consultas"
+      [paginator]="true"
+      [rows]="10"
+      [rowsPerPageOptions]="[5, 10, 20, 50]"
+      [responsiveLayout]="'scroll'"
+      [sortMode]="'single'"
+      [customSort]="true"
+      (onSort)="customSort($event)"
+      class="min-w-full">
+
+      <ng-template pTemplate="header">
+        <tr class="bg-[#e4f1f1]/20 border-b border-[#e4f1f1]/10">
+          <th class="text-center px-3 py-4 text-xs font-black uppercase tracking-wider text-[#329791] w-10">
+            #
+          </th>
+          <th pSortableColumn="nombre"
+              class="text-left px-6 py-4 text-xs font-black uppercase tracking-wider text-[#329791]">
+            <div class="flex items-center gap-2">
+              Nombre
+              <p-sortIcon field="nombre" />
+            </div>
+          </th>
+          <th pSortableColumn="email"
+              class="text-left px-6 py-4 text-xs font-black uppercase tracking-wider text-[#329791]">
+            <div class="flex items-center gap-2">
+              Email
+              <p-sortIcon field="email" />
+            </div>
+          </th>
+          <th pSortableColumn="fechaEnvio"
+              class="text-left px-6 py-4 text-xs font-black uppercase tracking-wider text-[#329791]">
+            <div class="flex items-center gap-2">
+              Fecha
+              <p-sortIcon field="fechaEnvio" />
+            </div>
+          </th>
+          <th class="text-center px-6 py-4 text-xs font-black uppercase tracking-wider text-[#329791]">
+            Estado
+          </th>
+          <th class="text-center px-6 py-4 text-xs font-black uppercase tracking-wider text-[#329791]">
+            Acci&oacute;n
+          </th>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="body" let-consulta let-i="rowIndex">
+        <tr class="border-b border-gray-100 hover:bg-[#329791]/[0.03] transition-all cursor-pointer"
+            (click)="abrirDetalle(consulta)"
+            [class.bg-[#f0fafa]]="!consulta.leido">
+          <td class="px-3 py-5 text-center">
+            <span class="text-sm text-gray-400">{{ i + 1 }}</span>
+          </td>
+          <td class="px-6 py-5">
+            <div class="flex items-center gap-2">
+              @if (!consulta.leido) {
+                <span class="w-2 h-2 rounded-full bg-[#329791] flex-shrink-0"></span>
+              }
+              <div>
+                <span class="text-sm font-semibold text-gray-800">{{ consulta.nombre }}</span>
+                @if (!consulta.leido) {
+                  <span class="ml-2 px-1.5 py-0.5 rounded-full bg-[#329791]/10 text-[#329791] text-[10px] font-bold">NUEVO</span>
+                }
+              </div>
+            </div>
+          </td>
+          <td class="px-6 py-5">
+            <span class="text-sm text-gray-600">{{ consulta.email }}</span>
+          </td>
+          <td class="px-6 py-5">
+            <span class="text-sm text-gray-600">{{ consulta.fechaEnvio | date:'dd/MM/yyyy HH:mm' }}</span>
+          </td>
+          <td class="px-6 py-5 text-center">
+            @if (consulta.respondido) {
+              <span class="inline-block px-2.5 py-1 rounded-full bg-green-100 text-green-700 text-xs font-semibold">
+                Respondido
+              </span>
+            } @else if (consulta.leido) {
+              <span class="inline-block px-2.5 py-1 rounded-full bg-amber-100 text-amber-700 text-xs font-semibold">
+                Le&iacute;do
+              </span>
+            } @else {
+              <span class="inline-block px-2.5 py-1 rounded-full bg-blue-100 text-blue-700 text-xs font-semibold">
+                Sin leer
+              </span>
+            }
+          </td>
+          <td class="px-6 py-5 text-center">
+            <button (click)="abrirDetalle(consulta); $event.stopPropagation()"
+              class="w-9 h-9 rounded-lg bg-[#329791]/10 hover:bg-[#329791]/20 text-[#329791] flex items-center justify-center cursor-pointer transition-all"
+              title="Ver consulta">
+              <span class="material-symbols-outlined text-sm">visibility</span>
+            </button>
+          </td>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="emptymessage">
+        <tr>
+          <td colspan="6" class="!text-center !align-middle py-20 text-gray-400">
+            <span class="material-symbols-outlined !text-6xl mb-4 block">mail</span>
+            <p class="font-semibold text-lg">No hay consultas</p>
+            <p class="text-sm mt-2">Los mensajes de los pacientes aparecer&aacute;n aqu&iacute;</p>
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
+</div>
+
+<!-- MODAL DETALLE -->
+<p-dialog
+  [header]="'Consulta de ' + (consultaSeleccionada?.nombre || '')"
+  [(visible)]="mostrarDetalle"
+  [modal]="true"
+  [style]="{ width: '600px' }"
+  [draggable]="false"
+  [resizable]="false">
+
+  @if (consultaSeleccionada) {
+    <div class="space-y-5 mt-4">
+      <!-- Info -->
+      <div class="bg-[#f0fafa] rounded-2xl p-4 space-y-3 text-sm">
+        <div class="flex justify-between">
+          <span class="text-gray-500 font-medium">Email:</span>
+          <span class="text-gray-800">{{ consultaSeleccionada.email }}</span>
+        </div>
+        <div class="flex justify-between">
+          <span class="text-gray-500 font-medium">Fecha:</span>
+          <span class="text-gray-800">{{ consultaSeleccionada.fechaEnvio | date:'dd/MM/yyyy HH:mm' }}</span>
+        </div>
+        <div class="flex justify-between">
+          <span class="text-gray-500 font-medium">Estado:</span>
+          <span>
+            @if (consultaSeleccionada.respondido) {
+              <span class="px-2 py-0.5 rounded-full bg-green-100 text-green-700 text-xs font-semibold">Respondido</span>
+            } @else {
+              <span class="px-2 py-0.5 rounded-full bg-amber-100 text-amber-700 text-xs font-semibold">Pendiente</span>
+            }
+          </span>
+        </div>
+      </div>
+
+      <!-- Mensaje -->
+      <div>
+        <label class="text-xs font-semibold text-gray-600 block mb-2">Mensaje del paciente</label>
+        <div class="bg-gray-50 rounded-xl p-4 text-sm text-gray-700 whitespace-pre-wrap border border-gray-100">
+          {{ consultaSeleccionada.mensaje }}
+        </div>
+      </div>
+
+      <!-- Respuesta previa -->
+      @if (consultaSeleccionada.respondido && consultaSeleccionada.respuesta) {
+        <div>
+          <label class="text-xs font-semibold text-gray-600 block mb-2">
+            Respuesta enviada
+            <span class="text-gray-400 font-normal ml-2">
+              ({{ consultaSeleccionada.respondidoPor }} — {{ consultaSeleccionada.fechaRespuesta | date:'dd/MM/yyyy HH:mm' }})
+            </span>
+          </label>
+          <div class="bg-green-50 rounded-xl p-4 text-sm text-gray-700 whitespace-pre-wrap border border-green-100">
+            {{ consultaSeleccionada.respuesta }}
+          </div>
+        </div>
+      }
+
+      <!-- Responder -->
+      @if (!consultaSeleccionada.respondido) {
+        <div>
+          <label class="text-xs font-semibold text-gray-600 block mb-2">Responder</label>
+          <textarea
+            #respTextarea
+            [(ngModel)]="respuestaTexto"
+            rows="4"
+            maxlength="2000"
+            placeholder="Escribe tu respuesta..."
+            (input)="autoResize(respTextarea)"
+            class="w-full px-4 py-3 rounded-xl border-2 border-gray-200 outline-none transition-all resize-none overflow-hidden text-sm"></textarea>
+        </div>
+      }
+    </div>
+  }
+
+  <ng-template pTemplate="footer">
+    <div class="flex justify-end gap-3 pt-4">
+      <button (click)="mostrarDetalle = false"
+        class="px-5 py-2.5 rounded-xl bg-gray-200 hover:bg-gray-300 text-gray-700 font-bold cursor-pointer transition-all">
+        Cerrar
+      </button>
+      @if (consultaSeleccionada && !consultaSeleccionada.respondido) {
+        <button (click)="responder()"
+          [disabled]="!respuestaTexto.trim() || respondiendo"
+          class="px-5 py-2.5 rounded-xl bg-[#329791] hover:bg-[#267c77] text-white font-bold cursor-pointer transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2">
+          @if (respondiendo) {
+            <div class="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+          } @else {
+            <span class="material-symbols-outlined text-sm">reply</span>
+          }
+          {{ respondiendo ? 'Enviando...' : 'Responder' }}
+        </button>
+      }
+    </div>
+  </ng-template>
+</p-dialog>

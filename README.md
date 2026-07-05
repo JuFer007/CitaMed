@@ -5,10 +5,12 @@
 
   ![Java](https://img.shields.io/badge/Java-ED8B00?logo=openjdk&logoColor=white)
   ![HTML](https://img.shields.io/badge/HTML-E34F26?logo=html5&logoColor=white)
-  ![CSS](https://img.shields.io/badge/CSS-1572B6?logo=css3&logoColor=white)
   ![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?logo=typescript&logoColor=white)
   ![Angular](https://img.shields.io/badge/Angular-DD0031?logo=angular&logoColor=white)
   ![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-06B6D4?logo=tailwindcss&logoColor=white)
+  ![Node.js](https://img.shields.io/badge/Node.js-339933?logo=node.js&logoColor=white)
+  ![MySQL](https://img.shields.io/badge/MySQL-4479A1?logo=mysql&logoColor=white)
+  ![Spring Boot](https://img.shields.io/badge/Spring_Boot-6DB33F?logo=springboot&logoColor=white)
 </div>
 
 ---
@@ -25,23 +27,27 @@ Pagina principal publica del sistema.
 
 Hero:
 
-![hero](capturas/lading1.png)
+![hero](capturas/lading%20(1).png)
 
 Especialidades:
 
-![especialidades](capturas/lading2.png)
+![especialidades](capturas/lading%20(2).png)
 
 Doctor destacado:
 
-![doctor](capturas/lading3.png)
+![doctor](capturas/lading%20(3).png)
 
-Testimonios:
+Reserva de citas:
 
-![testimonios](capturas/lading4.png)
+![reserva](capturas/lading%20(4).png)
 
-Contacto / Footer:
+Consultas / FAQ:
 
-![contacto](capturas/lading5.png)
+![consultas](capturas/lading%20(5).png)
+
+Testimonios / Footer:
+
+![testimonios](capturas/lading%20(6).png)
 
 ---
 
@@ -187,7 +193,7 @@ Listado de pacientes e historial:
 
 ![historial](capturas/historialMedico.png)
 
-Modal con detalle de atenciones y diagnosticos | PDF generado del historial medico
+Modal con detalle de historial medico de cada paciente | PDF generado del historial medico
 :---:|:---:
 ![modal](capturas/modalHistorialmEDICO.png) | ![pdf](capturas/pdfHistorialMedico.png)
 
@@ -199,6 +205,69 @@ Funcionalidades:
 - PDF se abre en nueva pestana con nombre estandarizado
 - Acceso por roles ADMIN / MEDICO / RECEPCIONISTA
 - Filtra solo pacientes del medico cuando el rol es MEDICO
+
+---
+
+## 10. Diagnósticos
+
+Gestión de diagnósticos y recetas médicas asociados a las citas.
+
+Listado de citas pendientes y atendidas:
+
+![diagnosticos](capturas/diagnosticos.png)
+
+Modal de atención / edición | PDF de receta médica
+:---:|:---:
+![modal](capturas/modalDiafnosticoEditaroAgregar.png) | ![receta](capturas/receta-diagnostico.png)
+
+Funcionalidades:
+- Listar citas pendientes y atendidas
+- Filtrar por estado: Pendientes, Atendidas, Todas
+- Buscar por paciente, médico o DNI
+- Atender paciente: registrar enfermedad, descripción, receta e indicaciones
+- Editar diagnóstico existente
+- Descargar receta médica en PDF
+- Acceso por roles ADMIN / MEDICO
+- Validación de campos obligatorios (enfermedad)
+
+---
+
+## 11. Pagos
+
+Gestión de pagos con generación de ticket PDF.
+
+Listado de pagos | Modal de pago / ticket PDF
+:---:|:---:
+![pagos](capturas/pagos%20(1).png) | ![pagoModal](capturas/pagos%20(2).png)
+
+Funcionalidades:
+- Listar pagos con paginación y ordenamiento
+- Buscar por paciente o DNI
+- Crear pago asociado a una cita
+- Ver detalle del pago
+- Descargar ticket PDF del pago
+- Acceso por roles ADMIN / MEDICO / RECEPCIONISTA
+
+---
+
+## 12. Consultas
+
+Bandeja de consultas enviadas desde la landing page, con gestión de respuestas vía email.
+
+Listado de consultas:
+
+![consultas](capturas/consultas%20(1).png)
+
+Modal de detalle y respuesta:
+
+![consultaModal](capturas/consultas%20(2).png)
+
+Funcionalidades:
+- Listar consultas recibidas con paginación y ordenamiento
+- Indicador visual de no leído / leído / respondido
+- Ver detalle de la consulta (marca automáticamente como leída)
+- Responder consulta con envío de email al paciente
+- Acceso por roles ADMIN / MEDICO / RECEPCIONISTA
 
 ---
 
@@ -215,6 +284,9 @@ Funcionalidades:
 | Citas CRUD | Completo (+ estados) |
 | Horarios | Completo |
 | Historial Medico | Completo (+ PDF) |
+| Diagnosticos CRUD | Completo (+ Receta PDF) |
+| Pagos CRUD | Completo (+ Ticket PDF) |
+| Consultas | Completo (+ respuesta por email) |
 | Seguridad | Roles ADMIN / MEDICO / RECEPCIONISTA |
 | Backend API | Spring Boot + JPA + MySQL |
 | Frontend | Angular + PrimeNG + Tailwind |

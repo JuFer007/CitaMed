@@ -13,6 +13,7 @@ import com.app.CitaMed.Model.Paciente.Paciente;
 import com.app.CitaMed.Repository.Administrativo.PagoRepository;
 import com.app.CitaMed.Repository.Agenda.CitaRepository;
 import com.app.CitaMed.Repository.Agenda.HorarioMedicoRepository;
+import com.app.CitaMed.Repository.Medico.DiagnosticoRepository;
 import com.app.CitaMed.Repository.Medico.MedicoRepository;
 import com.app.CitaMed.Repository.Paciente.PacienteRepository;
 import com.app.CitaMed.Service.MicroServicios.EmailService;
@@ -37,6 +38,7 @@ public class CitaService {
     private final EmailService emailService;
     private final PagoRepository pagoRepository;
     private final HorarioMedicoRepository horarioMedicoRepository;
+    private final DiagnosticoRepository diagnosticoRepository;
 
     public List<CitaDetalleDTO> findAllDetalle() {
         return citaRepository.findAllDetalle();
@@ -141,7 +143,7 @@ public class CitaService {
 
         Pago pago = new Pago();
         pago.setCita(cita);
-        pago.setMonto(80.00);
+        pago.setMonto(medico.getEspecialidad().getPrecio());
         pago.setMetodoPago(MetodoPago.EFECTIVO);
         pago.setEstado(EstadoPago.PENDIENTE);
         pago.setFechaPago(LocalDateTime.now());
@@ -184,6 +186,8 @@ public class CitaService {
         if (cita == null) return "Cita no encontrada";
         if (cita.getEstado() == EstadoCita.CANCELADA)
             return "No se puede completar una cita cancelada";
+        if (!diagnosticoRepository.existsByCitaId(id))
+            return "No se puede completar una cita sin diagnóstico. Registre el diagnóstico primero.";
         cita.setEstado(EstadoCita.ATENDIDA);
         citaRepository.save(cita);
         return "Cita completada correctamente";

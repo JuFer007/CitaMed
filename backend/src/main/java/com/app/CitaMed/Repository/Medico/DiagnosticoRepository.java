@@ -7,4 +7,5 @@ import java.util.Optional;
 @Repository
 public interface DiagnosticoRepository extends JpaRepository<Diagnostico, Long> {
     Optional<Diagnostico> findByCitaId(Long citaId);
+    boolean existsByCitaId(Long citaId);
 }

@@ -4,6 +4,7 @@ import com.app.CitaMed.Model.Agenda.Cita;
 import com.app.CitaMed.Model.Medico.Diagnostico;
 import com.app.CitaMed.Repository.Agenda.CitaRepository;
 import com.app.CitaMed.Repository.Medico.DiagnosticoRepository;
+import com.app.CitaMed.Service.Agenda.CitaService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,6 +15,7 @@ import java.util.List;
 public class DiagnosticoService {
     private final DiagnosticoRepository diagnosticoRepository;
     private final CitaRepository citaRepository;
+    private final CitaService citaService;
 
     public List<Diagnostico> findAll() {
         return diagnosticoRepository.findAll();
@@ -52,6 +54,16 @@ public class DiagnosticoService {
         if (dto.getIndicaciones() != null) diagnostico.setIndicaciones(dto.getIndicaciones());
         diagnosticoRepository.save(diagnostico);
         return "Diagnóstico actualizado correctamente";
+    }
+
+    @Transactional
+    public String atender(DiagnosticoDTO dto) {
+        String diagResult = save(dto);
+        if (!diagResult.equals("Diagnóstico registrado correctamente"))
+            return diagResult;
+
+        citaService.completar(dto.getCitaId());
+        return "Atención registrada correctamente";
     }
 
     @Transactional

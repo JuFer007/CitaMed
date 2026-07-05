@@ -1,0 +1,225 @@
+<div class="dx-wrap">
+  <div class="dx-header-card">
+    <div class="dx-header-inner">
+      <div>
+        <h3 class="dx-title">Diagnósticos</h3>
+        <p class="dx-subtitle">Gestión de diagnósticos y recetas médicas</p>
+      </div>
+      <div class="dx-header-actions">
+        <div class="dx-search">
+          <i class="pi pi-search dx-search-icon"></i>
+          <input
+            type="text"
+            [(ngModel)]="terminoBusqueda"
+            (input)="aplicarFiltros()"
+            placeholder="Buscar paciente, médico o DNI..."
+            class="dx-search-input" />
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="dx-table-card">
+    @if (loading) {
+      <div class="dx-loading">
+        <div class="dx-spinner"></div>
+        <p>Cargando...</p>
+      </div>
+    } @else {
+      <div class="dx-tabs">
+        <button class="dx-tab" [class.active]="vista === 'PENDIENTES'" (click)="setVista('PENDIENTES')">
+          <i class="pi pi-clock"></i> Pendientes
+        </button>
+        <button class="dx-tab" [class.active]="vista === 'ATENDIDAS'" (click)="setVista('ATENDIDAS')">
+          <i class="pi pi-check-circle"></i> Atendidas
+        </button>
+        <button class="dx-tab" [class.active]="vista === 'TODAS'" (click)="setVista('TODAS')">
+          <i class="pi pi-list"></i> Todas
+        </button>
+      </div>
+
+      <div class="dx-table-header">
+        <div class="dt-col" style="flex:2.2">Paciente</div>
+        <div class="dt-col" style="flex:2">Médico</div>
+        <div class="dt-col" style="flex:0.9">Consultorio</div>
+        <div class="dt-col" style="flex:1; text-align:center">Fecha</div>
+        <div class="dt-col" style="flex:0.8; text-align:center">Estado</div>
+        <div class="dt-col" style="flex:1.2; text-align:center">Acciones</div>
+      </div>
+
+      <div class="dx-table-body">
+        @for (c of filtrados; track c.id) {
+          <div class="dx-row">
+            <div class="dx-cell" style="flex:2.2">
+              <div class="cell-patient">
+                <div class="cell-avatar">{{ getInitials(c) }}</div>
+                <div class="cell-patient-info">
+                  <span class="cell-name">{{ nombrePaciente(c) }}</span>
+                  <span class="cell-sub">DNI: {{ c.pacienteDni }}</span>
+                </div>
+              </div>
+            </div>
+            <div class="dx-cell" style="flex:2">
+              <div class="cell-text">{{ nombreMedico(c) }}</div>
+              <span class="cell-especialidad">{{ c.medicoEspecialidad }}</span>
+            </div>
+            <div class="dx-cell" style="flex:0.9">N° {{ c.consultorioNumero }}</div>
+            <div class="dx-cell" style="flex:1; text-align:center">
+              <div class="cell-fecha">{{ c.fechaHora | date:'dd/MM/yyyy' }}</div>
+              <div class="cell-hora">{{ c.fechaHora | date:'HH:mm' }}</div>
+            </div>
+            <div class="dx-cell" style="flex:0.8; text-align:center">
+              <span class="dx-badge-estado {{ estadoClass(c.estado) }}">{{ c.estado }}</span>
+            </div>
+            <div class="dx-cell dx-cell-actions" style="flex:1.2; text-align:center">
+              @if (c.estado === EstadoCita.PROGRAMADA) {
+                <button class="dx-btn-action dx-btn-atender" (click)="abrirAtender(c)" [disabled]="esSoloLectura" title="Atender paciente">
+                  <i class="pi pi-play"></i> Atender
+                </button>
+              } @else if (c.estado === EstadoCita.ATENDIDA) {
+                <div class="dx-action-group">
+                  <button class="dx-btn-action dx-btn-editar" (click)="abrirEditar(c)" [disabled]="esSoloLectura" title="Editar diagnóstico">
+                    <i class="pi pi-pencil"></i>
+                  </button>
+                  @if (c.tieneDiagnostico) {
+                    <button class="dx-btn-action dx-btn-pdf" (click)="descargarReceta(c)" [disabled]="generandoPdfId === c.id" title="Descargar receta PDF">
+                      @if (generandoPdfId === c.id) {
+                        <i class="pi pi-spin pi-spinner"></i>
+                      } @else {
+                        <i class="pi pi-file-pdf"></i>
+                      }
+                    </button>
+                  }
+                </div>
+              } @else {
+                <span class="dx-badge-readonly">—</span>
+              }
+            </div>
+          </div>
+        } @empty {
+          <div class="dx-empty">
+            <i class="pi pi-inbox dx-empty-icon"></i>
+            <p>No se encontraron resultados</p>
+          </div>
+        }
+      </div>
+
+      <div class="dx-footer">
+        <span class="dx-count">{{ filtrados.length }} resultado{{ filtrados.length !== 1 ? 's' : '' }}</span>
+      </div>
+    }
+  </div>
+</div>
+
+<p-dialog
+  [header]="citaAtendiendo ? (modoEdicion ? 'Editando: ' + nombrePaciente(citaAtendiendo) : 'Atendiendo: ' + nombrePaciente(citaAtendiendo)) : 'Diagnóstico'"
+  [(visible)]="mostrarModal"
+  [modal]="true"
+  [style]="{ width: '700px' }"
+  [draggable]="false"
+  [resizable]="false"
+  (onHide)="cerrarModal()">
+
+  @if (cargandoDiagnostico) {
+    <div class="dx-loading">
+      <div class="dx-spinner"></div>
+      <p>Cargando diagnóstico...</p>
+    </div>
+  }
+
+  @if (citaAtendiendo && !cargandoDiagnostico) {
+    <div class="dx-modal-body">
+      <div class="dx-modal-info">
+        <div class="dx-info-item">
+          <span class="dx-info-lbl">Paciente</span>
+          <span class="dx-info-val">{{ nombrePaciente(citaAtendiendo) }}</span>
+        </div>
+        <div class="dx-info-item">
+          <span class="dx-info-lbl">Médico</span>
+          <span class="dx-info-val">{{ nombreMedico(citaAtendiendo) }} — {{ citaAtendiendo.medicoEspecialidad }}</span>
+        </div>
+        <div class="dx-info-item">
+          <span class="dx-info-lbl">Fecha</span>
+          <span class="dx-info-val">{{ citaAtendiendo.fechaHora | date:'dd/MM/yyyy HH:mm' }} — Cons. N° {{ citaAtendiendo.consultorioNumero }}</span>
+        </div>
+      </div>
+
+      <div class="dx-form-divider">Datos del diagnóstico</div>
+
+      <div class="dx-form">
+        <div class="dx-field">
+          <label class="dx-label">Enfermedad o Diagnóstico <span class="dx-req">*</span></label>
+          <input
+            type="text"
+            [(ngModel)]="form.enfermedad"
+            maxlength="100"
+            placeholder="Ej: Diabetes tipo 2, Hipertensión arterial..."
+            class="dx-input" />
+        </div>
+
+        <div class="dx-field">
+          <label class="dx-label">Descripción</label>
+          <textarea
+            [(ngModel)]="form.descripcion"
+            maxlength="500"
+            rows="3"
+            placeholder="Descripción detallada del diagnóstico..."
+            class="dx-textarea"></textarea>
+          <span class="dx-counter">{{ (form.descripcion || '').length }}/500</span>
+        </div>
+
+        <div class="dx-field">
+          <label class="dx-label">Receta / Medicamentos</label>
+          <textarea
+            [(ngModel)]="form.receta"
+            maxlength="500"
+            rows="3"
+            placeholder="Medicamentos recetados, dosis, frecuencia..."
+            class="dx-textarea"></textarea>
+          <span class="dx-counter">{{ (form.receta || '').length }}/500</span>
+        </div>
+
+        <div class="dx-field">
+          <label class="dx-label">Indicaciones</label>
+          <textarea
+            [(ngModel)]="form.indicaciones"
+            maxlength="500"
+            rows="3"
+            placeholder="Indicaciones adicionales para el paciente..."
+            class="dx-textarea"></textarea>
+          <span class="dx-counter">{{ (form.indicaciones || '').length }}/500</span>
+        </div>
+      </div>
+    </div>
+  }
+
+  <ng-template pTemplate="footer">
+    @if (citaAtendiendo && !cargandoDiagnostico) {
+      <div class="dx-footer-btns">
+        <button class="dx-btn dx-btn-secondary" (click)="cerrarModal()">Cancelar</button>
+        <button class="dx-btn dx-btn-primary" (click)="guardar()" [disabled]="!formValido || guardando">
+          @if (guardando) {
+            <i class="pi pi-spin pi-spinner"></i>
+          } @else {
+            <i class="pi {{ modoEdicion ? 'pi-save' : 'pi-check-circle' }}"></i>
+          }
+          {{ guardando
+            ? (modoEdicion ? 'Actualizando...' : 'Guardando...')
+            : (modoEdicion ? 'Actualizar Diagnóstico' : 'Guardar y Completar')
+          }}
+        </button>
+      </div>
+    }
+  </ng-template>
+  </p-dialog>
+
+  <!-- PDF LOADING MODAL -->
+  @if (generandoPdfId !== null) {
+    <div class="pdf-modal-overlay">
+      <div class="pdf-modal-card">
+        <div class="pdf-modal-spinner"><i class="pi pi-file-pdf pdf-modal-icon"></i></div>
+        <p class="pdf-modal-title">Generando PDF</p>
+        <p class="pdf-modal-sub">Por favor espere, su receta se está generando...</p>
+      </div>
+    </div>
+  }

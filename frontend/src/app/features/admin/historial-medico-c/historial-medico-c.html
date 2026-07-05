@@ -74,8 +74,12 @@
               <button class="action-btn action-view" (click)="abrirHistorial(p)" title="Ver historial">
                 <i class="pi pi-eye"></i>
               </button>
-              <button class="action-btn action-download" (click)="descargarHistorial(p)" title="Descargar PDF">
-                <i class="pi pi-download"></i>
+              <button class="action-btn action-download" (click)="descargarHistorial(p)" [disabled]="generandoHistorialPdf" title="Descargar PDF">
+                @if (generandoHistorialPdf) {
+                  <i class="pi pi-spin pi-spinner"></i>
+                } @else {
+                  <i class="pi pi-download"></i>
+                }
               </button>
             </div>
           </div>
@@ -133,8 +137,12 @@
               <span>{{ historial.paciente.telefono || '—' }}</span>
             </div>
           </div>
-          <button class="mpc-download" (click)="descargarHistorialActual()">
-            <i class="pi pi-download" style="font-size:14px"></i>
+          <button class="mpc-download" (click)="descargarHistorialActual()" [disabled]="generandoHistorialPdf">
+            @if (generandoHistorialPdf) {
+              <i class="pi pi-spin pi-spinner" style="font-size:14px"></i>
+            } @else {
+              <i class="pi pi-download" style="font-size:14px"></i>
+            }
             PDF
           </button>
         </div>
@@ -192,6 +200,17 @@
     </ng-template>
   </p-dialog>
 
+  <!-- PDF LOADING MODAL -->
+  @if (generandoHistorialPdf || generandoRecetaPdf) {
+    <div class="pdf-modal-overlay">
+      <div class="pdf-modal-card">
+        <div class="pdf-modal-spinner"><i class="pi pi-file-pdf pdf-modal-icon"></i></div>
+        <p class="pdf-modal-title">Generando PDF</p>
+        <p class="pdf-modal-sub">Por favor espere, su documento se está generando...</p>
+      </div>
+    </div>
+  }
+
   <!-- DETAIL DIALOG -->
   <p-dialog
     header="Detalle de consulta"
@@ -216,7 +235,19 @@
             <div class="dd-dx-card">
               <div><span class="dd-lbl">Enfermedad</span><span class="dd-val strong">{{ citaSeleccionada.diagnostico.enfermedad }}</span></div>
               @if (citaSeleccionada.diagnostico.descripcion) { <div><span class="dd-lbl">Descripción</span><span class="dd-val">{{ citaSeleccionada.diagnostico.descripcion }}</span></div> }
-              @if (citaSeleccionada.diagnostico.receta) { <div><span class="dd-lbl">Receta</span><span class="dd-val pre">{{ citaSeleccionada.diagnostico.receta }}</span></div> }
+              @if (citaSeleccionada.diagnostico.receta) {
+                <div><span class="dd-lbl">Receta</span><span class="dd-val pre">{{ citaSeleccionada.diagnostico.receta }}</span></div>
+                <div style="margin-top: 0.5rem;">
+                  <button class="hm-btn hm-btn-pdf" (click)="descargarRecetaPdf(citaSeleccionada)" [disabled]="generandoRecetaPdf">
+                    @if (generandoRecetaPdf) {
+                      <i class="pi pi-spin pi-spinner"></i>
+                    } @else {
+                      <i class="pi pi-file-pdf"></i>
+                    }
+                    {{ generandoRecetaPdf ? 'Generando...' : 'Descargar Receta PDF' }}
+                  </button>
+                </div>
+              }
               @if (citaSeleccionada.diagnostico.indicaciones) { <div><span class="dd-lbl">Indicaciones</span><span class="dd-val pre">{{ citaSeleccionada.diagnostico.indicaciones }}</span></div> }
             </div>
           </div>

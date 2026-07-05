@@ -13,11 +13,11 @@ export class EspecialidadService {
     return this.http.get<Especialidad[]>(this.apiUrl);
   }
 
-  crear(data: { nombre: string; descripcion: string }): Observable<string> {
+  crear(data: { nombre: string; descripcion: string; precio: number }): Observable<string> {
     return this.http.post(this.apiUrl, data, { responseType: 'text' });
   }
 
-  actualizar(id: number, data: { nombre: string; descripcion: string }): Observable<string> {
+  actualizar(id: number, data: { nombre: string; descripcion: string; precio: number }): Observable<string> {
     return this.http.put(`${this.apiUrl}/${id}`, data, { responseType: 'text' });
   }
 

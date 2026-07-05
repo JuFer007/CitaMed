@@ -7,12 +7,13 @@ import { EspecialidadesComponent } from "./especialidades-component/especialidad
 import { DoctorDestacadoComponent } from "./doctor-destacado-component/doctor-destacado-component";
 import { TestimoniosComponent } from './testimonios-component/testimonios-component';
 import { ContactoComponent } from './contacto-component/contacto-component';
+import { ConsultasComponent } from './consultas-component/consultas-component';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CommonModule, NavbarComponent, FooterComponent, HeroComponent, EspecialidadesComponent, DoctorDestacadoComponent, TestimoniosComponent, ContactoComponent],
+  imports: [CommonModule, NavbarComponent, FooterComponent, HeroComponent, EspecialidadesComponent, DoctorDestacadoComponent, TestimoniosComponent, ContactoComponent, ConsultasComponent],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   templateUrl: './home-component.html',
   styleUrl: './home-component.css'

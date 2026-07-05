@@ -6,7 +6,7 @@ import com.app.CitaMed.Model.Paciente.Paciente;
 import com.app.CitaMed.Repository.Agenda.CitaRepository;
 import com.app.CitaMed.Repository.Medico.MedicoRepository;
 import com.app.CitaMed.Service.Paciente.PacienteService;
-import com.app.CitaMed.Util.SecurityUtil;
+import com.app.CitaMed.Config.SecurityUtil;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

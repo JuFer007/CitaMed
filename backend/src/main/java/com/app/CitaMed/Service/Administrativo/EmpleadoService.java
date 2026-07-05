@@ -6,8 +6,10 @@ import com.app.CitaMed.Repository.Administrativo.EmpleadoRepository;
 import com.app.CitaMed.Repository.Administrativo.UsuarioRepository;
 import com.app.CitaMed.Util.*;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -16,9 +18,15 @@ import java.util.List;
 public class EmpleadoService {
     private final EmpleadoRepository empleadoRepository;
     private final UsuarioRepository usuarioRepository;
+    private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
     public List<Empleado> findAll() {
         return empleadoRepository.findAll();
+    }
+
+    public List<Empleado> buscar(String termino) {
+        if (termino == null || termino.isBlank()) return empleadoRepository.findAll();
+        return empleadoRepository.buscar(termino);
     }
 
     public Empleado findById(Long id) {
@@ -49,7 +57,7 @@ public class EmpleadoService {
 
         Usuario usuario = new Usuario();
         usuario.setUserName(dto.getUserName());
-        usuario.setPassword(dto.getPassword());
+        usuario.setPassword(passwordEncoder.encode(dto.getPassword()));
         usuario.setRol(dto.getRol());
         usuario.setActivo(true);
         usuarioRepository.save(usuario);
@@ -65,7 +73,7 @@ public class EmpleadoService {
         empleado.setFechaNacimiento(dto.getFechaNacimiento());
         empleado.setGenero(dto.getGenero());
         empleado.setSalario(dto.getSalario());
-        empleado.setFechaIngreso(dto.getFechaIngreso());
+        empleado.setFechaIngreso(LocalDate.now());
         empleado.setUsuario(usuario);
         empleado.setActivo(true);
         empleadoRepository.save(empleado);

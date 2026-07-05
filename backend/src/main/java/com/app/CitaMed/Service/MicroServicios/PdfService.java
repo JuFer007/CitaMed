@@ -1,4 +1,5 @@
 package com.app.CitaMed.Service.MicroServicios;
+import com.app.CitaMed.DTO.HistorialPdfDTO;
 import com.app.CitaMed.DTO.RecetaDTO;
 import com.app.CitaMed.DTO.TicketCitaDTO;
 import lombok.RequiredArgsConstructor;
@@ -24,6 +25,14 @@ public class PdfService {
     public byte[] receta(RecetaDTO dto) {
         return rest.postForObject(
                 "http://localhost:3005/generar-receta",
+                dto,
+                byte[].class
+        );
+    }
+
+    public byte[] historial(HistorialPdfDTO dto) {
+        return rest.postForObject(
+                "http://localhost:3005/generar-historial",
                 dto,
                 byte[].class
         );

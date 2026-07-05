@@ -12,6 +12,52 @@ app.use(express.urlencoded({ limit: '10mb', extended: true }));
 app.use('/recursos', express.static(path.join(__dirname, 'recursos')));
 app.use('/', express.static(path.join(__dirname, 'templates')));
 
+async function renderPdf(html, viewportWidth) {
+  const browser = await puppeteer.launch({
+    args: ["--no-sandbox"],
+    headless: "new"
+  });
+
+  try {
+    const page = await browser.newPage();
+
+    await page.setViewport({ width: viewportWidth, height: 800 });
+    await page.setContent(html, { waitUntil: "networkidle0" });
+
+    await page.evaluate(() => {
+      document.body.style.margin = "0";
+      document.body.style.padding = "0";
+      document.body.style.background = "transparent";
+      document.body.style.display = "block";
+
+      const root = document.body.firstElementChild;
+      if (root) {
+        root.style.margin = "0";
+      }
+    });
+
+    const rootHandle = await page.evaluateHandle(() => document.body.firstElementChild);
+    const rootElement = rootHandle.asElement();
+    const box = await rootElement.boundingBox();
+    await rootHandle.dispose();
+
+    const width = Math.ceil(box.width);
+    const height = Math.ceil(box.height);
+
+    const pdf = await page.pdf({
+      width: `${width}px`,
+      height: `${height}px`,
+      printBackground: true,
+      margin: { top: 0, right: 0, bottom: 0, left: 0 },
+      pageRanges: "1"
+    });
+
+    return pdf;
+  } finally {
+    await browser.close();
+  }
+}
+
 app.post("/generar-ticket-cita", async (req, res) => {
   try {
     const {
@@ -30,30 +76,17 @@ app.post("/generar-ticket-cita", async (req, res) => {
     let template = fs.readFileSync(templatePath, "utf8");
 
     template = template
-      .replace("{{cliente}}", cliente)
-      .replace("{{dni}}", dni)
-      .replace("{{fecha}}", fecha)
-      .replace("{{hora}}", hora)
-      .replace("{{numeroCita}}", numeroCita)
-      .replace("{{medico}}", medico)
-      .replace("{{especialidad}}", especialidad)
-      .replace("{{metodoPago}}", metodoPago)
-      .replace("{{monto}}", monto.toFixed(2));
+        .replace("{{cliente}}", cliente)
+        .replace("{{dni}}", dni)
+        .replace("{{fecha}}", fecha)
+        .replace("{{hora}}", hora)
+        .replace("{{numeroCita}}", numeroCita)
+        .replace("{{medico}}", medico)
+        .replace("{{especialidad}}", especialidad)
+        .replace("{{metodoPago}}", metodoPago)
+        .replace("{{monto}}", monto.toFixed(2));
 
-    const browser = await puppeteer.launch({
-      args: ["--no-sandbox"],
-      headless: "new"
-    });
-
-    const page = await browser.newPage();
-    await page.setContent(template, { waitUntil: "networkidle0" });
-
-    const pdf = await page.pdf({
-      format: "A4",
-      printBackground: true
-    });
-
-    await browser.close();
+    const pdf = await renderPdf(template, 300);
 
     res.setHeader("Content-Type", "application/pdf");
     res.send(pdf);
@@ -72,39 +105,41 @@ app.post("/generar-receta", async (req, res) => {
       medico,
       especialidad,
       diagnostico,
+      enfermedad,
+      descripcion,
       receta,
       indicaciones,
       fecha
     } = req.body;
 
+    function toBullets(text) {
+      if (!text) return '';
+      return text.split(/\.\s+(?=[A-ZÁÉÍÓÚ])/).map(s => s.trim()).filter(s => s.length > 0).map(s => `<li>${s.endsWith('.') ? s : s + '.'}</li>`).join('');
+    }
+
+    function buildDiagnosticoHtml(enfermedad, descripcion) {
+      let html = `<p style="color:#126565;border-color:#126565" class="text-sm font-semibold border-l-2 pl-3">${enfermedad || ''}</p>`;
+      if (descripcion) {
+        html += `<p class="text-gray-600 text-sm mt-1 border-l-2 pl-3" style="border-color:#126565">${descripcion}</p>`;
+      }
+      return html;
+    }
+
     const templatePath = path.join(__dirname, "templates", "receta.html");
     let template = fs.readFileSync(templatePath, "utf8");
 
     template = template
-      .replace("{{paciente}}", paciente)
-      .replace("{{dni}}", dni)
-      .replace("{{edad}}", edad)
-      .replace("{{medico}}", medico)
-      .replace("{{especialidad}}", especialidad)
-      .replace("{{diagnostico}}", diagnostico)
-      .replace("{{receta}}", receta)
-      .replace("{{indicaciones}}", indicaciones)
-      .replace("{{fecha}}", fecha);
+        .replace(/\{\{paciente\}\}/g, paciente)
+        .replace(/\{\{dni\}\}/g, dni)
+        .replace(/\{\{edad\}\}/g, edad)
+        .replace(/\{\{medico\}\}/g, medico)
+        .replace(/\{\{especialidad\}\}/g, especialidad)
+        .replace(/\{\{diagnosticoHtml\}\}/g, buildDiagnosticoHtml(enfermedad, descripcion))
+        .replace(/\{\{receta\}\}/g, toBullets(receta))
+        .replace(/\{\{indicaciones\}\}/g, toBullets(indicaciones))
+        .replace(/\{\{fecha\}\}/g, fecha);
 
-    const browser = await puppeteer.launch({
-      args: ["--no-sandbox"],
-      headless: "new"
-    });
-
-    const page = await browser.newPage();
-    await page.setContent(template, { waitUntil: "networkidle0" });
-
-    const pdf = await page.pdf({
-      format: "A4",
-      printBackground: true
-    });
-
-    await browser.close();
+    const pdf = await renderPdf(template, 560);
 
     res.setHeader("Content-Type", "application/pdf");
     res.send(pdf);
@@ -113,7 +148,6 @@ app.post("/generar-receta", async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 });
-
 
 app.post("/generar-historial", async (req, res) => {
   try {
@@ -162,32 +196,19 @@ app.post("/generar-historial", async (req, res) => {
     `).join('') : '<p class="text-xs text-gray-400 italic">No hay diagnósticos registrados</p>';
 
     template = template
-      .replace("{{paciente}}", paciente)
-      .replace("{{dni}}", dni)
-      .replace("{{edad}}", edad)
-      .replace("{{genero}}", genero)
-      .replace("{{grupoSanguineo}}", grupoSanguineo)
-      .replace("{{telefono}}", telefono)
-      .replace("{{email}}", email)
-      .replace("{{fecha}}", fecha)
-      .replace("{{totalCitas}}", totalCitas)
-      .replace("{{citas}}", citasHtml)
-      .replace("{{diagnosticos}}", diagnosticosHtml);
+        .replace("{{paciente}}", paciente)
+        .replace("{{dni}}", dni)
+        .replace("{{edad}}", edad)
+        .replace("{{genero}}", genero)
+        .replace("{{grupoSanguineo}}", grupoSanguineo)
+        .replace("{{telefono}}", telefono)
+        .replace("{{email}}", email)
+        .replace("{{fecha}}", fecha)
+        .replace("{{totalCitas}}", totalCitas)
+        .replace("{{citas}}", citasHtml)
+        .replace("{{diagnosticos}}", diagnosticosHtml);
 
-    const browser = await puppeteer.launch({
-      args: ["--no-sandbox"],
-      headless: "new"
-    });
-
-    const page = await browser.newPage();
-    await page.setContent(template, { waitUntil: "networkidle0" });
-
-    const pdf = await page.pdf({
-      format: "A4",
-      printBackground: true
-    });
-
-    await browser.close();
+    const pdf = await renderPdf(template, 750);
 
     res.setHeader("Content-Type", "application/pdf");
     res.setHeader("Content-Disposition", `inline; filename="HISTORIAL_MEDICO_${dni}.pdf"`);

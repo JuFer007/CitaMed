@@ -23,29 +23,24 @@ INSERT INTO usuarios (user_name, password, rol, activo) VALUES
 ('med.mora',           '$2a$10$800I/8HGwCkjx0iApGb/kevpKOnZ1jp2UjTTWCg9CKaUNKdFhoywa', 'MEDICO',         true),
 ('med.rivas',          '$2a$10$800I/8HGwCkjx0iApGb/kevpKOnZ1jp2UjTTWCg9CKaUNKdFhoywa', 'MEDICO',         true),
 ('med.pinto',          '$2a$10$800I/8HGwCkjx0iApGb/kevpKOnZ1jp2UjTTWCg9CKaUNKdFhoywa', 'MEDICO',         true),
-('med.aguilar',        '$2a$10$800I/8HGwCkjx0iApGb/kevpKOnZ1jp2UjTTWCg9CKaUNKdFhoywa', 'MEDICO',         true),
-('enf.lopez',          '$2a$10$800I/8HGwCkjx0iApGb/kevpKOnZ1jp2UjTTWCg9CKaUNKdFhoywa', 'RECEPCIONISTA',      true),
-('enf.perez',          '$2a$10$800I/8HGwCkjx0iApGb/kevpKOnZ1jp2UjTTWCg9CKaUNKdFhoywa', 'RECEPCIONISTA',      true),
-('enf.ruiz',           '$2a$10$800I/8HGwCkjx0iApGb/kevpKOnZ1jp2UjTTWCg9CKaUNKdFhoywa', 'RECEPCIONISTA',      true),
-('enf.diaz',           '$2a$10$800I/8HGwCkjx0iApGb/kevpKOnZ1jp2UjTTWCg9CKaUNKdFhoywa', 'RECEPCIONISTA',      true),
-('enf.ortiz',          '$2a$10$800I/8HGwCkjx0iApGb/kevpKOnZ1jp2UjTTWCg9CKaUNKdFhoywa', 'RECEPCIONISTA',      true);
+('med.aguilar',        '$2a$10$800I/8HGwCkjx0iApGb/kevpKOnZ1jp2UjTTWCg9CKaUNKdFhoywa', 'MEDICO',         true);
 
 -- ========================
 -- 2. ESPECIALIDADES
 -- ========================
-INSERT INTO especialidades (nombre, descripcion) VALUES
-('Urología',                  'Diagnóstico y tratamiento del sistema urinario y reproductor masculino'),
-('Reumatología',              'Tratamiento de enfermedades articulares, musculares y autoinmunes'),
-('Medicina General',          'Atención médica primaria y consultas generales de salud'),
-('Cardiología',               'Diagnóstico y tratamiento de enfermedades cardiovasculares'),
-('Pediatría',                 'Atención médica integral de niños desde el nacimiento hasta la adolescencia'),
-('Ginecología y Obstetricia', 'Salud reproductiva femenina, embarazo y parto'),
-('Traumatología y Ortopedia', 'Lesiones y enfermedades del aparato locomotor'),
-('Neurología',                'Enfermedades del sistema nervioso central y periférico'),
-('Dermatología',              'Enfermedades de la piel, cabello y uñas'),
-('Endocrinología',            'Trastornos hormonales y metabólicos'),
-('Gastroenterología',         'Enfermedades del sistema digestivo'),
-('Oftalmología',              'Enfermedades y cirugías del ojo');
+INSERT INTO especialidades (nombre, descripcion, precio) VALUES
+('Urología',                  'Diagnóstico y tratamiento del sistema urinario y reproductor masculino',                   120.00),
+('Reumatología',              'Tratamiento de enfermedades articulares, musculares y autoinmunes',                      110.00),
+('Medicina General',          'Atención médica primaria y consultas generales de salud',                                 80.00),
+('Cardiología',               'Diagnóstico y tratamiento de enfermedades cardiovasculares',                             150.00),
+('Pediatría',                 'Atención médica integral de niños desde el nacimiento hasta la adolescencia',             90.00),
+('Ginecología y Obstetricia', 'Salud reproductiva femenina, embarazo y parto',                                         130.00),
+('Traumatología y Ortopedia', 'Lesiones y enfermedades del aparato locomotor',                                         120.00),
+('Neurología',                'Enfermedades del sistema nervioso central y periférico',                                140.00),
+('Dermatología',              'Enfermedades de la piel, cabello y uñas',                                               100.00),
+('Endocrinología',            'Trastornos hormonales y metabólicos',                                                   115.00),
+('Gastroenterología',         'Enfermedades del sistema digestivo',                                                     125.00),
+('Oftalmología',              'Enfermedades y cirugías del ojo',                                                        135.00);
 
 -- ========================
 -- 3. CONSULTORIOS 
@@ -77,14 +72,7 @@ INSERT INTO empleados (nombre, apellido_paterno, apellido_materno, dni, telefono
 ('CARLOS',         'MENDOZA',   'QUISPE',   '45678901', '987654321', 'Av. Los Olivos 123, Chiclayo',          'carlos.mendoza@citamed.com',   '1985-03-15', 'MASCULINO', 4200.00, '2018-01-10', true,  1),
 -- Recepcionistas apuntando a IDs 5 y 6
 ('MARIA',          'LOPEZ',     'SANCHEZ',  '45678902', '987654322', 'Jr. Los Pinos 456, Chiclayo',           'maria.lopez@citamed.com',      '1990-07-22', 'FEMENINO',  1800.00, '2020-03-01', true,  5),
-('ANA',            'PEREZ',     'CASTILLO', '45678903', '987654323', 'Calle Manco Capac 789, Chiclayo',       'ana.perez@citamed.com',        '1992-11-05', 'FEMENINO',  1800.00, '2021-06-15', true,  6),
--- Enfermeros (IDs ajustados: 19, 20, 21...)
-('JOSE',           'RUIZ',      'VARGAS',   '45678910', '987654330', 'Av. Salaverry 321, Chiclayo',           'jose.ruiz@citamed.com',        '1988-04-18', 'MASCULINO', 2200.00, '2019-08-01', true,  19),
-('LUCIA',          'DIAZ',      'FLORES',   '45678911', '987654331', 'Jr. Amazonas 654, Chiclayo',            'lucia.diaz@citamed.com',       '1991-09-25', 'FEMENINO',  2200.00, '2020-01-15', true,  20),
--- Personal adicional (les asigné los IDs 21, 22 y 23 que son los que sobran de enfermeros)
-('ROBERTO',        'NUNEZ',     'PAREDES',  '45678914', '987654334', 'Av. Grau 987, Chiclayo',                'roberto.nunez@citamed.com',    '1987-12-10', 'MASCULINO', 1500.00, '2018-05-01', true,  21),
-('ELENA',          'MENDOZA',   'CRUZ',     '45678916', '987654336', 'Calle 7 de Enero 147, Chiclayo',        'elena.mendoza@citamed.com',    '1989-06-30', 'FEMENINO',  1500.00, '2019-11-01', true,  22),
-('PEDRO',          'AGUILAR',   'RIOS',     '45678918', '987654338', 'Av. Bolognesi 258, Chiclayo',           'pedro.aguilar@citamed.com',    '1983-02-14', 'MASCULINO', 3800.00, '2017-03-20', true,  23);
+('ANA',            'PEREZ',     'CASTILLO', '45678903', '987654323', 'Calle Manco Capac 789, Chiclayo',       'ana.perez@citamed.com',        '1992-11-05', 'FEMENINO',  1800.00, '2021-06-15', true,  6);
 -- ========================
 -- 5. MEDICOS
 -- ========================
@@ -283,3 +271,34 @@ INSERT INTO diagnosticos (enfermedad, descripcion, receta, indicaciones, cita_id
 ('ASMA BRONQUIAL',                     'Asma intermitente en nino con FEV1 80% del predicho',                          'Salbutamol inhalador 100mcg c/4-6h en crisis / Budesonida inhalada 200mcg',                              'Max 4 inhalaciones por crisis. Enjuagar boca tras cada uso.',                            29),
 ('FIBRILACION AURICULAR',              'FA paroxistica en seguimiento con anticoagulacion oral',                      'Warfarina 5mg/dia / Digoxina 0.125mg/dia',                                                               'Control INR mensual. Controlar pulso antes de digoxina. Evitar AINES.',                  30);
 
+INSERT INTO consultas (nombre, email, mensaje, fecha_envio, leido, respondido, respuesta, fecha_respuesta, respondido_por) VALUES
+('María García López', 'maria.garcia@gmail.com', 'Buenos días, quisiera saber si atienden pacientes diabéticos y qué especialista recomiendan para mi caso.', '2026-06-01 09:15:00', TRUE, TRUE, 'Buenos días María. Contamos con endocrinólogos especializados en diabetes. Puede agendar una cita con el Dr. Ricardo Mendoza en nuestras instalaciones. Gracias por contactarnos.', '2026-06-01 10:30:00', 'Dr. Ricardo Mendoza'),
+('Carlos Paredes Ruiz', 'carlos.paredes@hotmail.com', 'Hola, estoy interesado en saber los precios de las consultas por especialidad. ¿Podrían enviarme un listado?', '2026-06-02 11:00:00', TRUE, TRUE, 'Hola Carlos. Puede ver los precios de cada especialidad directamente en nuestra página web en la sección Especialidades. Los costos van desde S/80 hasta S/150 según la especialidad. Saludos.', '2026-06-02 14:20:00', 'Admin'),
+('Ana Torres Torres', 'ana.torres@yahoo.com', 'Necesito reprogramar la cita de mi mamá, ¿cuál es el procedimiento?', '2026-06-03 08:45:00', TRUE, TRUE, 'Hola Ana. Para reprogramar una cita puede llamarnos al +51 922 626 148 o acercarse a recepción. Necesitamos el nombre completo del paciente y la fecha/hora actual de la cita. Gracias.', '2026-06-03 09:15:00', 'Recepcionista'),
+('Jorge Salazar Vega', 'jorge.salazar@gmail.com', 'Excelente atención recibida hoy con el Dr. López. Muy profesional y amable.', '2026-06-04 13:30:00', TRUE, TRUE, 'Agradecemos sus palabras Jorge. Nos alegra saber que tuvo una buena experiencia con el Dr. López. Lo esperamos nuevamente cuando lo necesite.', '2026-06-04 15:00:00', 'Admin'),
+('Lucía Fernández Rojas', 'lucia.fr@outlook.com', '¿Cuentan con servicio de emergencias las 24 horas? Mi esposo tuvo un accidente y no sabemos si ir a su clínica.', '2026-06-05 19:45:00', TRUE, TRUE, 'Hola Lucía. Sí, contamos con atención de emergencias las 24 horas, los 7 días de la semana. Puede acercarse a nuestra sede en Av. Luis González 1182, Chiclayo. Esperamos que su esposo se recupere pronto.', '2026-06-05 20:30:00', 'Dr. Ricardo Mendoza'),
+('Pedro Huamán Quispe', 'pedro.hq@gmail.com', 'Quisiera saber si aceptan pagos con tarjeta de crédito o solo efectivo.', '2026-06-06 10:10:00', TRUE, TRUE, 'Hola Pedro. Actualmente solo aceptamos pago en efectivo en nuestras instalaciones. El pago se realiza al momento de la cita. Gracias por su consulta.', '2026-06-06 11:00:00', 'Admin'),
+('Rosa Castillo Morales', 'rosa.castillo@gmail.com', 'Hola, soy paciente nueva y quisiera saber qué documentos debo llevar para mi primera consulta.', '2026-06-07 09:00:00', TRUE, TRUE, 'Hola Rosa. Para su primera consulta debe traer su DNI original. Si tiene exámenes previos o historial médico, también puede traerlos para que el médico los revise. La esperamos.', '2026-06-07 10:15:00', 'Recepcionista'),
+('Miguel Ángel Rivas', 'miguel.rivas@hotmail.com', '¿Tienen convenio con seguros médicos? Tengo el seguro de SaludTotal.', '2026-06-08 15:30:00', TRUE, FALSE, NULL, NULL, NULL),
+('Diana Prado Linares', 'diana.prado@gmail.com', 'Tuve una consulta hace dos días y el doctor me recetó unos análisis. ¿Los resultados se los puedo enviar por correo?', '2026-06-09 11:45:00', TRUE, TRUE, 'Hola Diana. Puede traer los resultados personalmente a nuestra sede o si prefiere enviarlos al correo contacto@citamed.pe indicando su nombre completo y fecha de la cita. Saludos.', '2026-06-09 14:00:00', 'Admin'),
+('Fernando Bellido Chunga', 'fernando.bellido@gmail.com', 'Excelente servicio. El Dr. Herrera me explicó todo con mucha paciencia. Muy recomendado.', '2026-06-10 12:20:00', TRUE, TRUE, 'Muchas gracias Fernando. Nos alegra mucho su comentario. El Dr. Herrera es uno de nuestros mejores especialistas. Lo esperamos en su próximo control.', '2026-06-10 13:45:00', 'Admin'),
+('Elena Cueva Sánchez', 'elena.cueva@yahoo.com', 'Quisiera saber si hay estacionamiento para pacientes en la clínica.', '2026-06-11 16:00:00', TRUE, TRUE, 'Hola Elena. Sí, contamos con estacionamiento gratuito para nuestros pacientes en la parte posterior de la clínica. Capacidad para 20 vehículos. Gracias por consultarnos.', '2026-06-11 17:00:00', 'Recepcionista'),
+('Luis Alberto Neira', 'luis.neira@gmail.com', 'Llamé varias veces hoy y nadie contestó. Necesito cancelar mi cita del viernes.', '2026-06-12 09:30:00', TRUE, TRUE, 'Hola Luis, lamentamos el inconveniente. Hemos tenido problemas con la línea telefónica. Para cancelar su cita puede responder este correo indicando su nombre completo y la fecha/hora de la cita. Nosotros la procesaremos.', '2026-06-12 10:00:00', 'Admin'),
+('Carmen Mendoza Padilla', 'carmen.mp@hotmail.com', '¿Realizan exámenes de sangre en la misma clínica o tengo que ir a un laboratorio externo?', '2026-06-13 08:15:00', TRUE, FALSE, NULL, NULL, NULL),
+('Humberto Tello Carpio', 'humberto.tello@gmail.com', 'Quiero agradecer al Dr. Salazar por la atención que le dio a mi hijo. Salió muy contento de su consulta.', '2026-06-14 17:50:00', TRUE, TRUE, 'Qué alegría leer esto Humberto. El Dr. Salazar es excelente con los niños. Transmitiremos su agradecimiento. Saludos a su hijo.', '2026-06-14 18:30:00', 'Admin'),
+('Patricia Sialer Pisfil', 'patricia.sialer@gmail.com', 'Buenas tardes, quisiera información sobre el programa de atención para adultos mayores. ¿Tienen descuentos?', '2026-06-15 14:00:00', TRUE, FALSE, NULL, NULL, NULL),
+('Raúl Ramírez López', 'raul.ramirez@outlook.com', 'Hace una semana me atendí con la Dra. Méndez y necesito una copia de mi receta porque la perdí.', '2026-06-16 10:00:00', TRUE, TRUE, 'Hola Raúl. Puede acercarse a recepción en nuestras instalaciones y solicitaremos una copia de su receta. Necesitará su DNI para identificarse. Atenderemos su solicitud a la brevedad.', '2026-06-16 11:30:00', 'Recepcionista'),
+('Silvia Vílchez Guerrero', 'silvia.vilchez@gmail.com', '¿Cuál es el horario de atención los sábados?', '2026-06-17 09:45:00', TRUE, TRUE, 'Hola Silvia. Atendemos los sábados de 8:00 AM a 8:00 PM igual que entre semana. Solo los domingos no tenemos atención regular, solo emergencias. Gracias.', '2026-06-17 10:15:00', 'Admin'),
+('Alberto Chávez Montenegro', 'alberto.chavez@gmail.com', 'Recibí un correo de confirmación de cita pero no reconozco haberla agendado. Favor de cancelarla.', '2026-06-18 11:20:00', TRUE, FALSE, NULL, NULL, NULL),
+('Gloria Sánchez de Díaz', 'gloria.sanchez@yahoo.com', 'Mi cita es mañana pero tengo fiebre. ¿Debo ir igual o la reprogramo?', '2026-06-19 07:30:00', TRUE, TRUE, 'Hola Gloria. Le recomendamos no asistir si tiene fiebre para evitar contagios. Puede llamarnos para reprogramar sin costo. Cuídese mucho.', '2026-06-19 08:00:00', 'Admin'),
+('Óscar Ponce Torres', 'oscar.ponce@gmail.com', '¿Tienen servicio de teleconsulta o todas las citas son presenciales?', '2026-06-20 16:45:00', TRUE, FALSE, NULL, NULL, NULL),
+('Liliana Arriola Zevallos', 'liliana.arriola@hotmail.com', 'Quisiera saber si el Dr. Gamarra atiende también en la tarde o solo en la mañana.', '2026-06-21 12:30:00', TRUE, TRUE, 'Hola Liliana. El Dr. Gamarra atiende en horario de mañana de 8:00 AM a 1:00 PM y también los lunes y jueves en la tarde de 3:00 PM a 6:00 PM. Puede ver sus horarios disponibles al agendar su cita.', '2026-06-21 13:15:00', 'Admin'),
+('Javier Montero Silva', 'javier.montero@gmail.com', 'Compré unos medicamentos recomendados por el Dr. Campos pero me están causando malestar estomacal. ¿Debo suspenderlos?', '2026-06-22 10:00:00', TRUE, TRUE, 'Hola Javier. Le recomendamos no suspender el tratamiento sin consultar al médico. Puede llamar a la clínica para dejarle un mensaje al Dr. Campos y que él le indique qué hacer. Esperamos que mejore.', '2026-06-22 11:00:00', 'Recepcionista'),
+('Ruth Córdova Ramos', 'ruth.cordova@gmail.com', 'La página web es muy clara y fácil de usar. Me encantó el diseño. Felicitaciones.', '2026-06-23 14:00:00', TRUE, TRUE, 'Muchas gracias Ruth. Nos alegra que le guste nuestro sitio web. Trabajamos constantemente para mejorar la experiencia de nuestros pacientes. Saludos.', '2026-06-23 15:00:00', 'Admin'),
+('David Rentería Vílchez', 'david.renteria@gmail.com', '¿Cuánto tiempo de anticipación debo llegar antes de mi cita?', '2026-06-24 08:00:00', TRUE, TRUE, 'Hola David. Le recomendamos llegar 15 minutos antes de su cita para realizar el registro en recepción y estar listo para su atención. Gracias.', '2026-06-24 08:30:00', 'Recepcionista'),
+('Sandra Cubas Purizaca', 'sandra.cubas@yahoo.com', 'Hola, quiero saber si el Dr. Aliaga atiende a niños o solo adultos.', '2026-06-25 10:30:00', FALSE, FALSE, NULL, NULL, NULL),
+('Manuel Vásquez Torres', 'manuel.vasquez@gmail.com', 'Excelente atención en general. La clínica está muy bien equipada y el personal es muy amable.', '2026-06-26 13:00:00', FALSE, FALSE, NULL, NULL, NULL),
+('Brenda Rojas Sánchez', 'brenda.rojas@hotmail.com', 'Tuve un problema con el pago de mi cita. Me cobraron de más. ¿Pueden revisar mi caso?', '2026-06-27 09:15:00', FALSE, FALSE, NULL, NULL, NULL),
+('Aldo Seminario Cruz', 'aldo.seminario@gmail.com', '¿Puede un familiar recoger mis resultados de exámenes o solo yo como paciente?', '2026-06-28 11:40:00', FALSE, FALSE, NULL, NULL, NULL),
+('Katherine Jiménez Rivas', 'kathy.jimenez@gmail.com', 'Me gustaría saber si tienen nutricionista. Quiero iniciar un plan de alimentación saludable.', '2026-06-29 15:20:00', FALSE, FALSE, NULL, NULL, NULL),
+('Ronald Flores Baca', 'ronald.flores@outlook.com', 'Estoy muy agradecido con la Dra. Merino por su dedicación y profesionalismo. Es una excelente médica.', '2026-06-30 17:00:00', FALSE, FALSE, NULL, NULL, NULL);

@@ -178,7 +178,7 @@ public class ReservaService {
 
         Pago pago = new Pago();
         pago.setCita(cita);
-        pago.setMonto(80.00);
+        pago.setMonto(medico.getEspecialidad().getPrecio());
         pago.setMetodoPago(MetodoPago.EFECTIVO);
         pago.setEstado(EstadoPago.PAGADO);
         pago.setFechaPago(LocalDateTime.now());

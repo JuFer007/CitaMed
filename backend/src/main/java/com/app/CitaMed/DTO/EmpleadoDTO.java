@@ -48,10 +48,6 @@ public class EmpleadoDTO {
     @Positive(message = "El salario debe ser mayor que 0")
     private double salario;
 
-    @NotNull(message = "La fecha de ingreso es obligatoria")
-    @PastOrPresent(message = "La fecha de ingreso no puede ser futura")
-    private LocalDate fechaIngreso;
-
     @NotBlank(message = "El nombre de usuario es obligatorio")
     @Size(min = 3, max = 50)
     private String userName;

@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { DialogModule } from 'primeng/dialog';
 import { PacienteService } from '../../../core/services/paciente-service';
 import { HistorialMedicoService } from '../../../core/services/historial-medico-service';
+import { DiagnosticoService } from '../../../core/services/diagnostico-service';
 import { Paciente, PageResponse } from '../../../model/Paciente';
 import { HistorialMedicoDetalle, CitaHistorial } from '../../../model/HistorialMedico';
 import { GlobalToast } from '../../../core/services/global-toast';
@@ -39,11 +40,13 @@ export class HistorialMedicoC implements OnInit {
     return Math.ceil(this.totalRecords / this.size);
   }
 
-  private pdfApi = 'http://localhost:3005/generar-historial';
+  generandoHistorialPdf = false;
+  generandoRecetaPdf = false;
 
   constructor(
     private pacienteService: PacienteService,
     private historialMedicoService: HistorialMedicoService,
+    private diagnosticoService: DiagnosticoService,
     private toast: GlobalToast,
     private cdr: ChangeDetectorRef,
   ) {}
@@ -118,7 +121,9 @@ export class HistorialMedicoC implements OnInit {
   }
 
   private generarPdf(historial: HistorialMedicoDetalle): void {
-    this.toast.info('Generando historial médico...');
+    this.generandoHistorialPdf = true;
+    this.cdr.markForCheck();
+
     const edad = historial.paciente.fechaNacimiento
       ? Math.floor((Date.now() - new Date(historial.paciente.fechaNacimiento).getTime()) / (365.25 * 24 * 60 * 60 * 1000)).toString()
       : '—';
@@ -153,28 +158,46 @@ export class HistorialMedicoC implements OnInit {
       diagnosticos,
     };
 
-    const form = document.createElement('form');
-    form.method = 'POST';
-    form.action = this.pdfApi;
-    form.target = '_blank';
-    form.style.display = 'none';
-
-    const input = document.createElement('input');
-    input.type = 'hidden';
-    input.name = 'data';
-    input.value = JSON.stringify(data);
-    form.appendChild(input);
-
-    document.body.appendChild(form);
-    form.submit();
-    document.body.removeChild(form);
-    this.cdr.markForCheck();
+    this.historialMedicoService.descargarHistorial(data).subscribe({
+      next: (blob) => {
+        const url = window.URL.createObjectURL(blob);
+        window.open(url, '_blank');
+        this.generandoHistorialPdf = false;
+        this.cdr.markForCheck();
+      },
+      error: () => {
+        this.toast.error('Error al generar el historial médico');
+        this.generandoHistorialPdf = false;
+        this.cdr.markForCheck();
+      },
+    });
   }
 
   verDetalleCita(cita: CitaHistorial): void {
     this.citaSeleccionada = cita;
     this.mostrarDetalle = true;
+    this.generandoRecetaPdf = false;
     this.cdr.markForCheck();
+  }
+
+  descargarRecetaPdf(cita: CitaHistorial): void {
+    if (!cita.citaId || !cita.diagnostico?.receta) return;
+    this.generandoRecetaPdf = true;
+    this.cdr.markForCheck();
+
+    this.diagnosticoService.descargarReceta(cita.citaId).subscribe({
+      next: (blob) => {
+        const url = window.URL.createObjectURL(blob);
+        window.open(url, '_blank');
+        this.generandoRecetaPdf = false;
+        this.cdr.markForCheck();
+      },
+      error: () => {
+        this.toast.error('Error al generar el PDF de receta');
+        this.generandoRecetaPdf = false;
+        this.cdr.markForCheck();
+      },
+    });
   }
 
   estadoClass(estado: EstadoCita): string {

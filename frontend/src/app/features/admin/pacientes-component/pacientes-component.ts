@@ -6,6 +6,7 @@ import { ButtonModule } from 'primeng/button';
 import { TableModule } from 'primeng/table';
 import { PaginatorModule } from 'primeng/paginator';
 import { LucideAngularModule, User } from 'lucide-angular';
+import { AuthService } from '../../../core/services/auth-service';
 import { PacienteService } from '../../../core/services/paciente-service';
 import { Paciente, PacienteDTO, PageResponse } from '../../../model/Paciente';
 import { GlobalToast } from '../../../core/services/global-toast';
@@ -45,10 +46,15 @@ export class PacientesComponent implements OnInit {
   };
 
   constructor(
+    private authService: AuthService,
     private pacienteService: PacienteService,
     private toast: GlobalToast,
     private cdr: ChangeDetectorRef,
   ) {}
+
+  get esSoloLectura(): boolean {
+    return this.authService.isMedico() && !this.authService.isAdmin();
+  }
 
   ngOnInit(): void {
     this.obtenerPacientes();

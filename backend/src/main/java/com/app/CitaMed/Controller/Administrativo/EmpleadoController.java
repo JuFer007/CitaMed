@@ -18,8 +18,8 @@ public class EmpleadoController {
     private final EmpleadoService empleadoService;
 
     @GetMapping
-    public ResponseEntity<List<Empleado>> findAll() {
-        return ResponseEntity.ok(empleadoService.findAll());
+    public ResponseEntity<List<Empleado>> findAll(@RequestParam(required = false) String search) {
+        return ResponseEntity.ok(empleadoService.buscar(search));
     }
 
     @GetMapping("/{id}")
@@ -43,7 +43,7 @@ public class EmpleadoController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<String> update(@PathVariable Long id, @RequestBody @Valid EmpleadoDTO dto) {
+    public ResponseEntity<String> update(@PathVariable Long id, @RequestBody EmpleadoDTO dto) {
         String resultado = empleadoService.update(id, dto);
         if (resultado.equals("Empleado no encontrado"))
             return ResponseEntity.notFound().build();

@@ -110,7 +110,8 @@ public interface CitaRepository extends JpaRepository<Cita, Long> {
             "c.paciente.id, c.paciente.nombre, c.paciente.apellidoPaterno, c.paciente.apellidoMaterno, c.paciente.dni, " +
             "c.medico.id, c.medico.nombre, c.medico.apellidoPaterno, c.medico.apellidoMaterno, c.medico.especialidad.nombre, " +
             "c.consultorio.id, c.consultorio.numero, c.consultorio.descripcion, " +
-            "c.fechaHora, c.motivoConsulta, c.estado) " +
+            "c.fechaHora, c.motivoConsulta, c.estado, " +
+            "CASE WHEN c.diagnostico IS NOT NULL THEN true ELSE false END) " +
             "FROM Cita c ORDER BY c.fechaHora DESC")
     List<CitaDetalleDTO> findAllDetalle();
 
@@ -119,7 +120,8 @@ public interface CitaRepository extends JpaRepository<Cita, Long> {
             "c.paciente.id, c.paciente.nombre, c.paciente.apellidoPaterno, c.paciente.apellidoMaterno, c.paciente.dni, " +
             "c.medico.id, c.medico.nombre, c.medico.apellidoPaterno, c.medico.apellidoMaterno, c.medico.especialidad.nombre, " +
             "c.consultorio.id, c.consultorio.numero, c.consultorio.descripcion, " +
-            "c.fechaHora, c.motivoConsulta, c.estado) " +
+            "c.fechaHora, c.motivoConsulta, c.estado, " +
+            "CASE WHEN c.diagnostico IS NOT NULL THEN true ELSE false END) " +
             "FROM Cita c WHERE c.medico.id = :medicoId ORDER BY c.fechaHora DESC")
     List<CitaDetalleDTO> findDetalleByMedicoId(@Param("medicoId") Long medicoId);
 
@@ -128,7 +130,8 @@ public interface CitaRepository extends JpaRepository<Cita, Long> {
             "c.paciente.id, c.paciente.nombre, c.paciente.apellidoPaterno, c.paciente.apellidoMaterno, c.paciente.dni, " +
             "c.medico.id, c.medico.nombre, c.medico.apellidoPaterno, c.medico.apellidoMaterno, c.medico.especialidad.nombre, " +
             "c.consultorio.id, c.consultorio.numero, c.consultorio.descripcion, " +
-            "c.fechaHora, c.motivoConsulta, c.estado) " +
+            "c.fechaHora, c.motivoConsulta, c.estado, " +
+            "CASE WHEN c.diagnostico IS NOT NULL THEN true ELSE false END) " +
             "FROM Cita c WHERE c.paciente.id = :pacienteId ORDER BY c.fechaHora DESC")
     List<CitaDetalleDTO> findDetalleByPacienteId(@Param("pacienteId") Long pacienteId);
 
@@ -137,7 +140,8 @@ public interface CitaRepository extends JpaRepository<Cita, Long> {
             "c.paciente.id, c.paciente.nombre, c.paciente.apellidoPaterno, c.paciente.apellidoMaterno, c.paciente.dni, " +
             "c.medico.id, c.medico.nombre, c.medico.apellidoPaterno, c.medico.apellidoMaterno, c.medico.especialidad.nombre, " +
             "c.consultorio.id, c.consultorio.numero, c.consultorio.descripcion, " +
-            "c.fechaHora, c.motivoConsulta, c.estado) " +
+            "c.fechaHora, c.motivoConsulta, c.estado, " +
+            "CASE WHEN c.diagnostico IS NOT NULL THEN true ELSE false END) " +
             "FROM Cita c WHERE c.medico.id = :medicoId AND c.paciente.id = :pacienteId ORDER BY c.fechaHora DESC")
     List<CitaDetalleDTO> findDetalleByMedicoIdAndPacienteId(@Param("medicoId") Long medicoId, @Param("pacienteId") Long pacienteId);
 

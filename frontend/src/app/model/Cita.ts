@@ -22,6 +22,7 @@ export interface CitaDetalle {
   fechaHora: string;
   motivoConsulta: string;
   estado: EstadoCita;
+  tieneDiagnostico: boolean;
 }
 
 export interface CitaDTO {
