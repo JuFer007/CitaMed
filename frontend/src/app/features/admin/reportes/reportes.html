@@ -1,1 +1,93 @@
-<p>reportes works!</p>
+<div class="flex-1 overflow-y-auto p-1">
+  <!-- Header -->
+  <div class="flex items-center justify-between mb-5">
+    <div class="text-[18px] font-semibold text-navy">Reportes</div>
+    <select
+      class="text-[13px] border border-border rounded-lg px-3 py-1.5 bg-white text-navy"
+      [(ngModel)]="anioSeleccionado"
+      (ngModelChange)="cambiarAnio($event)">
+      <option *ngFor="let anio of aniosDisponibles" [value]="anio">{{ anio }}</option>
+    </select>
+  </div>
+
+  <!-- Resumen -->
+  <div class="grid grid-cols-2 gap-3 mb-4">
+    <div class="bg-white rounded-[10px] border border-border p-4 flex flex-col gap-1.5">
+      <div class="text-[11px] text-muted uppercase tracking-[0.07em] font-medium">
+        Total de citas ({{ anioSeleccionado }})
+      </div>
+      <div class="text-[26px] font-semibold text-navy leading-none">{{ totalCitasAnio }}</div>
+    </div>
+    <div class="bg-white rounded-[10px] border border-border p-4 flex flex-col gap-1.5">
+      <div class="text-[11px] text-muted uppercase tracking-[0.07em] font-medium">
+        Ingresos totales ({{ anioSeleccionado }})
+      </div>
+      <div class="text-[26px] font-semibold text-navy leading-none">
+        S/ {{ totalIngresosAnio | number:'1.0-2' }}
+      </div>
+    </div>
+  </div>
+
+  <!-- Citas e ingresos por mes -->
+  <div class="grid grid-cols-2 gap-3 mb-4">
+    <div class="bg-white rounded-[10px] border border-border p-4">
+      <div class="text-[13px] font-semibold text-navy mb-3">Citas por mes</div>
+      <div class="h-[260px]">
+        <canvas baseChart [data]="citasPorMesData" [options]="citasPorMesOptions" type="line"></canvas>
+      </div>
+    </div>
+    <div class="bg-white rounded-[10px] border border-border p-4">
+      <div class="text-[13px] font-semibold text-navy mb-3">Ingresos por mes</div>
+      <div class="h-[260px]">
+        <canvas baseChart [data]="ingresosPorMesData" [options]="ingresosPorMesOptions" type="bar"></canvas>
+      </div>
+    </div>
+  </div>
+
+  <!-- Estado y especialidad -->
+  <div class="grid grid-cols-2 gap-3 mb-4">
+    <div class="bg-white rounded-[10px] border border-border p-4">
+      <div class="text-[13px] font-semibold text-navy mb-3">Citas por estado</div>
+      <div class="h-[260px]">
+        <canvas baseChart [data]="citasPorEstadoData" [options]="citasPorEstadoOptions" type="doughnut"></canvas>
+      </div>
+    </div>
+    <div class="bg-white rounded-[10px] border border-border p-4">
+      <div class="text-[13px] font-semibold text-navy mb-3">Citas por especialidad</div>
+      <div class="h-[260px]">
+        <canvas baseChart [data]="citasPorEspecialidadData" [options]="citasPorEspecialidadOptions" type="bar"></canvas>
+      </div>
+    </div>
+  </div>
+
+  <!-- Top médicos -->
+  <div class="bg-white rounded-[10px] border border-border p-4">
+    <div class="text-[13px] font-semibold text-navy mb-3">Médicos con más citas atendidas</div>
+    <table class="w-full text-[13px]">
+      <thead>
+        <tr class="text-left text-muted text-[11px] uppercase tracking-[0.06em]">
+          <th class="pb-2">Médico</th>
+          <th class="pb-2">Especialidad</th>
+          <th class="pb-2">CMP</th>
+          <th class="pb-2 text-right">Citas</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let m of topMedicos" class="border-t border-border">
+          <td class="py-2 flex items-center gap-2">
+            <div class="w-7 h-7 rounded-full bg-teal-light text-teal-dark flex items-center justify-center text-[11px] font-semibold">
+              {{ m.iniciales }}
+            </div>
+            {{ m.medico }}
+          </td>
+          <td class="py-2 text-muted">{{ m.especialidad }}</td>
+          <td class="py-2 text-muted">{{ m.cmp }}</td>
+          <td class="py-2 text-right font-semibold text-navy">{{ m.citas }}</td>
+        </tr>
+        <tr *ngIf="topMedicos.length === 0">
+          <td colspan="4" class="py-4 text-center text-muted">No hay datos disponibles.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

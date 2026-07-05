@@ -1,6 +1,7 @@
 package com.app.CitaMed.Repository.Agenda;
 
 import com.app.CitaMed.DTO.CitaDetalleDTO;
+import com.app.CitaMed.DTO.ReporteEstadoDTO;
 import com.app.CitaMed.DTO.EspecialidadDTO;
 import com.app.CitaMed.DTO.UltimaCitaDTO;
 import com.app.CitaMed.Enums.EstadoCita;
@@ -105,6 +106,13 @@ public interface CitaRepository extends JpaRepository<Cita, Long> {
             "ORDER BY citas.fecha_hora", nativeQuery = true)
     List<Object[]> agendaHoyNativePorMedico(@Param("medicoId") Long medicoId, @Param("anio") int anio, @Param("mes") int mes, @Param("dia") int dia);
 
+    @Query(value = "SELECT MONTH(fecha_hora) AS mes, COUNT(*) AS total " +
+           "FROM citas " +
+           "WHERE YEAR(fecha_hora) = :anio AND estado <> 'CANCELADA' " +
+           "GROUP BY MONTH(fecha_hora) " +
+           "ORDER BY MONTH(fecha_hora)", nativeQuery = true)
+    List<Object[]> citasPorMesNative(@Param("anio") int anio);
+
     @Query("SELECT new com.app.CitaMed.DTO.CitaDetalleDTO(" +
             "c.id, " +
             "c.paciente.id, c.paciente.nombre, c.paciente.apellidoPaterno, c.paciente.apellidoMaterno, c.paciente.dni, " +
@@ -145,6 +153,15 @@ public interface CitaRepository extends JpaRepository<Cita, Long> {
             "FROM Cita c WHERE c.medico.id = :medicoId AND c.paciente.id = :pacienteId ORDER BY c.fechaHora DESC")
     List<CitaDetalleDTO> findDetalleByMedicoIdAndPacienteId(@Param("medicoId") Long medicoId, @Param("pacienteId") Long pacienteId);
 
+ 
+    @Query("SELECT new com.app.CitaMed.DTO.ReporteEstadoDTO(c.estado, COUNT(c)) FROM Cita c " +
+            "WHERE YEAR(c.fechaHora) = :anio GROUP BY c.estado")
+    List<ReporteEstadoDTO> citasPorEstadoPorAnio(@Param("anio") int anio);
+
+    @Query("SELECT new com.app.CitaMed.DTO.EspecialidadDTO(c.medico.especialidad.nombre, COUNT(c)) FROM Cita c " +
+            "WHERE YEAR(c.fechaHora) = :anio " +
+            "GROUP BY c.medico.especialidad.nombre ORDER BY COUNT(c) DESC")
+    List<EspecialidadDTO> citasPorEspecialidadPorAnio(@Param("anio") int anio);
     boolean existsByMedicoIdAndPacienteId(Long medicoId, Long pacienteId);
 
     @Query("SELECT DISTINCT c.paciente.id FROM Cita c WHERE c.medico.id = :medicoId")
