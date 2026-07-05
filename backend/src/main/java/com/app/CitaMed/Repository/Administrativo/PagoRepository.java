@@ -24,8 +24,6 @@ public interface PagoRepository extends JpaRepository<Pago, Long> {
     "p.cita.paciente.apellidoPaterno), p.metodoPago, p.cita.id, p.monto, p.estado) " +
     "FROM Pago p ORDER BY p.fechaPago DESC limit 4")
     List<UltimoPagoDTO> ultimosPagos(Pageable pageable);
-<<<<<<< HEAD
-
     @Query("SELECT new com.app.CitaMed.DTO.PagoDetalleDTO(p.id, " +
     "CONCAT(p.cita.paciente.nombre, ' ', p.cita.paciente.apellidoPaterno), " +
     "p.cita.paciente.dni, p.cita.fechaHora, p.cita.id, " +
@@ -34,12 +32,10 @@ public interface PagoRepository extends JpaRepository<Pago, Long> {
     "p.metodoPago, p.monto, p.estado) " +
     "FROM Pago p ORDER BY p.fechaPago DESC")
     List<PagoDetalleDTO> findAllDetalle();
-=======
     @Query(value = "SELECT MONTH(fecha_pago) AS mes, COALESCE(SUM(monto),0) AS total " +
-            "FROM pagos " +
-            "WHERE YEAR(fecha_pago) = :anio " +
-            "GROUP BY MONTH(fecha_pago) " +
-            "ORDER BY MONTH(fecha_pago)", nativeQuery = true)
+    "FROM pagos " +
+    "WHERE YEAR(fecha_pago) = :anio " +
+    "GROUP BY MONTH(fecha_pago) " +
+    "ORDER BY MONTH(fecha_pago)", nativeQuery = true)
     List<Object[]> ingresosPorMesNative(@Param("anio") int anio);
->>>>>>> 45494fb4badbdbb74ce2bdab71d983d528671968
 }
