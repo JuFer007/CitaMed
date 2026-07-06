@@ -1,12 +1,13 @@
 import { Component, CUSTOM_ELEMENTS_SCHEMA, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpClientModule, HttpClient } from '@angular/common/http';
+import { RouterLink } from '@angular/router';
 import 'iconify-icon';
 
 @Component({
   selector: 'app-doctor-destacado',
   standalone: true,
-  imports: [CommonModule, HttpClientModule],
+  imports: [CommonModule, HttpClientModule, RouterLink],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   templateUrl: './doctor-destacado-component.html',
   styleUrls: ['./doctor-destacado-component.css']

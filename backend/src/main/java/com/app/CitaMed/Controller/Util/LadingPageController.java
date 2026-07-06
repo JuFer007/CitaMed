@@ -5,6 +5,7 @@ import com.app.CitaMed.DTO.ReservaDTO;
 import com.app.CitaMed.DTO.SlotDisponibleDTO;
 import com.app.CitaMed.DTO.ReniecDataDTO;
 import com.app.CitaMed.Model.Medico.Especialidad;
+import com.app.CitaMed.Model.Medico.Medico;
 import com.app.CitaMed.Model.Paciente.Paciente;
 import com.app.CitaMed.Repository.Paciente.PacienteRepository;
 import com.app.CitaMed.Service.Administrativo.ReservaService;
@@ -35,6 +36,11 @@ public class LadingPageController {
         if (medico == null)
             return ResponseEntity.status(404).body("No hay médicos disponibles");
         return ResponseEntity.ok(medico);
+    }
+
+    @GetMapping("/medicos")
+    public ResponseEntity<List<Medico>> listarMedicos() {
+        return ResponseEntity.ok(medicoService.findAllActivos());
     }
 
     @GetMapping("/especialidades")
