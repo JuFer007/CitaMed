@@ -41,6 +41,10 @@ public class MedicoService {
         return medicoRepository.findAll();
     }
 
+    public List<Medico> findAllActivos() {
+        return medicoRepository.findByActivoTrue();
+    }
+
     public Medico findById(Long id) {
         return medicoRepository.findById(id).orElse(null);
     }
