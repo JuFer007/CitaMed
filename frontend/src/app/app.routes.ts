@@ -17,6 +17,7 @@ import { DiagnosticosComponent } from './features/admin/diagnosticos/diagnostico
 import { HistorialMedicoC } from './features/admin/historial-medico-c/historial-medico-c';
 import { authGuard } from './core/guards/auth.guard';
 import { Page404Component } from './shared/components/page404-component/page404-component';
+import { DoctoresPage } from './features/home/doctores-page/doctores-page';
 import { roleGuard } from './core/guards/role.guard';
 
 export const routes: Routes = [
@@ -29,6 +30,11 @@ export const routes: Routes = [
     path: 'login',
     component: LoginComponent,
     title: 'Iniciar Sesión',
+  },
+  {
+    path: 'staff-medico',
+    component: DoctoresPage,
+    title: 'Staff Medico CitaMed',
   },
   {
     path: 'admin',

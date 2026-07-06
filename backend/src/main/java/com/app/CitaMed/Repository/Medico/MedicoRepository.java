@@ -55,4 +55,7 @@ public interface MedicoRepository extends JpaRepository<Medico, Long> {
     List<MedicoActivoDTO> medicosMasActivosPorAnio(@Param("anio") int anio, Pageable pageable);
 
     Optional<Medico> findByUsuarioUserName(String userName);
+
+    @Query("SELECT m FROM Medico m JOIN FETCH m.especialidad LEFT JOIN FETCH m.consultorio WHERE m.activo = true")
+    List<Medico> findByActivoTrue();
 }
