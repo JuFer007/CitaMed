@@ -18,11 +18,47 @@
     <p class="text-red-700 text-sm">{{ error }}</p>
   </div>
 
+  <!-- FILTROS -->
+  <div class="bg-white rounded-3xl shadow-sm border border-blue-100/50 p-6 mb-6">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div class="relative">
+        <i class="pi pi-search absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 text-sm"></i>
+        <input
+          type="text"
+          [(ngModel)]="terminoBusqueda"
+          (input)="aplicarFiltros()"
+          placeholder="Buscar por nombre o email..."
+          class="w-full pl-11 pr-4 h-12 rounded-xl border-2 border-gray-200 focus:border-[#329791] focus:ring-4 focus:ring-[#329791]/10 transition-all outline-none text-sm bg-white" />
+      </div>
+
+      <div>
+        <select
+          [(ngModel)]="filtroEstado"
+          (change)="aplicarFiltros()"
+          class="w-full h-12 px-4 rounded-xl border-2 border-gray-200 focus:border-[#329791] outline-none text-sm bg-white text-gray-600">
+          <option [ngValue]="null">Todos los estados</option>
+          <option value="no-leido">Sin leer</option>
+          <option value="leido">Le&iacute;do</option>
+          <option value="respondido">Respondido</option>
+        </select>
+      </div>
+
+      <div class="flex items-end justify-end">
+        <button
+          (click)="limpiarFiltros()"
+          class="px-4 py-2 text-sm font-semibold text-[#329791] hover:bg-[#329791]/10 rounded-lg transition-all">
+          <i class="pi pi-filter-slash mr-2"></i>
+          Limpiar filtros
+        </button>
+      </div>
+    </div>
+  </div>
+
   <!-- TABLA -->
   <div class="bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden">
     <p-table
       #dt
-      [value]="consultas"
+      [value]="consultasFiltradas"
       [paginator]="true"
       [rows]="10"
       [rowsPerPageOptions]="[5, 10, 20, 50]"

@@ -8,6 +8,71 @@
     </div>
   </div>
 
+  <!-- FILTROS -->
+  <div class="bg-white rounded-3xl shadow-sm border border-blue-100/50 p-6 mb-6">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4">
+      <div class="relative lg:col-span-2">
+        <i class="pi pi-search absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 text-sm"></i>
+        <input
+          type="text"
+          [(ngModel)]="terminoBusqueda"
+          (input)="aplicarFiltros()"
+          placeholder="Buscar por paciente o DNI..."
+          class="w-full pl-11 pr-4 h-12 rounded-xl border-2 border-gray-200 focus:border-[#329791] focus:ring-4 focus:ring-[#329791]/10 transition-all outline-none text-sm bg-white" />
+      </div>
+
+      <div>
+        <select
+          [(ngModel)]="filtroEstado"
+          (change)="aplicarFiltros()"
+          class="w-full h-12 px-4 rounded-xl border-2 border-gray-200 focus:border-[#329791] outline-none text-sm bg-white text-gray-600">
+          <option [ngValue]="null">Todos los estados</option>
+          <option value="PAGADO">Pagado</option>
+          <option value="PENDIENTE">Pendiente</option>
+          <option value="ANULADO">Anulado</option>
+          <option value="REEMBOLSADO">Reembolsado</option>
+        </select>
+      </div>
+
+      <div>
+        <select
+          [(ngModel)]="filtroMetodo"
+          (change)="aplicarFiltros()"
+          class="w-full h-12 px-4 rounded-xl border-2 border-gray-200 focus:border-[#329791] outline-none text-sm bg-white text-gray-600">
+          <option [ngValue]="null">Todos los m&eacute;todos</option>
+          <option value="EFECTIVO">Efectivo</option>
+          <option value="TARJETA">Tarjeta</option>
+          <option value="TRANSFERENCIA">Transferencia</option>
+          <option value="SEGURO">Seguro</option>
+        </select>
+      </div>
+
+      <div>
+        <input
+          type="date"
+          [(ngModel)]="filtroFechaInicio"
+          (change)="aplicarFiltros()"
+          class="w-full h-12 px-4 rounded-xl border-2 border-gray-200 focus:border-[#329791] outline-none text-sm bg-white text-gray-600" />
+      </div>
+
+      <div>
+        <input
+          type="date"
+          [(ngModel)]="filtroFechaFin"
+          (change)="aplicarFiltros()"
+          class="w-full h-12 px-4 rounded-xl border-2 border-gray-200 focus:border-[#329791] outline-none text-sm bg-white text-gray-600" />
+      </div>
+    </div>
+    <div class="flex justify-end mt-3">
+      <button
+        (click)="limpiarFiltros()"
+        class="px-4 py-2 text-sm font-semibold text-[#329791] hover:bg-[#329791]/10 rounded-lg transition-all">
+        <i class="pi pi-filter-slash mr-2"></i>
+        Limpiar filtros
+      </button>
+    </div>
+  </div>
+
   <div class="bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden">
     @if (loading) {
       <div class="pg-loading">
@@ -17,7 +82,7 @@
     } @else {
       <p-table
         #dt
-        [value]="pagos"
+        [value]="pagosFiltrados"
         [paginator]="true"
         [rows]="10"
         [rowsPerPageOptions]="[5, 10, 20, 50]"

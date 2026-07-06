@@ -48,8 +48,11 @@ export class ConsultasComponent implements OnInit {
   private apiUrl = 'http://localhost:8080/api/consultas';
 
   consultas: Consulta[] = [];
+  consultasFiltradas: Consulta[] = [];
   cargando = true;
   error = '';
+  terminoBusqueda = '';
+  filtroEstado: string | null = null;
 
   mostrarDetalle = false;
   consultaSeleccionada: Consulta | null = null;
@@ -77,7 +80,7 @@ export class ConsultasComponent implements OnInit {
     this.http.get<Consulta[]>(this.apiUrl).subscribe({
       next: (data) => {
         this.consultas = data;
-        this.initialValue = [...data];
+        this.aplicarFiltros();
         this.cargando = false;
         this.cdr.markForCheck();
       },
@@ -100,14 +103,14 @@ export class ConsultasComponent implements OnInit {
     } else {
       this.isSorted = null;
       this.resetting = true;
-      this.consultas = [...this.initialValue];
+      this.consultasFiltradas = [...this.initialValue];
       this.dt.reset();
       setTimeout(() => { this.resetting = false; }, 0);
     }
   }
 
   private sortTableData(event: SortEvent): void {
-    this.consultas.sort((data1, data2) => {
+    this.consultasFiltradas.sort((data1, data2) => {
       const value1 = (data1 as any)[event.field!];
       const value2 = (data2 as any)[event.field!];
       let result: number;
@@ -119,6 +122,40 @@ export class ConsultasComponent implements OnInit {
       else result = value1 < value2 ? -1 : value1 > value2 ? 1 : 0;
       return event.order! * result;
     });
+  }
+
+  aplicarFiltros(): void {
+    let res = [...this.consultas];
+
+    if (this.terminoBusqueda.trim()) {
+      const t = this.terminoBusqueda.toLowerCase();
+      res = res.filter(
+        (c) =>
+          c.nombre.toLowerCase().includes(t) ||
+          c.email.toLowerCase().includes(t),
+      );
+    }
+
+    if (this.filtroEstado) {
+      if (this.filtroEstado === 'no-leido') {
+        res = res.filter((c) => !c.leido);
+      } else if (this.filtroEstado === 'leido') {
+        res = res.filter((c) => c.leido && !c.respondido);
+      } else if (this.filtroEstado === 'respondido') {
+        res = res.filter((c) => c.respondido);
+      }
+    }
+
+    this.consultasFiltradas = res;
+    this.initialValue = [...res];
+    this.isSorted = null;
+    this.cdr.markForCheck();
+  }
+
+  limpiarFiltros(): void {
+    this.terminoBusqueda = '';
+    this.filtroEstado = null;
+    this.aplicarFiltros();
   }
 
   abrirDetalle(consulta: Consulta): void {

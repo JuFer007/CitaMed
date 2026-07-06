@@ -27,27 +27,27 @@ Pagina principal publica del sistema.
 
 Hero:
 
-![hero](capturas/lading%20(1).png)
+![hero](frontend/public/capturas/lading%20(1).png)
 
 Especialidades:
 
-![especialidades](capturas/lading%20(2).png)
+![especialidades](frontend/public/capturas/lading%20(2).png)
 
 Doctor destacado:
 
-![doctor](capturas/lading%20(3).png)
+![doctor](frontend/public/capturas/lading%20(3).png)
 
 Reserva de citas:
 
-![reserva](capturas/lading%20(4).png)
+![reserva](frontend/public/capturas/lading%20(4).png)
 
 Consultas / FAQ:
 
-![consultas](capturas/lading%20(5).png)
+![consultas](frontend/public/capturas/lading%20(5).png)
 
 Testimonios / Footer:
 
-![testimonios](capturas/lading%20(6).png)
+![testimonios](frontend/public/capturas/lading%20(6).png)
 
 ---
 
@@ -55,7 +55,7 @@ Testimonios / Footer:
 
 Autenticacion de usuarios con JWT.
 
-![login](capturas/login.png)
+![login](frontend/public/capturas/login.png)
 
 ---
 
@@ -65,11 +65,11 @@ Vista principal con metricas del sistema.
 
 Dashboard parte 1 - cards de estadisticas:
 
-![dashboard1](capturas/dashboard1.png)
+![dashboard1](frontend/public/capturas/dashboard1.png)
 
 Dashboard parte 2 - ultimas citas, especialidades, agenda, medicos, pagos:
 
-![dashboard2](capturas/dashboard2.png)
+![dashboard2](frontend/public/capturas/dashboard2.png)
 
 El dashboard muestra:
 - Citas de hoy
@@ -91,7 +91,7 @@ El dashboard muestra:
 
 CRUD completo de pacientes.
 
-![pacientes](capturas/pacientes.png)
+![pacientes](frontend/public/capturas/pacientes.png)
 
 Funcionalidades:
 - Listar pacientes con paginacion
@@ -109,7 +109,7 @@ CRUD completo de medicos.
 
 Listado de medicos | Modal de registro / edición
 :---:|:---:
-![medicos](capturas/medicosmodulo%20(1).png) | ![medicosModal](capturas/medicosmodulo%20(2).png)
+![medicos](frontend/public/capturas/medicosmodulo%20(1).png) | ![medicosModal](frontend/public/capturas/medicosmodulo%20(2).png)
 
 Funcionalidades:
 - Listar medicos con paginacion
@@ -127,11 +127,11 @@ Funcionalidades:
 
 CRUD completo de especialidades.
 
-![especialidades](capturas/especialidades.png)
+![especialidades](frontend/public/capturas/especialidades.png)
 
 Modal de especialidad:
 
-![modalEspecialidades](capturas/modalEspecialidades.png)
+![modalEspecialidades](frontend/public/capturas/modalEspecialidades.png)
 
 Funcionalidades:
 - Listar especialidades con paginacion
@@ -142,21 +142,39 @@ Funcionalidades:
 
 ---
 
-## 7. Gestion de Citas
+## 7. Gestion de Consultorios
+
+CRUD completo de consultorios.
+
+Listado de consultorios | Modal de registro / edicion
+:---:|:---:
+![consultorios](frontend/public/capturas/consultorios%20(1).png) | ![consultoriosModal](frontend/public/capturas/consultorios%20(2).png)
+
+Funcionalidades:
+- Listar consultorios con paginacion
+- Buscar por nombre
+- Filtrar por disponibilidad
+- Registrar nuevo consultorio
+- Editar consultorio
+- Activar / Desactivar consultorio
+
+---
+
+## 8. Gestion de Citas
 
 CRUD completo y operaciones de estado.
 
 Listado de citas:
 
-![citas](capturas/citas.png)
+![citas](frontend/public/capturas/citas.png)
 
 Detalle de cita:
 
-![detalle](capturas/citaInfo.png)
+![detalle](frontend/public/capturas/citaInfo.png)
 
 Informacion adicional:
 
-![detalle2](capturas/citaInfo2.png)
+![detalle2](frontend/public/capturas/citaInfo2.png)
 
 Funcionalidades:
 - Listar citas con paginacion
@@ -172,11 +190,11 @@ Funcionalidades:
 
 ---
 
-## 8. Gestion de Horarios
+## 9. Gestion de Horarios
 
 Administracion de horarios por medico.
 
-![horarios](capturas/horarioMedico.png)
+![horarios](frontend/public/capturas/horarioMedico.png)
 
 Funcionalidades:
 - Listar horarios por medico
@@ -186,19 +204,17 @@ Funcionalidades:
 
 ---
 
----
-
-## 9. Historial Medico
+## 10. Historial Medico
 
 Consulta del historial clinico completo de los pacientes, con descarga de PDF.
 
 Listado de pacientes e historial:
 
-![historial](capturas/historialMedico.png)
+![historial](frontend/public/capturas/historialMedico.png)
 
 Modal con detalle de historial medico de cada paciente | PDF generado del historial medico
 :---:|:---:
-![modal](capturas/modalHistorialmEDICO.png) | ![pdf](capturas/pdfHistorialMedico.png)
+![modal](frontend/public/capturas/modalHistorialmEDICO.png) | ![pdf](frontend/public/capturas/pdfHistorialMedico.png)
 
 Funcionalidades:
 - Listar pacientes con busqueda por nombre o DNI
@@ -211,17 +227,17 @@ Funcionalidades:
 
 ---
 
-## 10. Diagnósticos
+## 11. Diagnósticos
 
 Gestión de diagnósticos y recetas médicas asociados a las citas.
 
 Listado de citas pendientes y atendidas:
 
-![diagnosticos](capturas/diagnosticos.png)
+![diagnosticos](frontend/public/capturas/diagnosticos.png)
 
 Modal de atención / edición | PDF de receta médica
 :---:|:---:
-![modal](capturas/modalDiafnosticoEditaroAgregar.png) | ![receta](capturas/receta-diagnostico.png)
+![modal](frontend/public/capturas/modalDiafnosticoEditaroAgregar.png) | ![receta](frontend/public/capturas/receta-diagnostico.png)
 
 Funcionalidades:
 - Listar citas pendientes y atendidas
@@ -235,13 +251,13 @@ Funcionalidades:
 
 ---
 
-## 11. Pagos
+## 12. Pagos
 
 Gestión de pagos con generación de ticket PDF.
 
 Listado de pagos | Modal de pago / ticket PDF
 :---:|:---:
-![pagos](capturas/pagos%20(1).png) | ![pagoModal](capturas/pagos%20(2).png)
+![pagos](frontend/public/capturas/pagos%20(1).png) | ![pagoModal](frontend/public/capturas/pagos%20(2).png)
 
 Funcionalidades:
 - Listar pagos con paginación y ordenamiento
@@ -253,17 +269,17 @@ Funcionalidades:
 
 ---
 
-## 12. Consultas
+## 13. Consultas
 
 Bandeja de consultas enviadas desde la landing page, con gestión de respuestas vía email.
 
 Listado de consultas:
 
-![consultas](capturas/consultas%20(1).png)
+![consultas](frontend/public/capturas/consultas%20(1).png)
 
 Modal de detalle y respuesta:
 
-![consultaModal](capturas/consultas%20(2).png)
+![consultaModal](frontend/public/capturas/consultas%20(2).png)
 
 Funcionalidades:
 - Listar consultas recibidas con paginación y ordenamiento
@@ -284,6 +300,7 @@ Funcionalidades:
 | Pacientes CRUD | Completo |
 | Medicos CRUD | Completo |
 | Especialidades CRUD | Completo |
+| Consultorios CRUD | Completo |
 | Citas CRUD | Completo (+ estados) |
 | Horarios | Completo |
 | Historial Medico | Completo (+ PDF) |

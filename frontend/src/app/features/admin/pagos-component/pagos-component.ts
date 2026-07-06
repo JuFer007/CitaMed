@@ -1,7 +1,9 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
-import { TableModule } from 'primeng/table';
+import { Table, TableModule } from 'primeng/table';
+import { InputTextModule } from 'primeng/inputtext';
 import { GlobalToast } from '../../../core/services/global-toast';
 import { SortEvent } from 'primeng/api';
 
@@ -21,15 +23,27 @@ interface PagoDetalle {
 @Component({
   selector: 'app-pagos-component',
   standalone: true,
-  imports: [CommonModule, TableModule],
+  imports: [CommonModule, FormsModule, TableModule, InputTextModule],
   templateUrl: './pagos-component.html',
   styleUrl: './pagos-component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PagosComponent implements OnInit {
+  @ViewChild('dt') dt!: Table;
+  initialValue: PagoDetalle[] = [];
+  isSorted: boolean | null = null;
+  private resetting = false;
+
   pagos: PagoDetalle[] = [];
+  pagosFiltrados: PagoDetalle[] = [];
   loading = false;
   generandoTicketPdf = false;
+
+  terminoBusqueda = '';
+  filtroEstado: string | null = null;
+  filtroMetodo: string | null = null;
+  filtroFechaInicio = '';
+  filtroFechaFin = '';
 
   private apiUrl = 'http://localhost:8080/api';
 
@@ -49,6 +63,7 @@ export class PagosComponent implements OnInit {
     this.http.get<PagoDetalle[]>(`${this.apiUrl}/pago/detalle`).subscribe({
       next: (data) => {
         this.pagos = data;
+        this.aplicarFiltros();
         this.loading = false;
         this.cdr.markForCheck();
       },
@@ -58,6 +73,52 @@ export class PagosComponent implements OnInit {
         this.cdr.markForCheck();
       },
     });
+  }
+
+  aplicarFiltros(): void {
+    let res = [...this.pagos];
+
+    if (this.terminoBusqueda.trim()) {
+      const t = this.terminoBusqueda.toLowerCase();
+      res = res.filter(
+        (p) =>
+          p.paciente.toLowerCase().includes(t) ||
+          p.dni.toLowerCase().includes(t),
+      );
+    }
+
+    if (this.filtroEstado) {
+      res = res.filter((p) => p.estado === this.filtroEstado);
+    }
+
+    if (this.filtroMetodo) {
+      res = res.filter((p) => p.metodoPago === this.filtroMetodo);
+    }
+
+    if (this.filtroFechaInicio) {
+      const inicio = new Date(this.filtroFechaInicio);
+      res = res.filter((p) => new Date(p.fechaHora) >= inicio);
+    }
+
+    if (this.filtroFechaFin) {
+      const fin = new Date(this.filtroFechaFin);
+      fin.setHours(23, 59, 59, 999);
+      res = res.filter((p) => new Date(p.fechaHora) <= fin);
+    }
+
+    this.pagosFiltrados = res;
+    this.initialValue = [...res];
+    this.isSorted = null;
+    this.cdr.markForCheck();
+  }
+
+  limpiarFiltros(): void {
+    this.terminoBusqueda = '';
+    this.filtroEstado = null;
+    this.filtroMetodo = null;
+    this.filtroFechaInicio = '';
+    this.filtroFechaFin = '';
+    this.aplicarFiltros();
   }
 
   descargarTicket(pago: PagoDetalle): void {
@@ -93,16 +154,36 @@ export class PagosComponent implements OnInit {
   }
 
   customSort(event: SortEvent): void {
-    const data = [...this.pagos];
-    const field = event.field as keyof PagoDetalle;
-    data.sort((a, b) => {
-      const va = a[field];
-      const vb = b[field];
-      const result = va < vb ? -1 : va > vb ? 1 : 0;
+    if (this.resetting) return;
+
+    if (this.isSorted == null) {
+      this.isSorted = true;
+      this.sortTableData(event);
+    } else if (this.isSorted === true) {
+      this.isSorted = false;
+      this.sortTableData(event);
+    } else {
+      this.isSorted = null;
+      this.resetting = true;
+      this.pagosFiltrados = [...this.initialValue];
+      this.dt.reset();
+      setTimeout(() => { this.resetting = false; }, 0);
+    }
+  }
+
+  private sortTableData(event: SortEvent): void {
+    this.pagosFiltrados.sort((data1, data2) => {
+      const value1 = (data1 as any)[event.field!];
+      const value2 = (data2 as any)[event.field!];
+      let result: number;
+      if (value1 == null && value2 != null) result = -1;
+      else if (value1 != null && value2 == null) result = 1;
+      else if (value1 == null && value2 == null) result = 0;
+      else if (typeof value1 === 'string' && typeof value2 === 'string')
+        result = value1.localeCompare(value2);
+      else result = value1 < value2 ? -1 : value1 > value2 ? 1 : 0;
       return event.order! * result;
     });
-    this.pagos = data;
-    this.cdr.markForCheck();
   }
 
   metodoPagoLabel(metodo: string): string {

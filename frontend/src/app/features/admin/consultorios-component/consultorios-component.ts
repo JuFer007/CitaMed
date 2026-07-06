@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { DialogModule } from 'primeng/dialog';
 import { ButtonModule } from 'primeng/button';
 import { Table, TableModule } from 'primeng/table';
+import { InputTextModule } from 'primeng/inputtext';
 import { SortEvent } from 'primeng/api';
 import { ConsultorioService } from '../../../core/services/consultorio-service';
 import { EspecialidadService } from '../../../core/services/especialidad-service';
@@ -20,6 +21,7 @@ import { GlobalToast } from '../../../core/services/global-toast';
     DialogModule,
     ButtonModule,
     TableModule,
+    InputTextModule,
   ],
   templateUrl: './consultorios-component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -38,7 +40,10 @@ export class ConsultoriosComponent implements OnInit {
   private resetting = false;
 
   consultorios: Consultorio[] = [];
+  consultoriosFiltrados: Consultorio[] = [];
   especialidades: Especialidad[] = [];
+  terminoBusqueda = '';
+  filtroDisponibilidad: string | null = null;
   mostrarModal = false;
   modoEdicion = false;
   consultorioEditandoId: number | null = null;
@@ -61,8 +66,7 @@ export class ConsultoriosComponent implements OnInit {
     this.consultorioService.listar().subscribe({
       next: (data) => {
         this.consultorios = data;
-        this.initialValue = [...data];
-        this.isSorted = null;
+        this.aplicarFiltros();
         this.cdr.markForCheck();
       },
       error: () => {
@@ -83,6 +87,35 @@ export class ConsultoriosComponent implements OnInit {
         this.cdr.markForCheck();
       },
     });
+  }
+
+  aplicarFiltros(): void {
+    let res = [...this.consultorios];
+
+    if (this.terminoBusqueda.trim()) {
+      const t = this.terminoBusqueda.toLowerCase();
+      res = res.filter(
+        (c) =>
+          c.numero.toLowerCase().includes(t) ||
+          c.descripcion.toLowerCase().includes(t),
+      );
+    }
+
+    if (this.filtroDisponibilidad) {
+      const disponible = this.filtroDisponibilidad === 'si';
+      res = res.filter((c) => c.disponible === disponible);
+    }
+
+    this.consultoriosFiltrados = res;
+    this.initialValue = [...res];
+    this.isSorted = null;
+    this.cdr.markForCheck();
+  }
+
+  limpiarFiltros(): void {
+    this.terminoBusqueda = '';
+    this.filtroDisponibilidad = null;
+    this.aplicarFiltros();
   }
 
   abrirNuevo(): void {
@@ -211,7 +244,7 @@ export class ConsultoriosComponent implements OnInit {
     } else {
       this.isSorted = null;
       this.resetting = true;
-      this.consultorios = [...this.initialValue];
+      this.consultoriosFiltrados = [...this.initialValue];
       this.dt.reset();
       setTimeout(() => {
         this.resetting = false;
@@ -220,7 +253,7 @@ export class ConsultoriosComponent implements OnInit {
   }
 
   private sortTableData(event: SortEvent): void {
-    this.consultorios.sort((data1, data2) => {
+    this.consultoriosFiltrados.sort((data1, data2) => {
       const value1 = (data1 as any)[event.field!];
       const value2 = (data2 as any)[event.field!];
       let result: number;
