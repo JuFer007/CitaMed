@@ -13,7 +13,14 @@ import com.app.CitaMed.Repository.Administrativo.UsuarioRepository;
 import com.app.CitaMed.Util.*;
 import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.ThreadLocalRandom;
@@ -22,10 +29,13 @@ import java.util.concurrent.ThreadLocalRandom;
 @RequiredArgsConstructor
 
 public class MedicoService {
+    private static final String CARPETA_FOTOS = "uploads/medicos/";
+
     private final MedicoRepository medicoRepository;
     private final EspecialidadRepository especialidadRepository;
     private final ConsultorioRepository consultorioRepository;
     private final UsuarioRepository usuarioRepository;
+    private final BCryptPasswordEncoder passwordEncoder;
 
     public List<Medico> findAll() {
         return medicoRepository.findAll();
@@ -40,7 +50,7 @@ public class MedicoService {
     }
 
     @Transactional
-    public String save(MedicoDTO dto) {
+    public Medico save(MedicoDTO dto) {
         DniValidator.validar(dto.getDni());
         NombreValidator.validar(dto.getNombre(), "nombre");
         NombreValidator.validar(dto.getApellidoPaterno(), "apellido paterno");
@@ -52,13 +62,13 @@ public class MedicoService {
         PasswordValidator.validar(dto.getPassword());
 
         if (medicoRepository.existsByDni(dto.getDni()))
-            return "Ya existe un médico con ese DNI";
+            throw new RuntimeException("Ya existe un médico con ese DNI");
 
         if (usuarioRepository.existsByUserName(dto.getUserName()))
-            return "El nombre de usuario ya está en uso";
+            throw new RuntimeException("El nombre de usuario ya está en uso");
 
         Especialidad especialidad = especialidadRepository.findById(dto.getEspecialidadId()).orElse(null);
-        if (especialidad == null) return "Especialidad no encontrada";
+        if (especialidad == null) throw new RuntimeException("Especialidad no encontrada");
 
         Consultorio consultorio = null;
         if (dto.getConsultorioId() != null) {
@@ -67,7 +77,7 @@ public class MedicoService {
 
         Usuario usuario = new Usuario();
         usuario.setUserName(dto.getUserName());
-        usuario.setPassword(dto.getPassword());
+        usuario.setPassword(passwordEncoder.encode(dto.getPassword()));
         usuario.setRol(Rol.MEDICO);
         usuario.setActivo(true);
         usuarioRepository.save(usuario);
@@ -87,8 +97,7 @@ public class MedicoService {
         medico.setConsultorio(consultorio);
         medico.setUsuario(usuario);
         medico.setActivo(true);
-        medicoRepository.save(medico);
-        return "Médico registrado correctamente";
+        return medicoRepository.save(medico);
     }
 
     public String updateEspecialidad(Long medicoId, Long especialidadId) {
@@ -118,16 +127,17 @@ public class MedicoService {
             return null;
         }
 
-        return new MedicoPerfilDTO(
-                medico.getNombre(),
-                medico.getApellidoPaterno(),
-                medico.getApellidoMaterno(),
-                medico.getTelefono(),
-                medico.getEmail(),
-                medico.getGenero(),
-                medico.getNumeroColegiatura(),
-                medico.getEspecialidad().getNombre()
-        );
+        return MedicoPerfilDTO.builder()
+                .nombre(medico.getNombre())
+                .apellidoPaterno(medico.getApellidoPaterno())
+                .apellidoMaterno(medico.getApellidoMaterno())
+                .telefono(medico.getTelefono())
+                .email(medico.getEmail())
+                .genero(medico.getGenero())
+                .numeroColegiatura(medico.getNumeroColegiatura())
+                .especialidad(medico.getEspecialidad().getNombre())
+                .fotoUrl(medico.getFotoUrl())
+                .build();
     }
 
     @Transactional
@@ -168,13 +178,67 @@ public class MedicoService {
             Usuario usuario = medico.getUsuario();
             usuario.setUserName(dto.getUserName());
             if (dto.getPassword() != null && !dto.getPassword().isBlank()) {
-                usuario.setPassword(dto.getPassword());
+                usuario.setPassword(passwordEncoder.encode(dto.getPassword()));
             }
             usuarioRepository.save(usuario);
         }
 
+        if (medico.getFotoUrl() != null && !medico.getFotoUrl().isBlank()) {
+            String nuevoNombre = "med" + capitalizar(medico.getNombre()) + capitalizar(medico.getApellidoPaterno());
+            String nombreActual = medico.getFotoUrl().substring(medico.getFotoUrl().lastIndexOf("/") + 1);
+            String nombreActualSinExt = nombreActual.contains(".") ? nombreActual.substring(0, nombreActual.lastIndexOf(".")) : nombreActual;
+            if (!nombreActualSinExt.equals(nuevoNombre)) {
+                String extension = nombreActual.contains(".") ? nombreActual.substring(nombreActual.lastIndexOf(".")) : ".jpg";
+                String nuevoArchivo = nuevoNombre + extension;
+                Path archivoViejo = Paths.get(CARPETA_FOTOS + nombreActual);
+                Path archivoNuevo = Paths.get(CARPETA_FOTOS + nuevoArchivo);
+                try {
+                    Files.move(archivoViejo, archivoNuevo);
+                } catch (IOException ignored) {}
+                medico.setFotoUrl("/uploads/medicos/" + nuevoArchivo);
+            }
+        }
+
         medicoRepository.save(medico);
         return "Médico actualizado correctamente";
+    }
+
+    public String guardarFoto(Long id, MultipartFile archivo) throws IOException {
+        Medico medico = medicoRepository.findById(id).orElse(null);
+        if (medico == null) return "Médico no encontrado";
+
+        Files.createDirectories(Paths.get(CARPETA_FOTOS));
+
+        String nombreCapitalizado = capitalizar(medico.getNombre());
+        String apellidoCapitalizado = capitalizar(medico.getApellidoPaterno());
+
+        String nombreOriginal = archivo.getOriginalFilename();
+        String extension = "";
+        if (nombreOriginal != null && nombreOriginal.contains(".")) {
+            extension = nombreOriginal.substring(nombreOriginal.lastIndexOf("."));
+        } else {
+            extension = ".jpg";
+        }
+
+        String nombreArchivo = "med" + nombreCapitalizado + apellidoCapitalizado + extension;
+        Path filePath = Paths.get(CARPETA_FOTOS + nombreArchivo);
+
+        if (medico.getFotoUrl() != null && !medico.getFotoUrl().isBlank()) {
+            String nombreExistente = medico.getFotoUrl().substring(medico.getFotoUrl().lastIndexOf("/") + 1);
+            Files.deleteIfExists(Paths.get(CARPETA_FOTOS + nombreExistente));
+        }
+
+        Files.copy(archivo.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
+
+        String fotoUrl = "/uploads/medicos/" + nombreArchivo;
+        medico.setFotoUrl(fotoUrl);
+        medicoRepository.save(medico);
+        return fotoUrl;
+    }
+
+    private String capitalizar(String texto) {
+        if (texto == null || texto.isBlank()) return "";
+        return texto.substring(0, 1).toUpperCase() + texto.substring(1).toLowerCase();
     }
 
     @Transactional

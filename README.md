@@ -107,15 +107,18 @@ Funcionalidades:
 
 CRUD completo de medicos.
 
-![medicos](capturas/medicos.png)
+Listado de medicos | Modal de registro / edición
+:---:|:---:
+![medicos](capturas/medicosmodulo%20(1).png) | ![medicosModal](capturas/medicosmodulo%20(2).png)
 
 Funcionalidades:
 - Listar medicos con paginacion
 - Buscar por nombre o DNI
 - Filtrar por especialidad
-- Registrar nuevo medico
-- Editar datos del medico
+- Registrar nuevo medico con foto
+- Editar datos del medico (incluye foto)
 - Cambiar especialidad
+- Asignar consultorio
 - Activar / Desactivar medico
 
 ---

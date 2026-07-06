@@ -68,6 +68,9 @@ public class Medico {
 
     private boolean activo;
 
+    @Column(name = "foto_url", length = 500)
+    private String fotoUrl;
+
     @NotNull(message = "Debe seleccionar una especialidad")
     @ManyToOne
     @JoinColumn(name = "especialidad_id", nullable = false)

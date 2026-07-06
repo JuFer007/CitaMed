@@ -1,13 +1,12 @@
 package com.app.CitaMed.DTO;
-
 import com.app.CitaMed.Enums.Genero;
 import com.app.CitaMed.Enums.Rol;
 import jakarta.validation.constraints.*;
 import lombok.Data;
-
 import java.time.LocalDate;
 
 @Data
+
 public class EmpleadoDTO {
     @NotBlank(message = "El nombre es obligatorio")
     @Size(max = 50, message = "El nombre no puede tener más de 50 caracteres")

@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+
 public class ConsultaRequestDTO {
     @NotBlank(message = "El nombre es obligatorio")
     @Size(max = 100)

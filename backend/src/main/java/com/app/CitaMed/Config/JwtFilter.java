@@ -15,6 +15,7 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 
 @Component
+
 public class JwtFilter extends OncePerRequestFilter {
 
     private final JwtUtil jwtUtil;
@@ -37,6 +38,7 @@ public class JwtFilter extends OncePerRequestFilter {
                 || path.startsWith("/api/lading")
                 || path.startsWith("/api/landing")
                 || path.startsWith("/api/contacto")
+                || path.startsWith("/uploads/")
                 || (path.equals("/api/consultas") && "POST".equalsIgnoreCase(request.getMethod()))) {
             filterChain.doFilter(request, response);
             return;

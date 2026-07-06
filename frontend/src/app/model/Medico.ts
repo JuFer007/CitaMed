@@ -15,6 +15,7 @@ export interface Medico {
   numeroColegiatura: string;
   userName: string;
   activo: boolean;
+  fotoUrl?: string;
   especialidad: Especialidad;
   consultorio?: Consultorio;
 }
@@ -34,4 +35,5 @@ export interface MedicoDTO {
   consultorioId?: number;
   userName: string;
   password: string;
+  fotoUrl?: string;
 }

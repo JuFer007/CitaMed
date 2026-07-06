@@ -48,6 +48,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/lading/**").permitAll()
                         .requestMatchers("/api/landing/**").permitAll()
                         .requestMatchers("/api/especialidad/**").permitAll()
+                        .requestMatchers("/uploads/**").permitAll()
                         .requestMatchers("/api/medico/**").hasAnyRole("ADMIN","MEDICO","RECEPCIONISTA")
                         .requestMatchers("/api/horarioMedico/**").hasAnyRole("ADMIN","MEDICO")
                         .requestMatchers("/api/paciente/**").hasAnyRole("ADMIN","RECEPCIONISTA","MEDICO")

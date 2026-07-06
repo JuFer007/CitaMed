@@ -1,12 +1,11 @@
 package com.app.CitaMed.DTO;
-
 import com.app.CitaMed.Enums.Genero;
 import jakarta.validation.constraints.*;
 import lombok.Data;
-
 import java.time.LocalDate;
 
 @Data
+
 public class MedicoDTO {
     @NotBlank(message = "El nombre es obligatorio")
     @Size(max = 50, message = "El nombre no puede tener más de 50 caracteres")
@@ -45,6 +44,8 @@ public class MedicoDTO {
 
     @NotBlank(message = "El número de colegiatura es obligatorio")
     private String numeroColegiatura;
+
+    private String fotoUrl;
 
     @NotNull(message = "Debe seleccionar una especialidad")
     private Long especialidadId;

@@ -1,13 +1,12 @@
 package com.app.CitaMed.DTO;
-
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
-
 import java.time.LocalDateTime;
 
 @Data
+
 public class CitaDTO {
     @NotNull(message = "Debe seleccionar un paciente")
     private Long pacienteId;

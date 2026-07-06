@@ -9,6 +9,7 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+
 public class HistorialMedicoDetalleDTO {
     private PacienteInfoDTO paciente;
     private List<CitaHistorialDTO> citas;
@@ -16,6 +17,7 @@ public class HistorialMedicoDetalleDTO {
     @Data
     @NoArgsConstructor
     @AllArgsConstructor
+
     public static class PacienteInfoDTO {
         private Long id;
         private String nombre;
@@ -33,6 +35,7 @@ public class HistorialMedicoDetalleDTO {
     @Data
     @NoArgsConstructor
     @AllArgsConstructor
+
     public static class CitaHistorialDTO {
         private Long citaId;
         private LocalDateTime fechaHora;
@@ -49,6 +52,7 @@ public class HistorialMedicoDetalleDTO {
     @Data
     @NoArgsConstructor
     @AllArgsConstructor
+
     public static class DiagnosticoHistorialDTO {
         private Long id;
         private String enfermedad;

@@ -17,4 +17,5 @@ public class MedicoPerfilDTO {
     private Genero genero;
     private String numeroColegiatura;
     private String especialidad;
+    private String fotoUrl;
 }

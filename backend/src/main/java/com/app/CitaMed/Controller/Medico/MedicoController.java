@@ -7,18 +7,22 @@ import com.app.CitaMed.Config.SecurityUtil;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 @RestController
-@CrossOrigin(origins = "*")
 @RequestMapping("/api/medico")
 @RequiredArgsConstructor
 
 public class MedicoController {
+    private static final Logger log = LoggerFactory.getLogger(MedicoController.class);
     private final MedicoService medicoService;
     private final MedicoRepository medicoRepository;
 
@@ -50,11 +54,13 @@ public class MedicoController {
     }
 
     @PostMapping
-    public ResponseEntity<String> save(@RequestBody @Valid MedicoDTO dto) {
-        String resultado = medicoService.save(dto);
-        if (!resultado.equals("Médico registrado correctamente"))
-            return ResponseEntity.badRequest().body(resultado);
-        return ResponseEntity.status(HttpStatus.CREATED).body(resultado);
+    public ResponseEntity<?> save(@RequestBody @Valid MedicoDTO dto) {
+        try {
+            Medico medico = medicoService.save(dto);
+            return ResponseEntity.status(HttpStatus.CREATED).body(medico);
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
     @PatchMapping("/{medicoId}/especialidad/{especialidadId}")
@@ -95,5 +101,19 @@ public class MedicoController {
         response.put("mensaje", resultado);
 
         return ResponseEntity.ok(response);
+    }
+
+    @PostMapping(value = "/{id}/foto", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<?> subirFoto(@PathVariable Long id, @RequestParam("archivo") MultipartFile archivo) {
+        try {
+            String fotoUrl = medicoService.guardarFoto(id, archivo);
+            Map<String, String> response = new HashMap<>();
+            response.put("fotoUrl", fotoUrl);
+            response.put("mensaje", "Foto subida correctamente");
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            log.error("Error al subir foto para medico {}: ", id, e);
+            return ResponseEntity.badRequest().body("Error al subir la foto: " + e.getMessage());
+        }
     }
 }

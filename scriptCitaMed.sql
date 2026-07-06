@@ -1,4 +1,5 @@
-CREATE DATABASE IF NOT EXISTS CitaMed;
+DROP DATABASE IF EXISTS CitaMed;
+CREATE DATABASE CitaMed;
 USE CitaMed;
 
 -- ========================
@@ -62,7 +63,6 @@ INSERT INTO consultorios (numero, descripcion, disponible, especialidad_id) VALU
 -- ========================
 -- 4. EMPLEADOS
 -- ========================
-
 INSERT INTO empleados (nombre, apellido_paterno, apellido_materno, dni, telefono, direccion, email, fecha_nacimiento, genero, salario, fecha_ingreso, activo, usuario_id) VALUES
 -- Integrantes del equipo (ADMIN) apuntando a IDs 2, 3, 4
 ('MARCELO ARIEL',  'ALARCON',   'MANAY',    '74100001', '987000001', 'Av. Los Desarrolladores 101, Chiclayo', 'marcelo.alarcon@citamed.com',  '1999-05-15', 'MASCULINO', 4500.00, '2024-01-01', true,  2),
@@ -73,20 +73,22 @@ INSERT INTO empleados (nombre, apellido_paterno, apellido_materno, dni, telefono
 -- Recepcionistas apuntando a IDs 5 y 6
 ('MARIA',          'LOPEZ',     'SANCHEZ',  '45678902', '987654322', 'Jr. Los Pinos 456, Chiclayo',           'maria.lopez@citamed.com',      '1990-07-22', 'FEMENINO',  1800.00, '2020-03-01', true,  5),
 ('ANA',            'PEREZ',     'CASTILLO', '45678903', '987654323', 'Calle Manco Capac 789, Chiclayo',       'ana.perez@citamed.com',        '1992-11-05', 'FEMENINO',  1800.00, '2021-06-15', true,  6);
+
 -- ========================
 -- 5. MEDICOS
 -- ========================
-INSERT INTO medicos (nombre, apellido_paterno, apellido_materno, dni, telefono, direccion, email, fecha_nacimiento, genero, numero_colegiatura, activo, especialidad_id, usuario_id, consultorio_id) VALUES
-('LUIS',      'GARCIA',   'MONTOYA',  '12345601', '912345601', 'Av. Pardo 101, Chiclayo',            'luis.garcia@citamed.com',    '1978-05-12', 'MASCULINO', 'CMP-045231', true,  1,  8,  1),
-('ROSA',      'TORRES',   'GUTIERREZ','12345602', '912345602', 'Jr. Colon 202, Chiclayo',            'rosa.torres@citamed.com',    '1980-09-18', 'FEMENINO',  'CMP-038742', true,  2,  9,  2),
-('MIGUEL',    'RAMIREZ',  'DELGADO',  '12345603', '912345603', 'Calle Real 303, Chiclayo',           'miguel.ramirez@citamed.com', '1975-03-27', 'MASCULINO', 'CMP-029183', true,  3,  10, 1),
-('CARMEN',    'FLORES',   'ESPINOZA', '12345604', '912345604', 'Av. Venezuela 404, Chiclayo',        'carmen.flores@citamed.com',  '1982-07-08', 'FEMENINO',  'CMP-051647', true,  4,  11, 4),
-('JORGE',     'CASTRO',   'HUAMAN',   '12345605', '912345605', 'Jr. Tacna 505, Chiclayo',            'jorge.castro@citamed.com',   '1977-11-14', 'MASCULINO', 'CMP-034829', true,  5,  12, 6),
-('PATRICIA',  'HERRERA',  'LEON',     '12345606', '912345606', 'Av. Balta 606, Chiclayo',            'patricia.herrera@citamed.com','1983-01-30', 'FEMENINO',  'CMP-062318', true,  6,  13, 8),
-('FERNANDO',  'VEGA',     'QUISPE',   '12345607', '912345607', 'Calle Elias Aguirre 707, Chiclayo',  'fernando.vega@citamed.com',  '1979-06-22', 'MASCULINO', 'CMP-041095', true,  7,  14, 10),
-('SANDRA',    'MORA',     'PAREDES',  '12345608', '912345608', 'Jr. Torres Paz 808, Chiclayo',       'sandra.mora@citamed.com',    '1981-10-03', 'FEMENINO',  'CMP-057382', true,  8,  15, 11),
-('HECTOR',    'RIVAS',    'CARDENAS', '12345609', '912345609', 'Av. Jose Balta 909, Chiclayo',       'hector.rivas@citamed.com',   '1976-04-17', 'MASCULINO', 'CMP-027461', true,  9,  16, 2),
-('GABRIELA',  'PINTO',    'SALINAS',  '12345610', '912345610', 'Calle Siete de Enero 1010, Chiclayo','gabriela.pinto@citamed.com', '1984-08-25', 'FEMENINO',  'CMP-068754', true,  1,  17, 2);
+INSERT INTO medicos (nombre, apellido_paterno, apellido_materno, dni, telefono, direccion, email, fecha_nacimiento, genero, numero_colegiatura, activo, foto_url, especialidad_id, usuario_id, consultorio_id) VALUES
+('LUIS',      'GARCIA',   'MONTOYA',  '12345601', '912345601', 'Av. Pardo 101, Chiclayo',            'luis.garcia@citamed.com',    '1978-05-12', 'MASCULINO', 'CMP-045231', true, '/uploads/medicos/medLuisGarcia.jpg',  1,  8,  1),
+('ROSA',      'TORRES',   'GUTIERREZ','12345602', '912345602', 'Jr. Colon 202, Chiclayo',            'rosa.torres@citamed.com',    '1980-09-18', 'FEMENINO',  'CMP-038742', true, '/uploads/medicos/medRosaGutierrez.jpg',  2,  9,  2),
+('MIGUEL',    'RAMIREZ',  'DELGADO',  '12345603', '912345603', 'Calle Real 303, Chiclayo',           'miguel.ramirez@citamed.com', '1975-03-27', 'MASCULINO', 'CMP-029183', true, '/uploads/medicos/medMiguelRamirez.jpg',  3,  10, 1),
+('CARMEN',    'FLORES',   'ESPINOZA', '12345604', '912345604', 'Av. Venezuela 404, Chiclayo',        'carmen.flores@citamed.com',  '1982-07-08', 'FEMENINO',  'CMP-051647', true, '/uploads/medicos/medCarmenFlores.jpg',  4,  11, 4),
+('JORGE',     'CASTRO',   'HUAMAN',   '12345605', '912345605', 'Jr. Tacna 505, Chiclayo',            'jorge.castro@citamed.com',   '1977-11-14', 'MASCULINO', 'CMP-034829', true, '/uploads/medicos/medJorgeCastro.jpg',  5,  12, 6),
+('PATRICIA',  'HERRERA',  'LEON',     '12345606', '912345606', 'Av. Balta 606, Chiclayo',            'patricia.herrera@citamed.com','1983-01-30', 'FEMENINO',  'CMP-062318', true, '/uploads/medicos/medPatriciaHerrera.jpg',  6,  13, 8),
+('FERNANDO',  'VEGA',     'QUISPE',   '12345607', '912345607', 'Calle Elias Aguirre 707, Chiclayo',  'fernando.vega@citamed.com',  '1979-06-22', 'MASCULINO', 'CMP-041095', true, '/uploads/medicos/medFernandoVega.jpg',  7,  14, 10),
+('SANDRA',    'MORA',     'PAREDES',  '12345608', '912345608', 'Jr. Torres Paz 808, Chiclayo',       'sandra.mora@citamed.com',    '1981-10-03', 'FEMENINO',  'CMP-057382', true, '/uploads/medicos/medSandraMora.jpg',  8,  15, 11),
+('HECTOR',    'RIVAS',    'CARDENAS', '12345609', '912345609', 'Av. Jose Balta 909, Chiclayo',       'hector.rivas@citamed.com',   '1976-04-17', 'MASCULINO', 'CMP-027461', true, '/uploads/medicos/medHectorRivas.jpg',  9,  16, 2),
+('GABRIELA',  'PINTO',    'SALINAS',  '12345610', '912345610', 'Calle Siete de Enero 1010, Chiclayo','gabriela.pinto@citamed.com', '1984-08-25', 'FEMENINO',  'CMP-068754', true, '/uploads/medicos/medGabrielaPinto.jpg',  1,  17, 2);
+
 -- ========================
 -- 5b. ASEGURAR QUE TODOS LOS MEDICOS TENGAN CONSULTORIO
 -- ========================
@@ -119,6 +121,7 @@ INSERT INTO horarios_medicos (dia, hora_inicio, hora_fin, activo, medico_id, con
 ('LUNES',     '08:00:00', '13:00:00', true,  10, 1),
 ('MIERCOLES', '08:00:00', '13:00:00', true,  10, 2),
 ('VIERNES',   '08:00:00', '13:00:00', true,  10, 2);
+
 -- ========================
 -- 7. PACIENTES
 -- ========================
@@ -153,6 +156,7 @@ INSERT INTO pacientes (nombre, apellido_paterno, apellido_materno, dni, telefono
 ('ROSARIO ESPERANZA','ALIAGA',      'DELGADO',    '71234528', '951234528', 'Jr. Balta 900, Chiclayo',            'rosario.aliaga@gmail.com',         '1968-07-03', 'FEMENINO',  'O_POSITIVO', TRUE),
 ('KEVIN SEBASTIAN',  'HEREDIA',     'CAMPOS',     '71234529', '951234529', 'Calle Junin 1000, Chiclayo',         'kevin.heredia@gmail.com',          '2005-11-28', 'MASCULINO', 'B_POSITIVO', TRUE),
 ('LORENA PATRICIA',  'VALDERRAMA',  'CHIRINOS',   '71234530', '951234530', 'Av. Mariscal Castilla 1100, Chiclayo','lorena.valderrama@gmail.com',     '1986-04-22', 'FEMENINO',  'A_POSITIVO', TRUE);
+
 -- ========================
 -- 8. HISTORIALES MEDICOS
 -- ========================
@@ -164,7 +168,6 @@ INSERT INTO historiales_medicos (paciente_id) VALUES
 -- ========================
 -- 9. CITAS
 -- ========================
-
 INSERT INTO citas (paciente_id, medico_id, consultorio_id, fecha_hora, motivo_consulta, estado) VALUES
 (1,  1,  1,  '2026-05-04 08:00:00', 'Dolor de cabeza persistente y mareos',      'ATENDIDA'), -- ID 1
 (2,  2,  4,  '2026-05-05 09:00:00', 'Revision de presion arterial alta',         'ATENDIDA'), -- ID 2
@@ -201,6 +204,7 @@ INSERT INTO citas (paciente_id, medico_id, consultorio_id, fecha_hora, motivo_co
 (28, 1,  1,  '2026-05-28 08:00:00', 'Presion alta y dolor de cabeza',             'PROGRAMADA'), -- ID 33
 (3,  3,  6,  '2026-05-29 14:00:00', 'Control de asma infantil',                   'PROGRAMADA'), -- ID 34
 (2,  2,  4,  '2026-05-30 09:00:00', 'Arritmia, control semestral',                'PROGRAMADA'); -- ID 35
+
 -- ========================
 -- 10. PAGOS
 -- ========================
@@ -271,6 +275,9 @@ INSERT INTO diagnosticos (enfermedad, descripcion, receta, indicaciones, cita_id
 ('ASMA BRONQUIAL',                     'Asma intermitente en nino con FEV1 80% del predicho',                          'Salbutamol inhalador 100mcg c/4-6h en crisis / Budesonida inhalada 200mcg',                              'Max 4 inhalaciones por crisis. Enjuagar boca tras cada uso.',                            29),
 ('FIBRILACION AURICULAR',              'FA paroxistica en seguimiento con anticoagulacion oral',                      'Warfarina 5mg/dia / Digoxina 0.125mg/dia',                                                               'Control INR mensual. Controlar pulso antes de digoxina. Evitar AINES.',                  30);
 
+-- ========================
+-- 13. CONSULTAS
+-- ========================
 INSERT INTO consultas (nombre, email, mensaje, fecha_envio, leido, respondido, respuesta, fecha_respuesta, respondido_por) VALUES
 ('María García López', 'maria.garcia@gmail.com', 'Buenos días, quisiera saber si atienden pacientes diabéticos y qué especialista recomiendan para mi caso.', '2026-06-01 09:15:00', TRUE, TRUE, 'Buenos días María. Contamos con endocrinólogos especializados en diabetes. Puede agendar una cita con el Dr. Ricardo Mendoza en nuestras instalaciones. Gracias por contactarnos.', '2026-06-01 10:30:00', 'Dr. Ricardo Mendoza'),
 ('Carlos Paredes Ruiz', 'carlos.paredes@hotmail.com', 'Hola, estoy interesado en saber los precios de las consultas por especialidad. ¿Podrían enviarme un listado?', '2026-06-02 11:00:00', TRUE, TRUE, 'Hola Carlos. Puede ver los precios de cada especialidad directamente en nuestra página web en la sección Especialidades. Los costos van desde S/80 hasta S/150 según la especialidad. Saludos.', '2026-06-02 14:20:00', 'Admin'),

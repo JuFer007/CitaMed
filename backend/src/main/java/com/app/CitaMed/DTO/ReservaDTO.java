@@ -1,11 +1,10 @@
 package com.app.CitaMed.DTO;
-
 import jakarta.validation.constraints.*;
 import lombok.Data;
-
 import java.time.LocalDate;
 
 @Data
+
 public class ReservaDTO {
     @NotBlank(message = "El DNI es obligatorio")
     @Pattern(regexp = "\\d{8}", message = "El DNI debe tener 8 dígitos")

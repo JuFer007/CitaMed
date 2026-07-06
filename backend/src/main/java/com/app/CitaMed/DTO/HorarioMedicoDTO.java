@@ -1,12 +1,11 @@
 package com.app.CitaMed.DTO;
-
 import com.app.CitaMed.Enums.DiaSemana;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
-
 import java.time.LocalTime;
 
 @Data
+
 public class HorarioMedicoDTO {
     @NotNull(message = "Debe seleccionar un médico")
     private Long medicoId;

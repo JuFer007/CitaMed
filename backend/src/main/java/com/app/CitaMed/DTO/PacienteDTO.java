@@ -1,13 +1,12 @@
 package com.app.CitaMed.DTO;
-
 import com.app.CitaMed.Enums.Genero;
 import com.app.CitaMed.Enums.GrupoSanguineo;
 import jakarta.validation.constraints.*;
 import lombok.Data;
-
 import java.time.LocalDate;
 
 @Data
+
 public class PacienteDTO {
     @NotBlank(message = "El nombre es obligatorio")
     @Size(max = 50)

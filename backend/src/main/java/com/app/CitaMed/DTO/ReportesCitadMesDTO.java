@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+
 public class ReportesCitadMesDTO {
     private String mes;
     private Long total;

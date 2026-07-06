@@ -57,6 +57,9 @@
       class="min-w-full">
       <ng-template pTemplate="header">
         <tr class="bg-[#e4f1f1]/20 border-b border-[#e4f1f1]/10">
+          <th class="text-left px-6 py-4 text-xs font-black uppercase tracking-wider text-[#329791]">
+            <div class="flex items-center gap-2">Foto</div>
+          </th>
           <th pSortableColumn="nombre" class="text-left px-6 py-4 text-xs font-black uppercase tracking-wider text-[#329791]">
             <div class="flex items-center gap-2">
               Médico
@@ -103,12 +106,19 @@
       <ng-template pTemplate="body" let-medico>
         <tr class="border-b border-gray-100 hover:bg-[#329791]/[0.03] transition-all">
           <td class="px-6 py-5">
-            <div class="flex items-center gap-4">
-              <div
-                class="w-14 h-14 rounded-2xl bg-[#329791]/10 flex items-center justify-center border border-[#329791]/20">
+            <div class="w-14 h-14 rounded-2xl overflow-hidden bg-[#329791]/10 flex items-center justify-center border border-[#329791]/20">
+              @if (medico.fotoUrl) {
+                <img [src]="'http://localhost:8080' + medico.fotoUrl"
+                     alt="Foto"
+                     class="w-full h-full object-cover">
+              } @else {
                 <i-lucide [img]="obtenerIconoEspecialidad(medico.especialidad?.nombre)"
                           class="w-6 h-6 text-[#329791]"></i-lucide>
-              </div>
+              }
+            </div>
+          </td>
+          <td class="px-6 py-5">
+            <div class="flex items-center gap-4">
               <div>
                 <h5
                   class="font-bold text-gray-800 text-sm">{{ medico.nombre }} {{ medico.apellidoPaterno }} {{ medico.apellidoMaterno }}</h5>
@@ -186,154 +196,147 @@
     [header]="modoEdicion ? 'Editar Médico' : 'Registrar Nuevo Médico'"
     [(visible)]="mostrarModal"
     [modal]="true"
-    [style]="{ width: '750px' }"
+    [style]="{ width: '900px' }"
     [draggable]="false"
     [resizable]="false">
-    <div class="grid grid-cols-2 gap-4 mt-4">
-      <!-- NOMBRE -->
-      <div>
-        <label class="text-xs font-semibold text-gray-600 block mb-1">Nombre *</label>
-        <input
-          type="text"
-          [(ngModel)]="nuevoMedico.nombre"
-          placeholder="Nombre"
-          class="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-[#267c77] outline-none" />
-      </div>
-
-
-      <!-- APELLIDO PATERNO -->
-      <div>
-        <label class="text-xs font-semibold text-gray-600 block mb-1">Apellido Paterno *</label>
-        <input
-          type="text"
-          [(ngModel)]="nuevoMedico.apellidoPaterno"
-          placeholder="Apellido Paterno"
-          class="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-[#267c77] outline-none" />
-      </div>
-
-
-      <!-- APELLIDO MATERNO -->
-      <div>
-        <label class="text-xs font-semibold text-gray-600 block mb-1">Apellido Materno *</label>
-        <input
-          type="text"
-          [(ngModel)]="nuevoMedico.apellidoMaterno"
-          placeholder="Apellido Paterno"
-          class="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-[#267c77] outline-none" />
-      </div>
-
-      <!-- DNI -->
-      <div>
-        <label class="text-xs font-semibold text-gray-600 block mb-1">DNI *</label>
-        <input
-          type="text"
-          [(ngModel)]="nuevoMedico.dni"
-          placeholder="DNI"
-          maxlength="8"
-          class="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-[#267c77] outline-none" />
-      </div>
-
-
-      <!-- TELÉFONO -->
-      <div>
-        <label class="text-xs font-semibold text-gray-600 block mb-1">Telefono</label>
-        <input
-          type="text"
-          [(ngModel)]="nuevoMedico.telefono"
-          placeholder="Teléfono"
-          maxlength="9"
-          class="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-[#267c77] outline-none" />
-      </div>
-
-
-      <!-- CMP -->
-      <div>
-        <label class="text-xs font-semibold text-gray-600 block mb-1">CMP</label>
-        <input
-          type="text"
-          [(ngModel)]="nuevoMedico.numeroColegiatura"
-          placeholder="CMP"
-          class="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-[#267c77] outline-none" />
-      </div>
-
-
-      <!-- DIRECCIÓN (OPCIONAL) -->
-      <div>
-        <label class="text-xs font-semibold text-gray-600 block mb-1">Direccion (Opcional)</label>
-        <input
-          type="text"
-          [(ngModel)]="nuevoMedico.direccion"
-          placeholder="Dirección (Opcional)"
-          class="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-[#267c77] outline-none" />
-      </div>
-
-
-      <!-- FECHA NACIMIENTO -->
-      <div>
-        <label class="text-xs font-semibold text-gray-600 block mb-1">Fecha de Nacimiento</label>
-        <input
-          type="date"
-          [(ngModel)]="nuevoMedico.fechaNacimiento"
-          class="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-[#267c77] outline-none" />
-      </div>
-
-      <!-- GÉNERO -->
-      <div class="flex flex-col">
-        <label class="text-xs font-semibold text-gray-600 block mb-1">
-          Género
+    <div class="flex gap-6 mt-4">
+      <!-- COLUMNA IZQUIERDA: FOTO -->
+      <div class="w-64 flex-shrink-0 flex flex-col items-center gap-4">
+        <div class="w-full aspect-square rounded-2xl border-2 border-dashed border-gray-300 bg-gray-50 flex items-center justify-center overflow-hidden">
+          @if (fotoPreview) {
+            <img [src]="fotoPreview" alt="Foto" class="w-full h-full object-cover">
+          } @else {
+            <i-lucide [img]="User" class="w-24 h-24 text-gray-300"></i-lucide>
+          }
+        </div>
+        <label class="w-full cursor-pointer">
+          <span class="block w-full text-center px-4 py-2.5 rounded-xl border-2 border-[#329791] text-[#329791] font-bold text-sm hover:bg-[#329791] hover:text-white transition-all">
+            {{ fotoPreview ? 'Cambiar foto' : 'Seleccionar foto' }}
+          </span>
+          <input
+            type="file"
+            accept="image/*"
+            (change)="onArchivoSeleccionado($event)"
+            class="hidden" />
         </label>
-
-        <select
-          [(ngModel)]="nuevoMedico.genero"
-          class="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-[#267c77] outline-none">
-          <option [ngValue]="null">
-            Seleccione género
-          </option>
-          <option value="MASCULINO">
-            Masculino
-          </option>
-          <option value="FEMENINO">
-            Femenino
-          </option>
-        </select>
       </div>
 
-      <!-- ESPECIALIDAD -->
-      <div class="flex flex-col">
-        <label class="text-xs font-semibold text-gray-600 block mb-1">
-          Especialidad
-        </label>
-        <select
-          [(ngModel)]="nuevoMedico.especialidadId"
-          class="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-[#267c77] outline-none">
-          <option [ngValue]="null">
-            Seleccione especialidad
-          </option>
-          <option
-            *ngFor="let esp of especialidades"
-            [ngValue]="esp.id">
-            {{ esp.nombre }}
-          </option>
-        </select>
-      </div>
+      <!-- COLUMNA DERECHA: DATOS -->
+      <div class="flex-1 grid grid-cols-2 gap-x-4 gap-y-3">
+        <!-- NOMBRE -->
+        <div>
+          <label class="text-xs font-semibold text-gray-600 block mb-1">Nombre *</label>
+          <input
+            type="text"
+            [(ngModel)]="nuevoMedico.nombre"
+            placeholder="Nombre"
+            class="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-[#267c77] outline-none" />
+        </div>
 
-      <!-- CONSULTORIO -->
-      <div class="flex flex-col">
-        <label class="text-xs font-semibold text-gray-600 block mb-1">
-          Consultorio
-        </label>
-        <select
-          [(ngModel)]="nuevoMedico.consultorioId"
-          class="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-[#267c77] outline-none">
-          <option [ngValue]="undefined">
-            Sin asignar
-          </option>
-          <option
-            *ngFor="let c of consultorios"
-            [ngValue]="c.id">
-            {{ c.numero }} - {{ c.descripcion }}
-          </option>
-        </select>
+        <!-- APELLIDO PATERNO -->
+        <div>
+          <label class="text-xs font-semibold text-gray-600 block mb-1">Apellido Paterno *</label>
+          <input
+            type="text"
+            [(ngModel)]="nuevoMedico.apellidoPaterno"
+            placeholder="Apellido Paterno"
+            class="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-[#267c77] outline-none" />
+        </div>
+
+        <!-- APELLIDO MATERNO -->
+        <div>
+          <label class="text-xs font-semibold text-gray-600 block mb-1">Apellido Materno *</label>
+          <input
+            type="text"
+            [(ngModel)]="nuevoMedico.apellidoMaterno"
+            placeholder="Apellido Materno"
+            class="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-[#267c77] outline-none" />
+        </div>
+
+        <!-- DNI -->
+        <div>
+          <label class="text-xs font-semibold text-gray-600 block mb-1">DNI *</label>
+          <input
+            type="text"
+            [(ngModel)]="nuevoMedico.dni"
+            placeholder="DNI"
+            maxlength="8"
+            class="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-[#267c77] outline-none" />
+        </div>
+
+        <!-- TELÉFONO -->
+        <div>
+          <label class="text-xs font-semibold text-gray-600 block mb-1">Telefono</label>
+          <input
+            type="text"
+            [(ngModel)]="nuevoMedico.telefono"
+            placeholder="Teléfono"
+            maxlength="9"
+            class="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-[#267c77] outline-none" />
+        </div>
+
+        <!-- CMP -->
+        <div>
+          <label class="text-xs font-semibold text-gray-600 block mb-1">CMP</label>
+          <input
+            type="text"
+            [(ngModel)]="nuevoMedico.numeroColegiatura"
+            placeholder="CMP"
+            class="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-[#267c77] outline-none" />
+        </div>
+
+        <!-- FECHA NACIMIENTO -->
+        <div>
+          <label class="text-xs font-semibold text-gray-600 block mb-1">Fecha de Nacimiento</label>
+          <input
+            type="date"
+            [(ngModel)]="nuevoMedico.fechaNacimiento"
+            class="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-[#267c77] outline-none" />
+        </div>
+
+        <!-- GÉNERO -->
+        <div class="flex flex-col">
+          <label class="text-xs font-semibold text-gray-600 block mb-1">Género</label>
+          <select
+            [(ngModel)]="nuevoMedico.genero"
+            class="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-[#267c77] outline-none">
+            <option [ngValue]="null">Seleccione género</option>
+            <option value="MASCULINO">Masculino</option>
+            <option value="FEMENINO">Femenino</option>
+          </select>
+        </div>
+
+        <!-- ESPECIALIDAD -->
+        <div class="flex flex-col">
+          <label class="text-xs font-semibold text-gray-600 block mb-1">Especialidad</label>
+          <select
+            [(ngModel)]="nuevoMedico.especialidadId"
+            class="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-[#267c77] outline-none">
+            <option [ngValue]="null">Seleccione especialidad</option>
+            <option *ngFor="let esp of especialidades" [ngValue]="esp.id">{{ esp.nombre }}</option>
+          </select>
+        </div>
+
+        <!-- DIRECCIÓN -->
+        <div>
+          <label class="text-xs font-semibold text-gray-600 block mb-1">Dirección (Opcional)</label>
+          <input
+            type="text"
+            [(ngModel)]="nuevoMedico.direccion"
+            placeholder="Dirección"
+            class="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-[#267c77] outline-none" />
+        </div>
+
+        <!-- CONSULTORIO -->
+        <div class="flex flex-col">
+          <label class="text-xs font-semibold text-gray-600 block mb-1">Consultorio</label>
+          <select
+            [(ngModel)]="nuevoMedico.consultorioId"
+            class="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-[#267c77] outline-none">
+            <option [ngValue]="undefined">Sin asignar</option>
+            <option *ngFor="let c of consultorios" [ngValue]="c.id">{{ c.numero }} - {{ c.descripcion }}</option>
+          </select>
+        </div>
       </div>
     </div>
     <ng-template pTemplate="footer">

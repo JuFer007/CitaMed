@@ -18,10 +18,8 @@ export class MedicoService {
     return this.http.get<Medico[]>(this.api);
   }
 
-  registrar(dto: MedicoDTO): Observable<any> {
-    return this.http.post(this.api, dto, {
-      responseType: 'text'
-    });
+  registrar(dto: MedicoDTO): Observable<Medico> {
+    return this.http.post<Medico>(this.api, dto);
   }
 
   modificar(id: number, dto: MedicoDTO): Observable<any> {
@@ -34,5 +32,11 @@ export class MedicoService {
 
   listarEspecialidades(): Observable<Especialidad[]> {
     return this.http.get<Especialidad[]>(this.apiEspecialidad);
+  }
+
+  subirFoto(id: number, archivo: File): Observable<any> {
+    const formData = new FormData();
+    formData.append('archivo', archivo);
+    return this.http.post(`${this.api}/${id}/foto`, formData);
   }
 }

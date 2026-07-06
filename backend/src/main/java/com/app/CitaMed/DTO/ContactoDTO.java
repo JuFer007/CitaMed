@@ -1,10 +1,10 @@
 package com.app.CitaMed.DTO;
-
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 
 @Data
+
 public class ContactoDTO {
     @NotBlank(message = "El nombre es obligatorio")
     private String nombre;

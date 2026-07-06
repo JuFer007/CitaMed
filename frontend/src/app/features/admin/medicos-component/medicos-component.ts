@@ -90,6 +90,9 @@ export class MedicosComponent implements OnInit {
   medicoEditandoId: number | null = null;
   roles = Object.values(Rol);
 
+  archivoSeleccionado: File | null = null;
+  fotoPreview: string | null = null;
+
   nuevoUsuario: Usuario = {
     userName: '',
     password: '',
@@ -157,6 +160,19 @@ export class MedicosComponent implements OnInit {
     });
   }
 
+  onArchivoSeleccionado(event: any): void {
+    const file = event.target.files?.[0];
+    if (file) {
+      this.archivoSeleccionado = file;
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        this.fotoPreview = e.target?.result as string;
+        this.cdr.markForCheck();
+      };
+      reader.readAsDataURL(file);
+    }
+  }
+
   abrirNuevoMedico(): void {
     this.modoEdicion = false;
     this.medicoEditandoId = null;
@@ -191,6 +207,9 @@ export class MedicosComponent implements OnInit {
       rol: Rol.MEDICO,
       activo: medico.activo ?? true,
     };
+
+    this.fotoPreview = medico.fotoUrl ? `http://localhost:8080${medico.fotoUrl}` : null;
+    this.archivoSeleccionado = null;
 
     this.mostrarModal = true;
     this.cdr.markForCheck();
@@ -280,7 +299,7 @@ export class MedicosComponent implements OnInit {
       this.medicoService.modificar(this.medicoEditandoId, this.nuevoMedico).subscribe({
         next: (res: any) => {
           this.toast.success(res.mensaje || res);
-          this.finalizarGuardado();
+          this.subirFotoSiSeleccionada(this.medicoEditandoId!);
         },
         error: (err: any) => {
           console.error(err);
@@ -290,9 +309,13 @@ export class MedicosComponent implements OnInit {
       });
     } else {
       this.medicoService.registrar(this.nuevoMedico).subscribe({
-        next: (res: any) => {
-          this.toast.success(res);
-          this.finalizarGuardado();
+        next: (medico: Medico) => {
+          this.toast.success('Médico registrado correctamente');
+          if (this.archivoSeleccionado && medico.id) {
+            this.subirFotoYFinalizar(medico.id);
+          } else {
+            this.finalizarGuardado();
+          }
         },
         error: (err: any) => {
           console.error(err);
@@ -301,6 +324,28 @@ export class MedicosComponent implements OnInit {
         },
       });
     }
+  }
+
+  private subirFotoSiSeleccionada(id: number): void {
+    if (this.archivoSeleccionado) {
+      this.subirFotoYFinalizar(id);
+    } else {
+      this.finalizarGuardado();
+    }
+  }
+
+  private subirFotoYFinalizar(id: number): void {
+    this.medicoService.subirFoto(id, this.archivoSeleccionado!).subscribe({
+      next: () => {
+        this.toast.success('Foto subida correctamente');
+        this.finalizarGuardado();
+      },
+      error: (err: any) => {
+        console.error(err);
+        this.toast.error('Error al subir la foto');
+        this.finalizarGuardado();
+      },
+    });
   }
 
   private finalizarGuardado(): void {
@@ -439,6 +484,9 @@ export class MedicosComponent implements OnInit {
       rol: Rol.MEDICO,
       activo: true,
     };
+
+    this.archivoSeleccionado = null;
+    this.fotoPreview = null;
 
     this.cdr.markForCheck();
   }
