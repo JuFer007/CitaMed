@@ -15,7 +15,7 @@
     </div>
 
     <!-- Principal -->
-    @if (isAdminView() || isRecepcionistaView() ) {
+    @if (isAdminView()) {
       <div class="px-3.5 pt-4 pb-1.5 text-white/30 text-[10px] tracking-[0.12em] uppercase font-semibold">Principal
       </div>
       <a routerLink="/admin/dashboard" routerLinkActive="bg-teal !text-white"
@@ -55,7 +55,7 @@
       <span class="material-symbols-outlined text-[17px] flex-shrink-0">local_hospital</span>
       Especialidades
     </a>
-    <a *ngIf="isAdminView() || isMedicoView()" routerLink="/admin/horarios" routerLinkActive="bg-teal !text-white"
+    <a *ngIf="isAdminView()" routerLink="/admin/horarios" routerLinkActive="bg-teal !text-white"
        class="flex items-center gap-2.5 px-2.5 py-2 mx-2 rounded-[7px] text-white/52 text-[13px] hover:bg-white/[0.07] hover:text-white/90 transition-all">
       <span class="material-symbols-outlined text-[17px] flex-shrink-0">schedule</span>
       Horarios médicos
@@ -73,7 +73,7 @@
     </a>
     <a *ngIf="isAdminView() || isMedicoView() || isRecepcionistaView()" routerLink="/admin/consultas" routerLinkActive="bg-teal !text-white"
        class="flex items-center gap-2.5 px-2.5 py-2 mx-2 rounded-[7px] text-white/52 text-[13px] hover:bg-white/[0.07] hover:text-white/90 transition-all">
-      <span class="material-symbols-outlined text-[17px] flex-shrink-0">contact_mail</span>
+      <span class="material-symbols-outlined text-[17px] flex-shrink-0">forward_to_inbox</span>
       Consultas
     </a>
     @if (isAdminView()){
@@ -81,6 +81,11 @@
       <div class="px-3.5 pt-4 pb-1.5 text-white/30 text-[10px] tracking-[0.12em] uppercase font-semibold">
         Administración
       </div>
+      <a routerLink="/admin/consultorios" routerLinkActive="bg-teal !text-white"
+         class="flex items-center gap-2.5 px-2.5 py-2 mx-2 rounded-[7px] text-white/52 text-[13px] hover:bg-white/[0.07] hover:text-white/90 transition-all">
+        <span class="material-symbols-outlined text-[17px] flex-shrink-0">home_health</span>
+        Consultorios
+      </a>
       <a routerLink="/admin/empleados" routerLinkActive="bg-teal !text-white"
          class="flex items-center gap-2.5 px-2.5 py-2 mx-2 rounded-[7px] text-white/52 text-[13px] hover:bg-white/[0.07] hover:text-white/90 transition-all">
         <span class="material-symbols-outlined text-[17px] flex-shrink-0">badge</span>

@@ -47,18 +47,18 @@ INSERT INTO especialidades (nombre, descripcion, precio) VALUES
 -- 3. CONSULTORIOS 
 -- ========================
 INSERT INTO consultorios (numero, descripcion, disponible, especialidad_id) VALUES
-('C-101', 'Consultorio de Medicina General N°1',  true,  1),
-('C-102', 'Consultorio de Medicina General N°2',  true,  1),
-('C-103', 'Consultorio de Medicina General N°3',  false, 1),
-('C-201', 'Consultorio de Cardiología N°1',        true,  2),
-('C-202', 'Consultorio de Cardiología N°2',        true,  2),
-('C-301', 'Consultorio de Pediatría N°1',          true,  3),
-('C-302', 'Consultorio de Pediatría N°2',          false, 3),
-('C-401', 'Consultorio de Ginecología N°1',        true,  4),
-('C-402', 'Consultorio de Ginecología N°2',        true,  4),
-('C-501', 'Consultorio de Traumatología N°1',      true,  5),
-('C-601', 'Consultorio de Neurología N°1',         true,  6),
-('C-602', 'Consultorio de Neurología N°2',         true,  6);
+('C-101', 'Consultorio de Medicina General N°1',  true,  3),
+('C-102', 'Consultorio de Medicina General N°2',  true,  3),
+('C-103', 'Consultorio de Medicina General N°3',  false, 3),
+('C-201', 'Consultorio de Cardiología N°1',        true,  4),
+('C-202', 'Consultorio de Cardiología N°2',        true,  4),
+('C-301', 'Consultorio de Pediatría N°1',          true,  5),
+('C-302', 'Consultorio de Pediatría N°2',          false, 5),
+('C-401', 'Consultorio de Ginecología N°1',        true,  6),
+('C-402', 'Consultorio de Ginecología N°2',        true,  6),
+('C-501', 'Consultorio de Traumatología N°1',      true,  7),
+('C-601', 'Consultorio de Neurología N°1',         true,  8),
+('C-602', 'Consultorio de Neurología N°2',         true,  8);
 
 -- ========================
 -- 4. EMPLEADOS

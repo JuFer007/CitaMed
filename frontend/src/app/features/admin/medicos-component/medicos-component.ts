@@ -1,10 +1,10 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { HttpClient } from '@angular/common/http';
 import { DialogModule } from 'primeng/dialog';
 import { ButtonModule } from 'primeng/button';
 import { MedicoService } from '../../../core/services/medico-service';
+import { ConsultorioService } from '../../../core/services/consultorio-service';
 import { Medico, MedicoDTO } from '../../../model/Medico';
 import { Especialidad } from '../../../model/Especialidad';
 import { Consultorio } from '../../../model/Consultorio';
@@ -51,9 +51,9 @@ import { SortEvent } from 'primeng/api';
 export class MedicosComponent implements OnInit {
   constructor(
     private medicoService: MedicoService,
+    private consultorioService: ConsultorioService,
     private cdr: ChangeDetectorRef,
     private toast: GlobalToast,
-    private http: HttpClient,
   ) {}
 
   Stethoscope = Stethoscope;
@@ -82,6 +82,7 @@ export class MedicosComponent implements OnInit {
   medicosFiltrados: Medico[] = [];
   especialidades: Especialidad[] = [];
   consultorios: Consultorio[] = [];
+  todosConsultorios: Consultorio[] = [];
   mensaje = '';
   terminoBusqueda = '';
   filtroEspecialidad = '';
@@ -154,8 +155,52 @@ export class MedicosComponent implements OnInit {
   }
 
   obtenerConsultorios(): void {
-    this.http.get<Consultorio[]>('http://localhost:8080/api/consultorio').subscribe({
-      next: (data) => { this.consultorios = data; this.cdr.markForCheck(); },
+    this.consultorioService.listar().subscribe({
+      next: (data) => {
+        this.consultorios = data;
+        this.todosConsultorios = data;
+        this.cdr.markForCheck();
+      },
+      error: () => {},
+    });
+  }
+
+  onEspecialidadChange(): void {
+    if (!this.nuevoMedico.especialidadId) {
+      this.consultorios = [...this.todosConsultorios];
+      this.nuevoMedico.consultorioId = undefined;
+      this.cdr.markForCheck();
+      return;
+    }
+    this.consultorioService.disponiblesParaMedico(this.nuevoMedico.especialidadId).subscribe({
+      next: (data) => {
+        this.consultorios = data;
+        if (this.modoEdicion && this.medicoEditandoId != null) {
+          const medicoActual = this.medicos.find(m => m.id === this.medicoEditandoId);
+          const consultorioActualId = medicoActual?.consultorio?.id;
+          if (consultorioActualId && !this.consultorios.some(c => c.id === consultorioActualId)) {
+            const actual = this.todosConsultorios.find(c => c.id === consultorioActualId);
+            if (actual) this.consultorios.push(actual);
+          }
+        } else {
+          this.nuevoMedico.consultorioId = undefined;
+        }
+        this.cdr.markForCheck();
+      },
+      error: () => {},
+    });
+  }
+
+  private cargarConsultoriosParaEditar(especialidadId: number, consultorioActualId?: number): void {
+    this.consultorioService.disponiblesParaMedico(especialidadId).subscribe({
+      next: (data) => {
+        this.consultorios = [...data];
+        if (consultorioActualId && !this.consultorios.some(c => c.id === consultorioActualId)) {
+          const actual = this.todosConsultorios.find(c => c.id === consultorioActualId);
+          if (actual) this.consultorios.push(actual);
+        }
+        this.cdr.markForCheck();
+      },
       error: () => {},
     });
   }
@@ -210,6 +255,8 @@ export class MedicosComponent implements OnInit {
 
     this.fotoPreview = medico.fotoUrl ? `http://localhost:8080${medico.fotoUrl}` : null;
     this.archivoSeleccionado = null;
+
+    this.cargarConsultoriosParaEditar(medico.especialidad.id, medico.consultorio?.id);
 
     this.mostrarModal = true;
     this.cdr.markForCheck();

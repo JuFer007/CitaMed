@@ -1,0 +1,178 @@
+<div class="p-1">
+  <div class="bg-white rounded-3xl shadow-sm border border-blue-100/50 p-8 mb-6">
+    <div class="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-5">
+      <div>
+        <h3 class="text-[32px] font-extrabold leading-[1.1] text-[#329791] mb-[6px]">
+          Gestión de Consultorios
+        </h3>
+        <p class="text-gray-600 text-sm">
+          Administración de consultorios y asignación de áreas
+        </p>
+      </div>
+
+      <div class="flex flex-col sm:flex-row gap-3 items-center w-full lg:w-auto">
+        <button
+          (click)="abrirNuevo()"
+          class="h-[48px] px-5 rounded-xl bg-[#329791] hover:bg-[#267c77] text-white font-bold text-sm transition-all shadow-sm cursor-pointer flex items-center gap-2 justify-center">
+          <i class="pi pi-plus"></i>
+          Nuevo Consultorio
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden">
+    <p-table
+      #dt
+      [value]="consultorios"
+      [paginator]="true"
+      [rows]="10"
+      [rowsPerPageOptions]="[5, 10, 20, 50]"
+      [responsiveLayout]="'scroll'"
+      [sortMode]="'single'"
+      [customSort]="true"
+      (onSort)="customSort($event)"
+      class="min-w-full">
+
+      <ng-template pTemplate="header">
+        <tr class="bg-[#e4f1f1]/20 border-b border-[#e4f1f1]/10">
+          <th pSortableColumn="numero"
+              class="text-left px-6 py-4 text-xs font-black uppercase tracking-wider text-[#329791]">
+            <div class="flex items-center gap-2">
+              Número
+              <p-sortIcon field="numero" />
+            </div>
+          </th>
+          <th pSortableColumn="descripcion"
+              class="text-left px-6 py-4 text-xs font-black uppercase tracking-wider text-[#329791]">
+            <div class="flex items-center gap-2">
+              Descripción
+              <p-sortIcon field="descripcion" />
+            </div>
+          </th>
+          <th class="text-left px-6 py-4 text-xs font-black uppercase tracking-wider text-[#329791]">
+            <div class="flex items-center gap-2">Área</div>
+          </th>
+          <th class="text-center px-6 py-4 text-xs font-black uppercase tracking-wider text-[#329791]">
+            <div class="flex items-center gap-2 justify-center">Cupo Máximo</div>
+          </th>
+          <th class="text-center px-6 py-4 text-xs font-black uppercase tracking-wider text-[#329791]">
+            <div class="flex items-center gap-2 justify-center">Disponible</div>
+          </th>
+          <th class="text-center px-6 py-4 text-xs font-black uppercase tracking-wider text-[#329791]">Acciones</th>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="body" let-consultorio>
+        <tr class="border-b border-gray-100 hover:bg-[#329791]/[0.03] transition-all">
+          <td class="px-6 py-5">
+            <span class="font-bold text-gray-800 text-sm">{{ consultorio.numero }}</span>
+          </td>
+          <td class="px-6 py-5 text-sm text-gray-700">{{ consultorio.descripcion }}</td>
+          <td class="px-6 py-5">
+            <span
+              class="inline-block px-3 py-1.5 rounded-xl bg-[#329791]/10 text-[#329791] text-xs font-bold">
+              {{ consultorio.especialidad?.nombre || '' }}
+            </span>
+          </td>
+          <td class="px-6 py-5 text-center">
+            <span class="font-bold text-sm">{{ consultorio.cupoMaximo ?? 3 }}</span>
+          </td>
+          <td class="px-6 py-5 text-center">
+            <span
+              [ngClass]="consultorio.disponible ? 'bg-green-100 text-green-700 px-4 py-2 rounded-full text-xs font-bold' : 'bg-red-100 text-red-700 px-4 py-2 rounded-full text-xs font-bold'">
+              {{ consultorio.disponible ? 'SÍ' : 'NO' }}
+            </span>
+          </td>
+          <td class="px-6 py-5">
+            <div class="flex items-center justify-center gap-2">
+              <button (click)="editar(consultorio)"
+                      class="w-10 h-10 rounded-xl bg-blue-100 hover:bg-blue-200 text-blue-700 flex items-center justify-center cursor-pointer"
+                      title="Editar">
+                <i class="pi pi-pencil"></i>
+              </button>
+              <button (click)="toggleDisponible(consultorio)"
+                      class="px-4 py-2 rounded-xl text-white text-sm font-bold transition-all cursor-pointer"
+                      [ngClass]="consultorio.disponible ? 'bg-red-500 hover:bg-red-600' : 'bg-[#329791] hover:bg-[#267c77]'"
+                      [title]="consultorio.disponible ? 'Deshabilitar' : 'Habilitar'">
+                <i class="pi pi-eye-slash text-sm"></i>
+              </button>
+            </div>
+          </td>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="emptymessage">
+        <tr>
+          <td colspan="7" class="!text-center !align-middle py-20 text-gray-400">
+            <i class="pi pi-building !text-6xl mb-4 block"></i>
+            <p class="font-semibold text-lg">No hay consultorios registrados</p>
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
+
+  <p-dialog
+    [header]="modoEdicion ? 'Editar Consultorio' : 'Nuevo Consultorio'"
+    [(visible)]="mostrarModal"
+    [modal]="true"
+    [style]="{ width: '500px' }"
+    [draggable]="false"
+    [resizable]="false">
+    <div class="flex flex-col gap-4 mt-4">
+      <div>
+        <label class="text-xs font-semibold text-gray-600 block mb-1">Número *</label>
+        <input
+          type="text"
+          [(ngModel)]="form.numero"
+          placeholder="Ej: 101"
+          class="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-[#267c77] outline-none" />
+      </div>
+
+      <div>
+        <label class="text-xs font-semibold text-gray-600 block mb-1">Descripción *</label>
+        <input
+          type="text"
+          [(ngModel)]="form.descripcion"
+          placeholder="Descripción del consultorio"
+          class="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-[#267c77] outline-none" />
+      </div>
+
+      <div class="flex flex-col">
+        <label class="text-xs font-semibold text-gray-600 block mb-1">Área *</label>
+        <select
+          [(ngModel)]="form.especialidadId"
+          (change)="onAreaChange()"
+          class="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-[#267c77] outline-none">
+          <option [ngValue]="0">Seleccione un área</option>
+          <option *ngFor="let esp of especialidades" [ngValue]="esp.id">{{ esp.nombre }}</option>
+        </select>
+      </div>
+
+      <div>
+        <label class="text-xs font-semibold text-gray-600 block mb-1">Cupo Máximo de Médicos</label>
+        <input
+          type="number"
+          [(ngModel)]="form.cupoMaximo"
+          min="1"
+          max="10"
+          class="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-[#267c77] outline-none" />
+      </div>
+    </div>
+    <ng-template pTemplate="footer">
+      <div class="flex justify-end gap-3 pt-4">
+        <button
+          (click)="mostrarModal = false"
+          class="px-5 py-2.5 rounded-xl bg-red-500 hover:bg-red-600 text-white font-bold cursor-pointer">
+          Cancelar
+        </button>
+        <button
+          (click)="guardar()"
+          class="px-5 py-2.5 rounded-xl bg-[#329791] hover:bg-[#267c77] text-white font-bold cursor-pointer">
+          {{ modoEdicion ? 'Actualizar' : 'Guardar' }}
+        </button>
+      </div>
+    </ng-template>
+  </p-dialog>
+</div>

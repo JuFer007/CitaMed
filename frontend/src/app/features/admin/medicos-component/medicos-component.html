@@ -311,6 +311,7 @@
           <label class="text-xs font-semibold text-gray-600 block mb-1">Especialidad</label>
           <select
             [(ngModel)]="nuevoMedico.especialidadId"
+            (change)="onEspecialidadChange()"
             class="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-[#267c77] outline-none">
             <option [ngValue]="null">Seleccione especialidad</option>
             <option *ngFor="let esp of especialidades" [ngValue]="esp.id">{{ esp.nombre }}</option>

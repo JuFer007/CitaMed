@@ -34,6 +34,11 @@ public class ConsultorioController {
         return ResponseEntity.ok(consultorioService.findDisponibles());
     }
 
+    @GetMapping("/disponibles-para-medico")
+    public ResponseEntity<List<Consultorio>> findDisponiblesParaMedico(@RequestParam Long especialidadId) {
+        return ResponseEntity.ok(consultorioService.findDisponiblesParaMedico(especialidadId));
+    }
+
     @PostMapping
     public ResponseEntity<String> save(@RequestBody @Valid ConsultorioDTO dto) {
         String resultado = consultorioService.save(dto);

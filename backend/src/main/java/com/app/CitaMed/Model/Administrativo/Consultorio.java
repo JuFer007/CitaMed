@@ -31,7 +31,8 @@ public class Consultorio {
 
     @NotNull(message = "Debe seleccionar un área")
     @ManyToOne
-    @JsonIgnore
     @JoinColumn(name = "especialidad_id", nullable = false)
     private Especialidad especialidad;
+
+    private Integer cupoMaximo = 3;
 }

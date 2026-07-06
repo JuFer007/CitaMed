@@ -6,6 +6,7 @@ import { UsuarioComponent } from './features/admin/usuario-component/usuario-com
 import { DashboardComponent } from './features/admin/dashboard-component/dashboard-component';
 import { CitasComponent } from './features/admin/citas-component/citas-component';
 import { MedicosComponent } from './features/admin/medicos-component/medicos-component';
+import { ConsultoriosComponent } from './features/admin/consultorios-component/consultorios-component';
 import { PacientesComponent } from './features/admin/pacientes-component/pacientes-component';
 import { EspecialidadesComponent } from './features/admin/especialidades-component/especialidades-component';
 import { HorarioComponent } from './features/admin/horario-component/horario-component';
@@ -69,6 +70,12 @@ export const routes: Routes = [
         canActivate: [roleGuard],
       },
       {
+        path: 'consultorios',
+        component: ConsultoriosComponent,
+        data: { title: 'Consultorios', roles: ['ADMIN'] },
+        canActivate: [roleGuard],
+      },
+      {
         path: 'pacientes',
         component: PacientesComponent,
         data: { title: 'Pacientes', roles: ['ADMIN', 'MEDICO', 'RECEPCIONISTA'] },
@@ -77,13 +84,13 @@ export const routes: Routes = [
       {
         path: 'especialidades',
         component: EspecialidadesComponent,
-        data: { title: 'Especialidades', roles: ['ADMIN', 'MEDICO', 'RECEPCIONISTA'] },
+        data: { title: 'Especialidades', roles: ['ADMIN'] },
         canActivate: [roleGuard],
       },
       {
         path: 'horarios',
         component: HorarioComponent,
-        data: { title: 'Horarios', roles: ['ADMIN', 'MEDICO'] },
+        data: { title: 'Horarios', roles: ['ADMIN'] },
         canActivate: [roleGuard],
       },
       {
@@ -95,7 +102,7 @@ export const routes: Routes = [
       {
         path: 'pagos',
         component: PagosComponent,
-        data: { title: 'Pagos', roles: ['ADMIN'] },
+        data: { title: 'Pagos', roles: ['ADMIN', 'RECEPCIONISTA'] },
         canActivate: [roleGuard],
       },
       {
