@@ -1,0 +1,67 @@
+/* ── LOADING STATE ── */
+.rp-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 80px 20px;
+  color: #6b8f8c;
+  font-size: 14px;
+}
+
+.rp-spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid #dcebe9;
+  border-top-color: #329791;
+  border-radius: 50%;
+  animation: rp-spin 0.7s linear infinite;
+  margin-bottom: 14px;
+}
+
+@keyframes rp-spin {
+  to { transform: rotate(360deg); }
+}
+
+/* ── ERROR STATE ── */
+.rp-error {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 60px 20px;
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  border-radius: 12px;
+  text-align: center;
+}
+
+.rp-error-icon {
+  font-size: 36px;
+  color: #dc2626;
+  margin-bottom: 12px;
+}
+
+.rp-error-msg {
+  font-size: 14px;
+  color: #991b1b;
+  margin: 0 0 16px;
+  max-width: 360px;
+}
+
+.rp-retry-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 20px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #fff;
+  background: #329791;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.rp-retry-btn:hover {
+  background: #267a75;
+}

@@ -1,8 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { BaseChartDirective } from 'ng2-charts';
 import { ChartConfiguration } from 'chart.js';
+import { forkJoin, of } from 'rxjs';
+import { catchError } from 'rxjs/operators';
 import {
   ReporteService,
   ReporteMedico,
@@ -18,6 +20,10 @@ import {
 export class Reportes implements OnInit {
   aniosDisponibles: number[] = [];
   anioSeleccionado: number = new Date().getFullYear();
+
+  loading = false;
+  error = false;
+  errorMsg = '';
 
   totalCitasAnio = 0;
   totalIngresosAnio = 0;
@@ -74,7 +80,10 @@ export class Reportes implements OnInit {
     plugins: { legend: { display: false } },
   };
 
-  constructor(private reporteService: ReporteService) {}
+  constructor(
+    private reporteService: ReporteService,
+    private cdr: ChangeDetectorRef
+  ) {}
 
   ngOnInit(): void {
     const actual = new Date().getFullYear();
@@ -82,78 +91,114 @@ export class Reportes implements OnInit {
     this.cargarTodo();
   }
 
-  cambiarAnio(anio: number): void {
+  cambiarAnio(anio: number | string): void {
     this.anioSeleccionado = Number(anio);
     this.cargarTodo();
   }
 
   cargarTodo(): void {
-    this.cargarCitasPorMes();
-    this.cargarIngresosPorMes();
-    this.cargarCitasPorEstado();
-    this.cargarCitasPorEspecialidad();
-    this.cargarTopMedicos();
-  }
+    this.loading = true;
+    this.error = false;
+    this.errorMsg = '';
 
-  cargarCitasPorMes(): void {
-    this.reporteService.citasPorMes(this.anioSeleccionado).subscribe({
-      next: (data) => {
-        this.citasPorMesData = {
-          ...this.citasPorMesData,
-          labels: data.map((d) => d.mes),
-          datasets: [{ ...this.citasPorMesData.datasets[0], data: data.map((d) => d.total) }],
-        };
-        this.totalCitasAnio = data.reduce((acc, d) => acc + d.total, 0);
+    forkJoin({
+      citasPorMes: this.reporteService.citasPorMes(this.anioSeleccionado).pipe(
+        catchError(err => {
+          console.error('Error cargando citas por mes:', err);
+          return of([]);
+        })
+      ),
+      ingresosPorMes: this.reporteService.ingresosPorMes(this.anioSeleccionado).pipe(
+        catchError(err => {
+          console.error('Error cargando ingresos por mes:', err);
+          return of([]);
+        })
+      ),
+      citasPorEstado: this.reporteService.citasPorEstado(this.anioSeleccionado).pipe(
+        catchError(err => {
+          console.error('Error cargando citas por estado:', err);
+          return of([]);
+        })
+      ),
+      citasPorEspecialidad: this.reporteService.citasPorEspecialidad(this.anioSeleccionado).pipe(
+        catchError(err => {
+          console.error('Error cargando citas por especialidad:', err);
+          return of([]);
+        })
+      ),
+      topMedicos: this.reporteService.topMedicos(this.anioSeleccionado).pipe(
+        catchError(err => {
+          console.error('Error cargando top médicos:', err);
+          return of([]);
+        })
+      ),
+    }).subscribe({
+      next: (result) => {
+        this.actualizarCitasPorMes(result.citasPorMes);
+        this.actualizarIngresosPorMes(result.ingresosPorMes);
+        this.actualizarCitasPorEstado(result.citasPorEstado);
+        this.actualizarCitasPorEspecialidad(result.citasPorEspecialidad);
+        this.topMedicos = result.topMedicos;
+
+        const totalSinDatos =
+          result.citasPorMes.length === 0 &&
+          result.ingresosPorMes.length === 0 &&
+          result.citasPorEstado.length === 0;
+
+        if (totalSinDatos) {
+          this.error = true;
+          this.errorMsg = 'No se encontraron datos para el año seleccionado.';
+        }
+
+        this.loading = false;
+        this.cdr.detectChanges();
       },
-      error: (err) => console.log(err),
-    });
-  }
-
-  cargarIngresosPorMes(): void {
-    this.reporteService.ingresosPorMes(this.anioSeleccionado).subscribe({
-      next: (data) => {
-        this.ingresosPorMesData = {
-          ...this.ingresosPorMesData,
-          labels: data.map((d) => d.mes),
-          datasets: [{ ...this.ingresosPorMesData.datasets[0], data: data.map((d) => d.total) }],
-        };
-        this.totalIngresosAnio = data.reduce((acc, d) => acc + d.total, 0);
+      error: (err) => {
+        console.error('Error general en reportes:', err);
+        this.loading = false;
+        this.error = true;
+        this.errorMsg = 'Error al cargar los reportes. Intente nuevamente.';
+        this.cdr.detectChanges();
       },
-      error: (err) => console.log(err),
     });
   }
 
-  cargarCitasPorEstado(): void {
-    this.reporteService.citasPorEstado(this.anioSeleccionado).subscribe({
-      next: (data) => {
-        this.citasPorEstadoData = {
-          ...this.citasPorEstadoData,
-          labels: data.map((d) => this.formatearEstado(d.estado)),
-          datasets: [{ ...this.citasPorEstadoData.datasets[0], data: data.map((d) => d.total) }],
-        };
-      },
-      error: (err) => console.log(err),
-    });
+  private actualizarCitasPorMes(data: { mes: string; total: number }[]): void {
+    this.citasPorMesData = {
+      ...this.citasPorMesData,
+      labels: data.map((d) => d.mes),
+      datasets: [{ ...this.citasPorMesData.datasets[0], data: data.map((d) => d.total) }],
+    };
+    this.totalCitasAnio = data.reduce((acc, d) => acc + d.total, 0);
   }
 
-  cargarCitasPorEspecialidad(): void {
-    this.reporteService.citasPorEspecialidad(this.anioSeleccionado).subscribe({
-      next: (data) => {
-        this.citasPorEspecialidadData = {
-          ...this.citasPorEspecialidadData,
-          labels: data.map((d) => d.especialidad),
-          datasets: [{ ...this.citasPorEspecialidadData.datasets[0], data: data.map((d) => d.total) }],
-        };
-      },
-      error: (err) => console.log(err),
-    });
+  private actualizarIngresosPorMes(data: { mes: string; total: number }[]): void {
+    this.ingresosPorMesData = {
+      ...this.ingresosPorMesData,
+      labels: data.map((d) => d.mes),
+      datasets: [{ ...this.ingresosPorMesData.datasets[0], data: data.map((d) => d.total) }],
+    };
+    this.totalIngresosAnio = data.reduce((acc, d) => acc + d.total, 0);
   }
 
-  cargarTopMedicos(): void {
-    this.reporteService.topMedicos(this.anioSeleccionado).subscribe({
-      next: (data) => (this.topMedicos = data),
-      error: (err) => console.log(err),
-    });
+  private actualizarCitasPorEstado(data: { estado: string; total: number }[]): void {
+    this.citasPorEstadoData = {
+      ...this.citasPorEstadoData,
+      labels: data.map((d) => this.formatearEstado(d.estado)),
+      datasets: [{ ...this.citasPorEstadoData.datasets[0], data: data.map((d) => d.total) }],
+    };
+  }
+
+  private actualizarCitasPorEspecialidad(data: { especialidad: string; total: number }[]): void {
+    this.citasPorEspecialidadData = {
+      ...this.citasPorEspecialidadData,
+      labels: data.map((d) => d.especialidad),
+      datasets: [{ ...this.citasPorEspecialidadData.datasets[0], data: data.map((d) => d.total) }],
+    };
+  }
+
+  reintentar(): void {
+    this.cargarTodo();
   }
 
   formatearEstado(estado: string): string {
