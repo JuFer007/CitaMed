@@ -1,5 +1,4 @@
 package com.app.CitaMed.Repository.Agenda;
-
 import com.app.CitaMed.DTO.CitaDetalleDTO;
 import com.app.CitaMed.DTO.ReporteEstadoDTO;
 import com.app.CitaMed.DTO.EspecialidadDTO;
@@ -11,7 +10,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
-
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -169,4 +167,16 @@ public interface CitaRepository extends JpaRepository<Cita, Long> {
 
     @Query("SELECT COUNT(DISTINCT c.paciente.id) FROM Cita c WHERE c.medico.id = :medicoId")
     Long countDistinctPacientesByMedicoId(@Param("medicoId") Long medicoId);
+
+    List<Cita> findByPacienteIdAndEstadoAndFechaHoraAfterOrderByFechaHoraAsc(
+            Long pacienteId, EstadoCita estado, LocalDateTime fechaHora);
+
+    List<Cita> findByPacienteIdAndFechaHoraBeforeOrderByFechaHoraDesc(
+            Long pacienteId, LocalDateTime fechaHora);
+
+    List<Cita> findByPacienteIdAndEstadoNotAndFechaHoraBeforeOrderByFechaHoraDesc(
+            Long pacienteId, EstadoCita estado, LocalDateTime fechaHora);
+
+    List<Cita> findByPacienteIdAndEstadoInAndFechaHoraAfterOrderByFechaHoraAsc(
+            Long pacienteId, List<EstadoCita> estados, LocalDateTime fechaHora);
 }

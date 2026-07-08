@@ -1,0 +1,218 @@
+<!-- Contenedor -->
+<div class="relative w-full h-screen flex items-center justify-center p-4 overflow-hidden">
+  <!-- Fondo -->
+  <div class="absolute inset-0 z-0 custom-pattern opacity-[0.50]"></div>
+  <!-- Card -->
+  <div class="relative z-10 w-full max-w-6xl bg-white/70 backdrop-blur-3xl rounded-[32px] shadow-[0_40px_100px_rgba(0,121,107,0.15)] border border-white/20 overflow-hidden">
+    <div class="grid grid-cols-1 lg:grid-cols-[1.15fr_0.85fr]">
+
+      <!-- FORMULARIO (izquierda) -->
+      <div class="px-8 py-10 md:px-14 md:py-12 relative bg-white/90">
+
+        <button routerLink="/login"
+          class="absolute top-8 right-8 lg:hidden flex items-center gap-1.5 text-slate-400 text-xs font-bold uppercase tracking-widest hover:text-[#00796B] transition-colors z-20">
+          <span class="mso !text-lg">close</span>
+        </button>
+
+        <div class="flex items-center gap-3 mb-8">
+          <div class="w-11 h-11 bg-[#F4FAF9] rounded-2xl flex items-center justify-center overflow-hidden ring-1 ring-[#00796B]/10 flex-shrink-0">
+            <img src="/logoCitaMed.png" class="w-full h-full object-contain">
+          </div>
+          <div>
+            <h1 class="text-2xl font-extrabold text-slate-900 tracking-tight leading-none">Crea tu cuenta</h1>
+            <p class="text-slate-500 text-xs mt-1">Completa tus datos para empezar a usar CitaMed</p>
+          </div>
+        </div>
+
+        <!-- STEPPER HORIZONTAL -->
+        <div class="flex items-center mb-9">
+          <div class="flex items-center gap-2">
+            <div class="w-7 h-7 rounded-full bg-[#00796B] text-white flex items-center justify-center text-[11px] font-bold flex-shrink-0">1</div>
+            <span class="text-xs font-bold text-slate-700 whitespace-nowrap">Identidad</span>
+          </div>
+          <div class="flex-1 h-px bg-[#00796B]/15 mx-3"></div>
+          <div class="flex items-center gap-2">
+            <div class="w-7 h-7 rounded-full bg-[#00796B] text-white flex items-center justify-center text-[11px] font-bold flex-shrink-0">2</div>
+            <span class="text-xs font-bold text-slate-700 whitespace-nowrap">Contacto</span>
+          </div>
+          <div class="flex-1 h-px bg-[#00796B]/15 mx-3"></div>
+          <div class="flex items-center gap-2">
+            <div class="w-7 h-7 rounded-full bg-[#00796B] text-white flex items-center justify-center text-[11px] font-bold flex-shrink-0">3</div>
+            <span class="text-xs font-bold text-slate-700 whitespace-nowrap">Acceso</span>
+          </div>
+        </div>
+
+        <form [formGroup]="registroForm" (ngSubmit)="onSubmit()" class="space-y-7">
+
+          <!-- SECCIÓN 1 — IDENTIDAD -->
+          <div class="space-y-3">
+            <div class="grid grid-cols-1 sm:grid-cols-[1fr_auto] gap-2">
+              <div class="group">
+                <div class="relative">
+                  <span class="mso absolute left-3 top-1/2 -translate-y-1/2 text-[#00796B]/40 group-focus-within:text-[#00796B]">badge</span>
+                  <input type="text" formControlName="dni" placeholder="DNI" maxlength="8"
+                    class="w-full pl-10 pr-4 py-3 bg-[#F4FAF9] border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-[#00796B]/30 focus:border-[#00796B] transition-all text-sm font-medium placeholder:text-slate-400">
+                </div>
+              </div>
+              <button type="button" (click)="buscarReniec(registroForm.get('dni')?.value)" [disabled]="registroForm.get('dni')?.invalid || reniecCargando"
+                class="px-5 bg-slate-900 hover:bg-slate-800 text-white font-bold rounded-xl flex items-center justify-center gap-2 transition-all active:scale-[0.98] text-sm disabled:opacity-40 disabled:cursor-not-allowed whitespace-nowrap">
+                <span class="mso !text-lg" *ngIf="!reniecCargando">search</span>
+                <span class="mso !text-lg animate-spin" *ngIf="reniecCargando">refresh</span>
+                Buscar en RENIEC
+              </button>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-2">
+              <div class="group">
+                <div class="relative">
+                  <span class="mso absolute left-3 top-1/2 -translate-y-1/2 text-[#00796B]/40 group-focus-within:text-[#00796B]">person</span>
+                  <input type="text" formControlName="nombre" placeholder="Nombres"
+                    class="w-full pl-10 pr-4 py-3 bg-[#F4FAF9] border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-[#00796B]/30 focus:border-[#00796B] transition-all text-sm font-medium placeholder:text-slate-400">
+                </div>
+              </div>
+              <div class="group">
+                <div class="relative">
+                  <span class="mso absolute left-3 top-1/2 -translate-y-1/2 text-[#00796B]/40 group-focus-within:text-[#00796B]">person</span>
+                  <input type="text" formControlName="apellidoPaterno" placeholder="Ap. Paterno"
+                    class="w-full pl-10 pr-4 py-3 bg-[#F4FAF9] border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-[#00796B]/30 focus:border-[#00796B] transition-all text-sm font-medium placeholder:text-slate-400">
+                </div>
+              </div>
+              <div class="group">
+                <div class="relative">
+                  <span class="mso absolute left-3 top-1/2 -translate-y-1/2 text-[#00796B]/40 group-focus-within:text-[#00796B]">person</span>
+                  <input type="text" formControlName="apellidoMaterno" placeholder="Ap. Materno"
+                    class="w-full pl-10 pr-4 py-3 bg-[#F4FAF9] border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-[#00796B]/30 focus:border-[#00796B] transition-all text-sm font-medium placeholder:text-slate-400">
+                </div>
+              </div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-2">
+              <div class="group">
+                <div class="relative">
+                  <span class="mso absolute left-3 top-1/2 -translate-y-1/2 text-[#00796B]/40 group-focus-within:text-[#00796B]">calendar_today</span>
+                  <input type="date" formControlName="fechaNacimiento"
+                    class="w-full pl-10 pr-4 py-3 bg-[#F4FAF9] border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-[#00796B]/30 focus:border-[#00796B] transition-all text-sm font-medium placeholder:text-slate-400">
+                </div>
+              </div>
+              <div class="group">
+                <div class="relative">
+                  <span class="mso absolute left-3 top-1/2 -translate-y-1/2 text-[#00796B]/40 group-focus-within:text-[#00796B]">wc</span>
+                  <select formControlName="genero"
+                    class="w-full pl-10 pr-4 py-3 bg-[#F4FAF9] border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-[#00796B]/30 focus:border-[#00796B] transition-all text-sm font-medium text-slate-700 appearance-none">
+                    <option value="" disabled>Género</option>
+                    <option value="MASCULINO">Masculino</option>
+                    <option value="FEMENINO">Femenino</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- SECCIÓN 2 — CONTACTO -->
+          <div class="space-y-3 pt-1">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+              <div class="group">
+                <div class="relative">
+                  <span class="mso absolute left-3 top-1/2 -translate-y-1/2 text-[#00796B]/40 group-focus-within:text-[#00796B]">call</span>
+                  <input type="tel" formControlName="telefono" placeholder="Teléfono" maxlength="9"
+                    class="w-full pl-10 pr-4 py-3 bg-[#F4FAF9] border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-[#00796B]/30 focus:border-[#00796B] transition-all text-sm font-medium placeholder:text-slate-400">
+                </div>
+              </div>
+              <div class="group">
+                <div class="relative">
+                  <span class="mso absolute left-3 top-1/2 -translate-y-1/2 text-[#00796B]/40 group-focus-within:text-[#00796B]">mail</span>
+                  <input type="email" formControlName="email" placeholder="Email"
+                    class="w-full pl-10 pr-4 py-3 bg-[#F4FAF9] border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-[#00796B]/30 focus:border-[#00796B] transition-all text-sm font-medium placeholder:text-slate-400">
+                </div>
+              </div>
+            </div>
+
+            <div class="group">
+              <div class="relative">
+                <span class="mso absolute left-3 top-1/2 -translate-y-1/2 text-[#00796B]/40 group-focus-within:text-[#00796B]">home</span>
+                <input type="text" formControlName="direccion" placeholder="Dirección"
+                  class="w-full pl-10 pr-4 py-3 bg-[#F4FAF9] border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-[#00796B]/30 focus:border-[#00796B] transition-all text-sm font-medium placeholder:text-slate-400">
+              </div>
+            </div>
+          </div>
+
+          <!-- SECCIÓN 3 — ACCESO -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-1">
+            <div class="group">
+              <div class="relative">
+                <span class="mso absolute left-3 top-1/2 -translate-y-1/2 text-[#00796B]/40 group-focus-within:text-[#00796B]">lock</span>
+                <input [type]="verPassword ? 'text' : 'password'" formControlName="password" placeholder="Contraseña"
+                  class="w-full pl-10 pr-10 py-3 bg-[#F4FAF9] border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-[#00796B]/30 focus:border-[#00796B] transition-all text-sm font-medium placeholder:text-slate-400">
+                <button type="button" (click)="togglePassword()"
+                  class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-[#00796B]">
+                  <span class="mso">{{ verPassword ? 'visibility_off' : 'visibility' }}</span>
+                </button>
+              </div>
+            </div>
+
+            <div class="group">
+              <div class="relative">
+                <span class="mso absolute left-3 top-1/2 -translate-y-1/2 text-[#00796B]/40 group-focus-within:text-[#00796B]">lock</span>
+                <input [type]="verPassword ? 'text' : 'password'" formControlName="confirmarPassword" placeholder="Confirmar Contraseña"
+                  class="w-full pl-10 pr-4 py-3 bg-[#F4FAF9] border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-[#00796B]/30 focus:border-[#00796B] transition-all text-sm font-medium placeholder:text-slate-400">
+              </div>
+            </div>
+          </div>
+
+          <div class="flex items-center gap-4 pt-1">
+            <button type="submit" [disabled]="registroForm.invalid || enviando"
+              class="flex-1 bg-[#00796B] hover:bg-[#004D40] text-white font-bold py-3.5 rounded-xl shadow-lg shadow-[#00796B]/25 flex items-center justify-center gap-2 transition-all active:scale-[0.98] text-sm disabled:opacity-50 disabled:cursor-not-allowed">
+              <span *ngIf="enviando" class="mso !text-lg animate-spin">refresh</span>
+              Crear cuenta
+            </button>
+            <div class="flex items-center gap-1.5 text-slate-400 flex-shrink-0">
+              <span class="mso !text-base">lock_person</span>
+              <span class="text-[10px] font-bold uppercase tracking-wider hidden sm:block leading-tight">Datos<br>protegidos</span>
+            </div>
+          </div>
+        </form>
+
+        <div class="mt-6 text-center">
+          <span class="text-xs text-slate-500">¿Ya tienes cuenta? </span>
+          <a routerLink="/login" class="text-xs font-bold text-[#00796B] hover:text-[#004D40]">Inicia sesión</a>
+        </div>
+      </div>
+
+      <!-- PANEL CON IMAGEN FULL (derecha) -->
+      <div class="hidden lg:flex relative overflow-hidden bg-[#00796B]">
+        <img src="https://img.magnific.com/foto-gratis/equipo-medico-que-realiza-visita-control-paciente-anciano-enfermedad-cama-sala-hospital-medico-enfermera-consultando-anciana-oximetro-saturacion-oxigeno-bolsa-goteo-iv_482257-38570.jpg"
+          class="absolute inset-0 w-full h-full object-cover opacity-100 mix-blend-soft-light">
+        <div class="absolute inset-0 bg-gradient-to-t from-[#004D40] via-[#00796B]/60 to-transparent"></div>
+
+        <button routerLink="/login"
+          class="absolute top-8 right-8 z-20 flex items-center gap-1.5 text-white/60 text-xs font-bold uppercase tracking-widest hover:text-white transition-colors">
+          <span class="mso !text-lg">close</span>
+        </button>
+
+        <div class="relative z-10 h-full w-full flex flex-col justify-end p-10">
+          <span class="self-start inline-block text-[10px] font-bold uppercase tracking-widest text-white bg-white/20 backdrop-blur-sm px-3 py-1.5 rounded-full mb-4">Portal de pacientes</span>
+
+          <h2 class="text-3xl font-extrabold text-white leading-tight">
+            Tu salud,<br>siempre contigo.
+          </h2>
+
+          <div class="space-y-3 mt-8 border-t border-white/20 pt-6">
+            <div class="flex items-center gap-3 text-white/90">
+              <span class="mso text-[#80CBC4] !text-xl">calendar_month</span>
+              <span class="text-xs font-semibold">Reserva tus citas en segundos</span>
+            </div>
+            <div class="flex items-center gap-3 text-white/90">
+              <span class="mso text-[#80CBC4] !text-xl">history</span>
+              <span class="text-xs font-semibold">Historial clínico siempre a la mano</span>
+            </div>
+            <div class="flex items-center gap-3 text-white/90">
+              <span class="mso text-[#80CBC4] !text-xl">payments</span>
+              <span class="text-xs font-semibold">Paga tus consultas online</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>

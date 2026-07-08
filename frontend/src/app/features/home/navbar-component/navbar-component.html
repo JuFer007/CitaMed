@@ -54,12 +54,24 @@
       </button>
     </div>
 
-    <!-- Botón login + menú mobile -->
+    <!-- Botón login / perfil + menú mobile -->
     <div class="flex items-center gap-4">
 
+      <!-- Perfil / Login -->
+      @if (isLoggedIn) {
+        <a routerLink="/portal" class="flex items-center gap-1.5 text-xs uppercase tracking-[0.14em] font-semibold text-[#6b7280] hover:text-[#0f8b86] transition">
+          <span class="material-symbols-outlined !text-lg">account_circle</span>
+          <span class="hidden sm:inline">Mi portal PACIENTE</span>
+        </a>
+      } @else {
+        <a routerLink="/login" class="flex items-center gap-1.5 text-xs uppercase tracking-[0.14em] font-semibold text-[#6b7280] hover:text-[#0f8b86] transition">
+          <span class="material-symbols-outlined !text-lg">person</span>
+          <span class="hidden sm:inline">Ingresar</span>
+        </a>
+      }
 
       <!-- Botón hamburguesa -->
-      <button class="md:hidden" (click)="toggleMenuMobile()">
+      <button class="md:hidden bg-transparent border-none cursor-pointer" (click)="toggleMenuMobile()">
         <span class="material-symbols-outlined">{{ menuMobile ? 'close' : 'menu' }}</span>
       </button>
     </div>

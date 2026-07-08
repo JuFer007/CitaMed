@@ -1,0 +1,27 @@
+<div>
+  <span class="inline-block px-4 py-1.5 rounded-full bg-[#36b1ae]/10 text-[#0f8b86] text-xs font-semibold tracking-widest uppercase mb-4">Historial clínico</span>
+  <h2 class="text-3xl font-bold text-[#083d3a] leading-tight">Tu línea de tiempo médica</h2>
+  <p class="text-sm text-[#4d6d6b] mt-2 mb-10">Consultas, diagnósticos y notas clínicas registradas por tus médicos.</p>
+
+  <div *ngIf="items.length === 0" class="text-center py-16">
+    <span class="mso !text-5xl text-[#c8e8e6] block mb-4">stethoscope</span>
+    <p class="text-sm text-[#6b8c89]">No hay registros en tu historial clínico</p>
+  </div>
+
+  <div *ngIf="items.length > 0" class="relative pl-8">
+    <div class="absolute left-[7px] top-2 bottom-2 w-px bg-[#c8e8e6]"></div>
+
+    <div *ngFor="let item of items" class="relative mb-8">
+      <div class="absolute -left-8 top-1.5 w-3.5 h-3.5 rounded-full bg-[#36b1ae] ring-4 ring-[#e0f9f8]"></div>
+      <div class="bg-white rounded-3xl shadow-xl shadow-[#36b1ae]/10 ring-1 ring-[#36b1ae]/10 p-6">
+        <div class="flex items-center gap-2 mb-2">
+          <span class="text-xs font-semibold text-[#0f8b86] uppercase tracking-wide">{{ item.fecha }}</span>
+          <span class="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-[#36b1ae]/10 text-[#0f8b86]">{{ item.tipo }}</span>
+        </div>
+        <h3 class="text-base font-bold text-[#083d3a] mt-1">{{ item.titulo }}</h3>
+        <p class="text-sm text-[#6b8c89] mt-2">{{ item.descripcion }}</p>
+        <p class="text-xs text-[#0f8b86] mt-3 font-semibold">{{ item.medico }}</p>
+      </div>
+    </div>
+  </div>
+</div>

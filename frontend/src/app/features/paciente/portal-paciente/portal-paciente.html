@@ -1,0 +1,74 @@
+<div class="min-h-screen bg-[#f5f5f5] dot-pattern">
+
+  <!-- Navbar -->
+  <header id="navbar"
+    class="fixed top-0 left-0 right-0 z-50 transition-all duration-500 ease-in-out"
+    [ngClass]="isScrolled ? 'bg-white/80 backdrop-blur-md border-b border-[#52b788]/20 shadow-sm' : 'bg-transparent'">
+    <div class="max-w-[1320px] mx-auto px-4 sm:px-6 py-4 flex items-center justify-between">
+      <div class="flex items-center gap-2">
+        <a routerLink="/inicio"><img src="/logoCitaMed.png" alt="CitaMed" class="w-18 h-18"></a>
+      </div>
+      <div class="text-sm font-bold text-[#083d3a] tracking-[0.12em] uppercase underline underline-offset-4 decoration-[#36b2ac]/50 hidden sm:block">Portal del Paciente</div>
+      <div class="flex items-center gap-3">
+        <div class="flex items-center gap-2 pl-3 sm:border-l border-[#e5e7eb]">
+          <div class="w-8 h-8 rounded-full bg-gradient-to-br from-[#36b1ae] to-[#0d5450] text-white text-xs font-semibold flex items-center justify-center">{{ iniciales }}</div>
+          <span class="hidden sm:block text-sm font-medium text-[#083d3a]">{{ nombrePaciente }}</span>
+        </div>
+        <button class="inline-flex items-center gap-1.5 text-xs uppercase tracking-[0.14em] font-semibold text-[#6b7280] hover:text-[#0f8b86] transition">
+          <span class="mso !text-[18px]">notifications</span>
+        </button>
+        <button (click)="cerrarSesion()" class="text-xs font-semibold text-[#6b7280] hover:text-red-500 transition uppercase tracking-wider">
+          <span class="mso !text-lg">logout</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero / Portada -->
+  <section class="banner-section">
+    <div class="banner" [style.background-image]="'url(' + bannerImagen + ')'">
+      <div class="deco"></div>
+    </div>
+    <div class="max-w-[1320px] mx-auto px-4 sm:px-6">
+      <div class="profile-identity">
+        <div class="identity-left">
+          <div class="profile-avatar">{{ iniciales }}</div>
+          <div class="identity-text">
+            <h1>{{ nombrePaciente }}</h1>
+            <div class="identity-tags">
+              <span class="id-tag" *ngIf="perfil">PAC-{{ perfil.id }}</span>
+              <span class="id-tag" *ngIf="perfil?.grupoSanguineo">{{ perfil?.grupoSanguineo }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Tab strip -->
+  <nav id="tab-strip" class="sticky top-[104px] z-35 bg-[#f5f5f5] border-b border-[#e5e7eb]">
+    <div class="max-w-[1320px] mx-auto px-4 sm:px-6 flex gap-1 overflow-x-auto">
+      <button *ngFor="let t of tabs" (click)="cambiarTab(t.id)"
+        class="tab-link whitespace-nowrap text-xs uppercase tracking-[0.18em] font-semibold px-4 py-3.5 border-b-2 transition flex items-center gap-1.5"
+        [class.is-active]="tabActivo === t.id"
+        [class.text-[#6b7280]]="tabActivo !== t.id"
+        [class.text-[#0f8b86]]="tabActivo === t.id"
+        [class.border-[#36b2ac]]="tabActivo === t.id"
+        [class.border-transparent]="tabActivo !== t.id"
+        [class.hover:text-[#0f8b86]]="tabActivo !== t.id">
+        <span class="mso !text-base">{{ t.icon }}</span>
+        {{ t.label }}
+      </button>
+    </div>
+  </nav>
+
+  <!-- Tab content -->
+  <main class="max-w-[1320px] mx-auto px-4 sm:px-6 py-8 sm:py-10">
+    <app-inicio-paciente *ngIf="tabActivo === 'inicio'" [perfil]="perfil" (cambiarTab)="cambiarTab($event)" />
+    <app-citas-paciente *ngIf="tabActivo === 'citas'" />
+    <app-historial-paciente *ngIf="tabActivo === 'historial'" />
+    <app-pagos-paciente *ngIf="tabActivo === 'pagos'" />
+    <app-perfil-paciente *ngIf="tabActivo === 'perfil'" [perfil]="perfil" (perfilActualizado)="cargarPerfil()" />
+  </main>
+
+</div>

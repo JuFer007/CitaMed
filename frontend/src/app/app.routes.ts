@@ -20,6 +20,8 @@ import { authGuard } from './core/guards/auth.guard';
 import { Page404Component } from './shared/components/page404-component/page404-component';
 import { DoctoresPage } from './features/home/doctores-page/doctores-page';
 import { roleGuard } from './core/guards/role.guard';
+import { PortalRegistroComponent } from './features/auth/portal-registro/portal-registro';
+import { PortalPacienteComponent } from './features/paciente/portal-paciente/portal-paciente';
 
 export const routes: Routes = [
   {
@@ -30,12 +32,23 @@ export const routes: Routes = [
   {
     path: 'login',
     component: LoginComponent,
-    title: 'Iniciar Sesión',
+    title: 'CitaMed - Inicio Sesión',
+  },
+  {
+    path: 'portal/registro',
+    component: PortalRegistroComponent,
+    title: 'CitaMed - Registro',
+  },
+  {
+    path: 'portal',
+    component: PortalPacienteComponent,
+    title: 'CitaMed - Portal del Paciente',
+    canActivate: [authGuard],
   },
   {
     path: 'staff-medico',
     component: DoctoresPage,
-    title: 'Staff Medico CitaMed',
+    title: 'CitaMed - Staff Médico',
   },
   {
     path: 'admin',

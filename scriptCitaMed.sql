@@ -24,7 +24,37 @@ INSERT INTO usuarios (user_name, password, rol, activo) VALUES
 ('med.mora',           '$2a$10$800I/8HGwCkjx0iApGb/kevpKOnZ1jp2UjTTWCg9CKaUNKdFhoywa', 'MEDICO',         true),
 ('med.rivas',          '$2a$10$800I/8HGwCkjx0iApGb/kevpKOnZ1jp2UjTTWCg9CKaUNKdFhoywa', 'MEDICO',         true),
 ('med.pinto',          '$2a$10$800I/8HGwCkjx0iApGb/kevpKOnZ1jp2UjTTWCg9CKaUNKdFhoywa', 'MEDICO',         true),
-('med.aguilar',        '$2a$10$800I/8HGwCkjx0iApGb/kevpKOnZ1jp2UjTTWCg9CKaUNKdFhoywa', 'MEDICO',         true);
+('med.aguilar',        '$2a$10$800I/8HGwCkjx0iApGb/kevpKOnZ1jp2UjTTWCg9CKaUNKdFhoywa', 'MEDICO',         true),
+-- Paciente 1: cuenta de portal usando su correo electronico como usuario
+('jc.quispe@gmail.com',        '$2a$10$800I/8HGwCkjx0iApGb/kevpKOnZ1jp2UjTTWCg9CKaUNKdFhoywa', 'PACIENTE',       true),
+-- Nuevo medico para cubrir Gastroenterologia (antes faltaba)
+('med.silva',                  '$2a$10$800I/8HGwCkjx0iApGb/kevpKOnZ1jp2UjTTWCg9CKaUNKdFhoywa', 'MEDICO',         true),
+-- Pacientes 2 al 6: cuenta de portal usando su correo electronico como usuario
+('maria.soto@gmail.com',       '$2a$10$800I/8HGwCkjx0iApGb/kevpKOnZ1jp2UjTTWCg9CKaUNKdFhoywa', 'PACIENTE',       true),
+('pedro.huaman@gmail.com',     '$2a$10$800I/8HGwCkjx0iApGb/kevpKOnZ1jp2UjTTWCg9CKaUNKdFhoywa', 'PACIENTE',       true),
+('lucia.paredes@gmail.com',    '$2a$10$800I/8HGwCkjx0iApGb/kevpKOnZ1jp2UjTTWCg9CKaUNKdFhoywa', 'PACIENTE',       true),
+('carlos.mendoza.p@gmail.com', '$2a$10$800I/8HGwCkjx0iApGb/kevpKOnZ1jp2UjTTWCg9CKaUNKdFhoywa', 'PACIENTE',       true),
+('ana.rojas@gmail.com',        '$2a$10$800I/8HGwCkjx0iApGb/kevpKOnZ1jp2UjTTWCg9CKaUNKdFhoywa', 'PACIENTE',       true),
+-- Pacientes 7 al 30: cuenta de portal usando su correo electronico como usuario
+('roberto.vargas@gmail.com',        '$2a$10$800I/8HGwCkjx0iApGb/kevpKOnZ1jp2UjTTWCg9CKaUNKdFhoywa', 'PACIENTE', true),
+('isabel.chavez@gmail.com',         '$2a$10$800I/8HGwCkjx0iApGb/kevpKOnZ1jp2UjTTWCg9CKaUNKdFhoywa', 'PACIENTE', true),
+('diego.fuentes@gmail.com',         '$2a$10$800I/8HGwCkjx0iApGb/kevpKOnZ1jp2UjTTWCg9CKaUNKdFhoywa', 'PACIENTE', true),
+('valentina.espinoza@gmail.com',    '$2a$10$800I/8HGwCkjx0iApGb/kevpKOnZ1jp2UjTTWCg9CKaUNKdFhoywa', 'PACIENTE', true),
+('andres.llontop@gmail.com',        '$2a$10$800I/8HGwCkjx0iApGb/kevpKOnZ1jp2UjTTWCg9CKaUNKdFhoywa', 'PACIENTE', true),
+('gabriela.zuloeta@gmail.com',      '$2a$10$800I/8HGwCkjx0iApGb/kevpKOnZ1jp2UjTTWCg9CKaUNKdFhoywa', 'PACIENTE', true),
+('ricardo.gonzales@gmail.com',      '$2a$10$800I/8HGwCkjx0iApGb/kevpKOnZ1jp2UjTTWCg9CKaUNKdFhoywa', 'PACIENTE', true),
+('sofia.chafloque@gmail.com',       '$2a$10$800I/8HGwCkjx0iApGb/kevpKOnZ1jp2UjTTWCg9CKaUNKdFhoywa', 'PACIENTE', true),
+('martin.idrogo@gmail.com',         '$2a$10$800I/8HGwCkjx0iApGb/kevpKOnZ1jp2UjTTWCg9CKaUNKdFhoywa', 'PACIENTE', true),
+('patricia.coronado@gmail.com',     '$2a$10$800I/8HGwCkjx0iApGb/kevpKOnZ1jp2UjTTWCg9CKaUNKdFhoywa', 'PACIENTE', true),
+('eduardo.saavedra@gmail.com',      '$2a$10$800I/8HGwCkjx0iApGb/kevpKOnZ1jp2UjTTWCg9CKaUNKdFhoywa', 'PACIENTE', true),
+('claudia.segura@gmail.com',        '$2a$10$800I/8HGwCkjx0iApGb/kevpKOnZ1jp2UjTTWCg9CKaUNKdFhoywa', 'PACIENTE', true),
+('marco.becerra@gmail.com',         '$2a$10$800I/8HGwCkjx0iApGb/kevpKOnZ1jp2UjTTWCg9CKaUNKdFhoywa', 'PACIENTE', true),
+('natalia.cubas@gmail.com',         '$2a$10$800I/8HGwCkjx0iApGb/kevpKOnZ1jp2UjTTWCg9CKaUNKdFhoywa', 'PACIENTE', true),
+('cesar.fernandez@gmail.com',       '$2a$10$800I/8HGwCkjx0iApGb/kevpKOnZ1jp2UjTTWCg9CKaUNKdFhoywa', 'PACIENTE', true),
+('milagros.puelles@gmail.com',      '$2a$10$800I/8HGwCkjx0iApGb/kevpKOnZ1jp2UjTTWCg9CKaUNKdFhoywa', 'PACIENTE', true),
+('jhon.guerrero@gmail.com',         '$2a$10$800I/8HGwCkjx0iApGb/kevpKOnZ1jp2UjTTWCg9CKaUNKdFhoywa', 'PACIENTE', true),
+('fiorella.tello@gmail.com',        '$2a$10$800I/8HGwCkjx0iApGb/kevpKOnZ1jp2UjTTWCg9CKaUNKdFhoywa', 'PACIENTE', true),
+('alejandro.santisteban@gmail.com', '$2a$10$800I/8HGwCkjx0iApGb/kevpKOnZ1jp2UjTTWCg9CKaUNKdFhoywa', 'PACIENTE', true);
 
 -- ========================
 -- 2. ESPECIALIDADES
@@ -44,21 +74,28 @@ INSERT INTO especialidades (nombre, descripcion, precio) VALUES
 ('Oftalmología',              'Enfermedades y cirugías del ojo',                                                        135.00);
 
 -- ========================
--- 3. CONSULTORIOS 
+-- 3. CONSULTORIOS
 -- ========================
-INSERT INTO consultorios (numero, descripcion, disponible, especialidad_id) VALUES
-('C-101', 'Consultorio de Medicina General N°1',  true,  3),
-('C-102', 'Consultorio de Medicina General N°2',  true,  3),
-('C-103', 'Consultorio de Medicina General N°3',  false, 3),
-('C-201', 'Consultorio de Cardiología N°1',        true,  4),
-('C-202', 'Consultorio de Cardiología N°2',        true,  4),
-('C-301', 'Consultorio de Pediatría N°1',          true,  5),
-('C-302', 'Consultorio de Pediatría N°2',          false, 5),
-('C-401', 'Consultorio de Ginecología N°1',        true,  6),
-('C-402', 'Consultorio de Ginecología N°2',        true,  6),
-('C-501', 'Consultorio de Traumatología N°1',      true,  7),
-('C-601', 'Consultorio de Neurología N°1',         true,  8),
-('C-602', 'Consultorio de Neurología N°2',         true,  8);
+INSERT INTO consultorios (numero, descripcion, disponible, especialidad_id, cupo_maximo) VALUES
+('C-101', 'Consultorio de Medicina General N°1',  true,  3, 3),
+('C-102', 'Consultorio de Medicina General N°2',  true,  3, 3),
+('C-103', 'Consultorio de Medicina General N°3',  false, 3, 3),
+('C-201', 'Consultorio de Cardiología N°1',        true,  4, 3),
+('C-202', 'Consultorio de Cardiología N°2',        true,  4, 3),
+('C-301', 'Consultorio de Pediatría N°1',          true,  5, 3),
+('C-302', 'Consultorio de Pediatría N°2',          false, 5, 3),
+('C-401', 'Consultorio de Ginecología N°1',        true,  6, 3),
+('C-402', 'Consultorio de Ginecología N°2',        true,  6, 3),
+('C-501', 'Consultorio de Traumatología N°1',      true,  7, 3),
+('C-601', 'Consultorio de Neurología N°1',         true,  8, 3),
+('C-602', 'Consultorio de Neurología N°2',         true,  8, 3),
+-- Consultorios agregados para cubrir especialidades que no tenian sala propia
+('C-701', 'Consultorio de Urología N°1',           true,  1, 3),
+('C-702', 'Consultorio de Urología N°2',           true,  1, 3),
+('C-801', 'Consultorio de Reumatología N°1',       true,  2, 3),
+('C-901', 'Consultorio de Dermatología N°1',       true,  9, 3),
+('C-1001','Consultorio de Endocrinología N°1',     true,  10, 3),
+('C-1101','Consultorio de Gastroenterología N°1',  true,  11, 3);
 
 -- ========================
 -- 4. EMPLEADOS
@@ -70,57 +107,63 @@ INSERT INTO empleados (nombre, apellido_paterno, apellido_materno, dni, telefono
 ('JUNIOR FERNANDO','ZUMAETA',   'GOLAC',    '74100003', '987000003', 'Calle Backend 303, Chiclayo',           'junior.zumaeta@citamed.com',   '1999-11-10', 'MASCULINO', 4500.00, '2024-01-01', true,  4),
 -- Admin genérico apuntando al ID 1
 ('CARLOS',         'MENDOZA',   'QUISPE',   '45678901', '987654321', 'Av. Los Olivos 123, Chiclayo',          'carlos.mendoza@citamed.com',   '1985-03-15', 'MASCULINO', 4200.00, '2018-01-10', true,  1),
--- Recepcionistas apuntando a IDs 5 y 6
+-- Recepcionistas apuntando a IDs 5, 6 y 7 (antes faltaba el empleado del usuario 7)
 ('MARIA',          'LOPEZ',     'SANCHEZ',  '45678902', '987654322', 'Jr. Los Pinos 456, Chiclayo',           'maria.lopez@citamed.com',      '1990-07-22', 'FEMENINO',  1800.00, '2020-03-01', true,  5),
-('ANA',            'PEREZ',     'CASTILLO', '45678903', '987654323', 'Calle Manco Capac 789, Chiclayo',       'ana.perez@citamed.com',        '1992-11-05', 'FEMENINO',  1800.00, '2021-06-15', true,  6);
+('ANA',            'PEREZ',     'CASTILLO', '45678903', '987654323', 'Calle Manco Capac 789, Chiclayo',       'ana.perez@citamed.com',        '1992-11-05', 'FEMENINO',  1800.00, '2021-06-15', true,  6),
+('LUCIA',          'MEJIA',     'SOTO',     '45678904', '987654324', 'Jr. Progreso 890, Chiclayo',            'lucia.mejia@citamed.com',      '1994-02-19', 'FEMENINO',  1800.00, '2023-09-01', false, 7);
 
 -- ========================
 -- 5. MEDICOS
 -- ========================
+-- consultorio_id corregido para que coincida con la especialidad de cada medico
 INSERT INTO medicos (nombre, apellido_paterno, apellido_materno, dni, telefono, direccion, email, fecha_nacimiento, genero, numero_colegiatura, activo, foto_url, especialidad_id, usuario_id, consultorio_id) VALUES
-('LUIS',      'GARCIA',   'MONTOYA',  '12345601', '912345601', 'Av. Pardo 101, Chiclayo',            'luis.garcia@citamed.com',    '1978-05-12', 'MASCULINO', 'CMP-045231', true, '/uploads/medicos/medLuisGarcia.jpg',  1,  8,  1),
-('ROSA',      'TORRES',   'GUTIERREZ','12345602', '912345602', 'Jr. Colon 202, Chiclayo',            'rosa.torres@citamed.com',    '1980-09-18', 'FEMENINO',  'CMP-038742', true, '/uploads/medicos/medRosaGutierrez.jpg',  2,  9,  2),
+('LUIS',      'GARCIA',   'MONTOYA',  '12345601', '912345601', 'Av. Pardo 101, Chiclayo',            'luis.garcia@citamed.com',    '1978-05-12', 'MASCULINO', 'CMP-045231', true, '/uploads/medicos/medLuisGarcia.jpg',  1,  8,  13),
+('ROSA',      'TORRES',   'GUTIERREZ','12345602', '912345602', 'Jr. Colon 202, Chiclayo',            'rosa.torres@citamed.com',    '1980-09-18', 'FEMENINO',  'CMP-038742', true, '/uploads/medicos/medRosaGutierrez.jpg',  2,  9,  15),
 ('MIGUEL',    'RAMIREZ',  'DELGADO',  '12345603', '912345603', 'Calle Real 303, Chiclayo',           'miguel.ramirez@citamed.com', '1975-03-27', 'MASCULINO', 'CMP-029183', true, '/uploads/medicos/medMiguelRamirez.jpg',  3,  10, 1),
 ('CARMEN',    'FLORES',   'ESPINOZA', '12345604', '912345604', 'Av. Venezuela 404, Chiclayo',        'carmen.flores@citamed.com',  '1982-07-08', 'FEMENINO',  'CMP-051647', true, '/uploads/medicos/medCarmenFlores.jpg',  4,  11, 4),
 ('JORGE',     'CASTRO',   'HUAMAN',   '12345605', '912345605', 'Jr. Tacna 505, Chiclayo',            'jorge.castro@citamed.com',   '1977-11-14', 'MASCULINO', 'CMP-034829', true, '/uploads/medicos/medJorgeCastro.jpg',  5,  12, 6),
 ('PATRICIA',  'HERRERA',  'LEON',     '12345606', '912345606', 'Av. Balta 606, Chiclayo',            'patricia.herrera@citamed.com','1983-01-30', 'FEMENINO',  'CMP-062318', true, '/uploads/medicos/medPatriciaHerrera.jpg',  6,  13, 8),
 ('FERNANDO',  'VEGA',     'QUISPE',   '12345607', '912345607', 'Calle Elias Aguirre 707, Chiclayo',  'fernando.vega@citamed.com',  '1979-06-22', 'MASCULINO', 'CMP-041095', true, '/uploads/medicos/medFernandoVega.jpg',  7,  14, 10),
 ('SANDRA',    'MORA',     'PAREDES',  '12345608', '912345608', 'Jr. Torres Paz 808, Chiclayo',       'sandra.mora@citamed.com',    '1981-10-03', 'FEMENINO',  'CMP-057382', true, '/uploads/medicos/medSandraMora.jpg',  8,  15, 11),
-('HECTOR',    'RIVAS',    'CARDENAS', '12345609', '912345609', 'Av. Jose Balta 909, Chiclayo',       'hector.rivas@citamed.com',   '1976-04-17', 'MASCULINO', 'CMP-027461', true, '/uploads/medicos/medHectorRivas.jpg',  9,  16, 2),
-('GABRIELA',  'PINTO',    'SALINAS',  '12345610', '912345610', 'Calle Siete de Enero 1010, Chiclayo','gabriela.pinto@citamed.com', '1984-08-25', 'FEMENINO',  'CMP-068754', true, '/uploads/medicos/medGabrielaPinto.jpg',  1,  17, 2);
+('HECTOR',    'RIVAS',    'CARDENAS', '12345609', '912345609', 'Av. Jose Balta 909, Chiclayo',       'hector.rivas@citamed.com',   '1976-04-17', 'MASCULINO', 'CMP-027461', true, '/uploads/medicos/medHectorRivas.jpg',  9,  16, 16),
+('GABRIELA',  'PINTO',    'SALINAS',  '12345610', '912345610', 'Calle Siete de Enero 1010, Chiclayo','gabriela.pinto@citamed.com', '1984-08-25', 'FEMENINO',  'CMP-068754', true, '/uploads/medicos/medGabrielaPinto.jpg',  1,  17, 14),
+-- Medicos agregados para cubrir Endocrinologia y Gastroenterologia (antes no existian)
+('SILVIA',    'AGUILAR',  'REYES',    '12345611', '912345611', 'Av. Grau 1111, Chiclayo',            'silvia.aguilar@citamed.com', '1980-12-01', 'FEMENINO',  'CMP-071235', true, '/uploads/medicos/medSilviaAguilar.jpg', 10, 18, 17),
+('RENZO',     'SILVA',    'CORDOVA',  '12345612', '912345612', 'Jr. Piura 1212, Chiclayo',           'renzo.silva@citamed.com',    '1979-03-09', 'MASCULINO', 'CMP-071899', true, '/uploads/medicos/medRenzoSilva.jpg',   11, 20, 18);
 
 -- ========================
--- 5b. ASEGURAR QUE TODOS LOS MEDICOS TENGAN CONSULTORIO
+-- 6. HORARIOS MEDICOS
 -- ========================
-UPDATE medicos SET consultorio_id = 1 WHERE consultorio_id IS NULL;
-
--- ========================
--- 6. HORARIOS MEDICOS (CORREGIDO - agregado médico 10)
--- ========================
+-- consultorio_id corregido para que coincida con el consultorio propio del medico
 INSERT INTO horarios_medicos (dia, hora_inicio, hora_fin, activo, medico_id, consultorio_id) VALUES
-('LUNES',     '08:00:00', '13:00:00', true,  1,  1),
-('MIERCOLES', '08:00:00', '13:00:00', true,  1,  1),
-('VIERNES',   '08:00:00', '12:00:00', true,  1,  2),
-('MARTES',    '09:00:00', '14:00:00', true,  2,  4),
-('JUEVES',    '09:00:00', '14:00:00', true,  2,  4),
-('SABADO',    '08:00:00', '12:00:00', true,  2,  5),
-('LUNES',     '14:00:00', '19:00:00', true,  3,  6),
-('MIERCOLES', '14:00:00', '19:00:00', true,  3,  6),
-('VIERNES',   '14:00:00', '19:00:00', true,  3,  6),
-('MARTES',    '08:00:00', '13:00:00', true,  4,  8),
-('JUEVES',    '08:00:00', '13:00:00', true,  4,  8),
-('SABADO',    '09:00:00', '12:00:00', true,  4,  9),
-('LUNES',     '08:00:00', '14:00:00', true,  5,  10),
-('MIERCOLES', '08:00:00', '14:00:00', true,  5,  10),
-('MARTES',    '15:00:00', '20:00:00', true,  6,  11),
-('JUEVES',    '15:00:00', '20:00:00', true,  6,  11),
-('VIERNES',   '15:00:00', '20:00:00', true,  6,  12),
-('LUNES',     '09:00:00', '14:00:00', true,  7,  2),
-('MIERCOLES', '09:00:00', '14:00:00', true,  8,  2),
-('VIERNES',   '09:00:00', '13:00:00', true,  9,  1),
-('LUNES',     '08:00:00', '13:00:00', true,  10, 1),
-('MIERCOLES', '08:00:00', '13:00:00', true,  10, 2),
-('VIERNES',   '08:00:00', '13:00:00', true,  10, 2);
+('LUNES',     '08:00:00', '13:00:00', true,  1,  13),
+('MIERCOLES', '08:00:00', '13:00:00', true,  1,  13),
+('VIERNES',   '08:00:00', '12:00:00', true,  1,  13),
+('MARTES',    '09:00:00', '14:00:00', true,  2,  15),
+('JUEVES',    '09:00:00', '14:00:00', true,  2,  15),
+('SABADO',    '08:00:00', '12:00:00', true,  2,  15),
+('LUNES',     '14:00:00', '19:00:00', true,  3,  1),
+('MIERCOLES', '14:00:00', '19:00:00', true,  3,  1),
+('VIERNES',   '14:00:00', '19:00:00', true,  3,  1),
+('MARTES',    '08:00:00', '13:00:00', true,  4,  4),
+('JUEVES',    '08:00:00', '13:00:00', true,  4,  4),
+('SABADO',    '09:00:00', '12:00:00', true,  4,  4),
+('LUNES',     '08:00:00', '14:00:00', true,  5,  6),
+('MIERCOLES', '08:00:00', '14:00:00', true,  5,  6),
+('MARTES',    '15:00:00', '20:00:00', true,  6,  8),
+('JUEVES',    '15:00:00', '20:00:00', true,  6,  8),
+('VIERNES',   '15:00:00', '20:00:00', true,  6,  8),
+('LUNES',     '09:00:00', '14:00:00', true,  7,  10),
+('MIERCOLES', '09:00:00', '14:00:00', true,  8,  11),
+('VIERNES',   '09:00:00', '13:00:00', true,  9,  16),
+('LUNES',     '08:00:00', '13:00:00', true,  10, 14),
+('MIERCOLES', '08:00:00', '13:00:00', true,  10, 14),
+('VIERNES',   '08:00:00', '13:00:00', true,  10, 14),
+-- Horarios de los medicos agregados
+('MARTES',    '08:00:00', '13:00:00', true,  11, 17),
+('JUEVES',    '08:00:00', '13:00:00', true,  11, 17),
+('LUNES',     '15:00:00', '19:00:00', true,  12, 18),
+('MIERCOLES', '15:00:00', '19:00:00', true,  12, 18);
 
 -- ========================
 -- 7. PACIENTES
@@ -150,12 +193,36 @@ INSERT INTO pacientes (nombre, apellido_paterno, apellido_materno, dni, telefono
 ('MILAGROS',         'PUELLES',     'ASALDE',     '71234522', '951234522', 'Jr. Los Jazmines 300, Chiclayo',     'milagros.puelles@gmail.com',       '1976-08-29', 'FEMENINO',  'O_POSITIVO', TRUE),
 ('JHON ALEXANDER',   'GUERRERO',    'RIVADENEYRA','71234523', '951234523', 'Calle Manco Capac 400, Chiclayo',    'jhon.guerrero@gmail.com',          '1999-12-17', 'MASCULINO', 'A_POSITIVO', TRUE),
 ('FIORELLA MILAGROS','TELLO',       'PERALES',    '71234524', '951234524', 'Av. Venezuela 500, Chiclayo',        'fiorella.tello@gmail.com',         '2003-04-05', 'FEMENINO',  'AB_POSITIVO', TRUE),
-('ALEJANDRO LUIS',   'SANTISTEBAN', 'CABREJOS',   '71234525', '951234525', 'Jr. Elias Aguirre 600, Chiclayo',    'alejandro.santisteban@gmail.com',  '1960-06-20', 'MASCULINO', 'O_POSITIVO', TRUE),
-('YESICA PAMELA',    'FALLA',       'MEDINA',     '71234526', '951234526', 'Calle Torres Paz 700, Chiclayo',     'yesica.falla@gmail.com',           '1994-10-08', 'FEMENINO',  'B_NEGATIVO', TRUE),
-('HUGO ARMANDO',     'BRAVO',       'ALCANTARA',  '71234527', '951234527', 'Av. Grecia 800, Chiclayo',           'hugo.bravo@gmail.com',             '1973-02-14', 'MASCULINO', 'A_NEGATIVO', TRUE),
-('ROSARIO ESPERANZA','ALIAGA',      'DELGADO',    '71234528', '951234528', 'Jr. Balta 900, Chiclayo',            'rosario.aliaga@gmail.com',         '1968-07-03', 'FEMENINO',  'O_POSITIVO', TRUE),
-('KEVIN SEBASTIAN',  'HEREDIA',     'CAMPOS',     '71234529', '951234529', 'Calle Junin 1000, Chiclayo',         'kevin.heredia@gmail.com',          '2005-11-28', 'MASCULINO', 'B_POSITIVO', TRUE),
-('LORENA PATRICIA',  'VALDERRAMA',  'CHIRINOS',   '71234530', '951234530', 'Av. Mariscal Castilla 1100, Chiclayo','lorena.valderrama@gmail.com',     '1986-04-22', 'FEMENINO',  'A_POSITIVO', TRUE);
+('ALEJANDRO LUIS',   'SANTISTEBAN', 'CABREJOS',   '71234525', '951234525', 'Jr. Elias Aguirre 600, Chiclayo',    'alejandro.santisteban@gmail.com',  '1960-06-20', 'MASCULINO', 'O_POSITIVO', TRUE);
+
+-- Vincular pacientes 1 al 6 con su cuenta de portal (usuario = su correo electronico)
+UPDATE pacientes SET usuario_id = 19 WHERE dni = '71234501'; -- JUAN CARLOS QUISPE MAMANI    -> jc.quispe@gmail.com
+UPDATE pacientes SET usuario_id = 21 WHERE dni = '71234502'; -- MARIA ELENA SOTO VARGAS      -> maria.soto@gmail.com
+UPDATE pacientes SET usuario_id = 22 WHERE dni = '71234503'; -- PEDRO PABLO HUAMAN QUISPE    -> pedro.huaman@gmail.com
+UPDATE pacientes SET usuario_id = 23 WHERE dni = '71234504'; -- LUCIA ROSA PAREDES TORRES    -> lucia.paredes@gmail.com
+UPDATE pacientes SET usuario_id = 24 WHERE dni = '71234505'; -- CARLOS ALBERTO MENDOZA LOPEZ -> carlos.mendoza.p@gmail.com
+UPDATE pacientes SET usuario_id = 25 WHERE dni = '71234506'; -- ANA SOFIA ROJAS CASTRO       -> ana.rojas@gmail.com
+
+-- Vincular pacientes 7 al 30 con su cuenta de portal (usuario = su correo electronico)
+UPDATE pacientes SET usuario_id = 26 WHERE dni = '71234507'; -- ROBERTO JESUS VARGAS DIAZ           -> roberto.vargas@gmail.com
+UPDATE pacientes SET usuario_id = 27 WHERE dni = '71234508'; -- ISABEL CRISTINA CHAVEZ MORALES      -> isabel.chavez@gmail.com
+UPDATE pacientes SET usuario_id = 28 WHERE dni = '71234509'; -- DIEGO ALEJANDRO FUENTES HERRERA     -> diego.fuentes@gmail.com
+UPDATE pacientes SET usuario_id = 29 WHERE dni = '71234510'; -- VALENTINA ESPINOZA NUNEZ            -> valentina.espinoza@gmail.com
+UPDATE pacientes SET usuario_id = 30 WHERE dni = '71234511'; -- ANDRES FELIPE LLONTOP BANCES        -> andres.llontop@gmail.com
+UPDATE pacientes SET usuario_id = 31 WHERE dni = '71234512'; -- GABRIELA NOEMI ZULOETA CARRASCO     -> gabriela.zuloeta@gmail.com
+UPDATE pacientes SET usuario_id = 32 WHERE dni = '71234513'; -- RICARDO MANUEL GONZALES MURO        -> ricardo.gonzales@gmail.com
+UPDATE pacientes SET usuario_id = 33 WHERE dni = '71234514'; -- SOFIA VALENTINA CHAFLOQUE SOLIS     -> sofia.chafloque@gmail.com
+UPDATE pacientes SET usuario_id = 34 WHERE dni = '71234515'; -- MARTIN EDUARDO IDROGO BUSTAMANTE    -> martin.idrogo@gmail.com
+UPDATE pacientes SET usuario_id = 35 WHERE dni = '71234516'; -- PATRICIA LUZ CORONADO DIAZ          -> patricia.coronado@gmail.com
+UPDATE pacientes SET usuario_id = 36 WHERE dni = '71234517'; -- EDUARDO JESUS SAAVEDRA NEYRA        -> eduardo.saavedra@gmail.com
+UPDATE pacientes SET usuario_id = 37 WHERE dni = '71234518'; -- CLAUDIA BEATRIZ SEGURA MONTOYA      -> claudia.segura@gmail.com
+UPDATE pacientes SET usuario_id = 38 WHERE dni = '71234519'; -- MARCO ANTONIO BECERRA VILLANUEVA    -> marco.becerra@gmail.com
+UPDATE pacientes SET usuario_id = 39 WHERE dni = '71234520'; -- NATALIA ANDREA CUBAS MEJIA          -> natalia.cubas@gmail.com
+UPDATE pacientes SET usuario_id = 40 WHERE dni = '71234521'; -- CESAR AUGUSTO FERNANDEZ PAZ         -> cesar.fernandez@gmail.com
+UPDATE pacientes SET usuario_id = 41 WHERE dni = '71234522'; -- MILAGROS PUELLES ASALDE             -> milagros.puelles@gmail.com
+UPDATE pacientes SET usuario_id = 42 WHERE dni = '71234523'; -- JHON ALEXANDER GUERRERO RIVADENEYRA -> jhon.guerrero@gmail.com
+UPDATE pacientes SET usuario_id = 43 WHERE dni = '71234524'; -- FIORELLA MILAGROS TELLO PERALES     -> fiorella.tello@gmail.com
+UPDATE pacientes SET usuario_id = 44 WHERE dni = '71234525'; -- ALEJANDRO LUIS SANTISTEBAN CABREJOS -> alejandro.santisteban@gmail.com
 
 -- ========================
 -- 8. HISTORIALES MEDICOS
@@ -168,81 +235,86 @@ INSERT INTO historiales_medicos (paciente_id) VALUES
 -- ========================
 -- 9. CITAS
 -- ========================
+-- medico_id / consultorio_id corregidos para que coincidan con la especialidad
+-- que exige el motivo_consulta (y con el diagnostico ya registrado abajo)
 INSERT INTO citas (paciente_id, medico_id, consultorio_id, fecha_hora, motivo_consulta, estado) VALUES
-(1,  1,  1,  '2026-05-04 08:00:00', 'Dolor de cabeza persistente y mareos',      'ATENDIDA'), -- ID 1
-(2,  2,  4,  '2026-05-05 09:00:00', 'Revision de presion arterial alta',         'ATENDIDA'), -- ID 2
-(3,  3,  6,  '2026-05-05 14:00:00', 'Control pediatrico de nino de 5 anos',       'ATENDIDA'), -- ID 3
-(4,  4,  8,  '2026-05-06 08:00:00', 'Consulta por irregularidades menstruales',   'ATENDIDA'), -- ID 4
-(5,  5,  10, '2026-05-06 09:00:00', 'Dolor en rodilla derecha tras caida',        'ATENDIDA'), -- ID 5
-(6,  6,  11, '2026-05-07 15:00:00', 'Episodios de migrana frecuentes',            'ATENDIDA'), -- ID 6
-(7,  1,  1,  '2026-05-07 08:00:00', 'Tos persistente y fiebre leve',              'ATENDIDA'), -- ID 7
-(8,  2,  4,  '2026-05-08 09:00:00', 'Palpitaciones y cansancio',                  'ATENDIDA'), -- ID 8
-(1,  10, 1,  '2026-05-10 08:00:00', 'Control medico trimestral',                  'ATENDIDA'), -- ID 9
-(9,  7,  2,  '2026-05-11 09:00:00', 'Dermatitis en brazos',                       'ATENDIDA'), -- ID 10
-(5,  5,  10, '2026-05-11 08:00:00', 'Revision de fractura curada',                'ATENDIDA'), -- ID 11
-(15, 8,  2,  '2026-05-11 09:00:00', 'Hipotiroidismo, control mensual',            'ATENDIDA'), -- ID 12
-(10, 8,  2,  '2026-05-12 09:00:00', 'Fatiga extrema y aumento de peso',            'ATENDIDA'), -- ID 13
-(11, 9,  1,  '2026-05-12 08:00:00', 'Nauseas y dolor abdominal',                  'ATENDIDA'), -- ID 14
-(12, 1,  2,  '2026-05-13 08:00:00', 'Chequeo medico general',                     'ATENDIDA'), -- ID 15
-(13, 3,  6,  '2026-05-13 14:00:00', 'Fiebre alta en nino de 8 anos',              'ATENDIDA'), -- ID 16
-(14, 4,  9,  '2026-05-14 08:00:00', 'Control de embarazo mes 5',                  'ATENDIDA'), -- ID 17
-(15, 5,  10, '2026-05-14 08:00:00', 'Dolor lumbar cronico',                       'ATENDIDA'), -- ID 18
-(22, 9,  1,  '2026-05-14 08:00:00', 'Gastroenterologia, seguimiento',             'ATENDIDA'), -- ID 19
-(28, 2,  4,  '2026-05-15 09:00:00', 'Hipertension, ajuste de tratamiento',        'ATENDIDA'), -- ID 20
-(16, 10, 1,  '2026-05-18 08:00:00', 'Resfriado y dolor de garganta',              'ATENDIDA'), -- ID 21
-(17, 6,  11, '2026-05-19 15:00:00', 'Entumecimiento en extremidades',             'ATENDIDA'), -- ID 22
-(18, 2,  5,  '2026-05-19 09:00:00', 'Control post-operatorio cardiaco',           'ATENDIDA'), -- ID 23
-(19, 1,  1,  '2026-05-20 08:00:00', 'Gastritis y acidez estomacal',               'ATENDIDA'), -- ID 24
-(20, 4,  8,  '2026-05-20 08:00:00', 'Revision de quiste ovarico',                 'ATENDIDA'), -- ID 25
-(21, 3,  6,  '2026-05-21 14:00:00', 'Vacunacion y control de crecimiento',        'ATENDIDA'), -- ID 26
-(22, 9,  1,  '2026-05-21 08:00:00', 'Colon irritable, control mensual',            'ATENDIDA'), -- ID 27
-(23, 5,  10, '2026-05-25 08:00:00', 'Esguince de tobillo izquierdo',              'ATENDIDA'), -- ID 28
-(24, 7,  2,  '2026-05-26 09:00:00', 'Acne y problemas en piel grasa',              'ATENDIDA'), -- ID 29
-(25, 8,  2,  '2026-05-26 09:00:00', 'Diabetes tipo 2, control trimestral',        'ATENDIDA'), -- ID 30
-(10, 2,  2,  '2026-05-27 09:00:00', 'Dolor de espalda y fatiga',                  'PROGRAMADA'), -- ID 31
-(6,  6,  12, '2026-05-27 15:00:00', 'Vertigo y perdida de equilibrio',            'PROGRAMADA'), -- ID 32
-(28, 1,  1,  '2026-05-28 08:00:00', 'Presion alta y dolor de cabeza',             'PROGRAMADA'), -- ID 33
-(3,  3,  6,  '2026-05-29 14:00:00', 'Control de asma infantil',                   'PROGRAMADA'), -- ID 34
-(2,  2,  4,  '2026-05-30 09:00:00', 'Arritmia, control semestral',                'PROGRAMADA'); -- ID 35
+(1,  8,  11, '2026-05-04 08:00:00', 'Dolor de cabeza persistente y mareos',      'ATENDIDA'), -- ID 1  -> Neurologia
+(2,  4,  4,  '2026-05-05 09:00:00', 'Revision de presion arterial alta',         'ATENDIDA'), -- ID 2  -> Cardiologia
+(3,  5,  6,  '2026-05-05 14:00:00', 'Control pediatrico de nino de 5 anos',       'ATENDIDA'), -- ID 3  -> Pediatria
+(4,  6,  8,  '2026-05-06 08:00:00', 'Consulta por irregularidades menstruales',   'ATENDIDA'), -- ID 4  -> Ginecologia
+(5,  7,  10, '2026-05-06 09:00:00', 'Dolor en rodilla derecha tras caida',        'ATENDIDA'), -- ID 5  -> Traumatologia
+(6,  8,  11, '2026-05-07 15:00:00', 'Episodios de migrana frecuentes',            'ATENDIDA'), -- ID 6  -> Neurologia
+(7,  3,  1,  '2026-05-07 08:00:00', 'Tos persistente y fiebre leve',              'ATENDIDA'), -- ID 7  -> Medicina General
+(8,  4,  4,  '2026-05-08 09:00:00', 'Palpitaciones y cansancio',                  'ATENDIDA'), -- ID 8  -> Cardiologia
+(1,  3,  1,  '2026-05-10 08:00:00', 'Control medico trimestral',                  'ATENDIDA'), -- ID 9  -> Medicina General
+(9,  9,  16, '2026-05-11 09:00:00', 'Dermatitis en brazos',                       'ATENDIDA'), -- ID 10 -> Dermatologia
+(5,  7,  10, '2026-05-11 08:00:00', 'Revision de fractura curada',                'ATENDIDA'), -- ID 11 -> Traumatologia
+(15, 11, 17, '2026-05-11 09:00:00', 'Hipotiroidismo, control mensual',            'ATENDIDA'), -- ID 12 -> Endocrinologia
+(10, 11, 17, '2026-05-12 09:00:00', 'Fatiga extrema y aumento de peso',           'ATENDIDA'), -- ID 13 -> Endocrinologia
+(11, 12, 18, '2026-05-12 08:00:00', 'Nauseas y dolor abdominal',                  'ATENDIDA'), -- ID 14 -> Gastroenterologia
+(12, 3,  1,  '2026-05-13 08:00:00', 'Chequeo medico general',                     'ATENDIDA'), -- ID 15 -> Medicina General
+(13, 5,  6,  '2026-05-13 14:00:00', 'Fiebre alta en nino de 8 anos',              'ATENDIDA'), -- ID 16 -> Pediatria
+(14, 6,  8,  '2026-05-14 08:00:00', 'Control de embarazo mes 5',                  'ATENDIDA'), -- ID 17 -> Ginecologia
+(15, 7,  10, '2026-05-14 08:00:00', 'Dolor lumbar cronico',                       'ATENDIDA'), -- ID 18 -> Traumatologia
+(22, 12, 18, '2026-05-14 08:00:00', 'Gastroenterologia, seguimiento',             'ATENDIDA'), -- ID 19 -> Gastroenterologia
+(28, 4,  4,  '2026-05-15 09:00:00', 'Hipertension, ajuste de tratamiento',        'ATENDIDA'), -- ID 20 -> Cardiologia
+(16, 3,  1,  '2026-05-18 08:00:00', 'Resfriado y dolor de garganta',              'ATENDIDA'), -- ID 21 -> Medicina General
+(17, 8,  11, '2026-05-19 15:00:00', 'Entumecimiento en extremidades',             'ATENDIDA'), -- ID 22 -> Neurologia
+(18, 4,  4,  '2026-05-19 09:00:00', 'Control post-operatorio cardiaco',           'ATENDIDA'), -- ID 23 -> Cardiologia
+(19, 12, 18, '2026-05-20 08:00:00', 'Gastritis y acidez estomacal',               'ATENDIDA'), -- ID 24 -> Gastroenterologia
+(20, 6,  8,  '2026-05-20 08:00:00', 'Revision de quiste ovarico',                 'ATENDIDA'), -- ID 25 -> Ginecologia
+(21, 5,  6,  '2026-05-21 14:00:00', 'Vacunacion y control de crecimiento',        'ATENDIDA'), -- ID 26 -> Pediatria
+(22, 12, 18, '2026-05-21 08:00:00', 'Colon irritable, control mensual',           'ATENDIDA'), -- ID 27 -> Gastroenterologia
+(23, 7,  10, '2026-05-25 08:00:00', 'Esguince de tobillo izquierdo',              'ATENDIDA'), -- ID 28 -> Traumatologia
+(24, 9,  16, '2026-05-26 09:00:00', 'Acne y problemas en piel grasa',             'ATENDIDA'), -- ID 29 -> Dermatologia
+(25, 11, 17, '2026-05-26 09:00:00', 'Diabetes tipo 2, control trimestral',        'ATENDIDA'), -- ID 30 -> Endocrinologia
+(10, 7,  10, '2026-05-27 09:00:00', 'Dolor de espalda y fatiga',                  'PROGRAMADA'), -- ID 31 -> Traumatologia
+(6,  8,  11, '2026-05-27 15:00:00', 'Vertigo y perdida de equilibrio',            'PROGRAMADA'), -- ID 32 -> Neurologia
+(28, 4,  4,  '2026-05-28 08:00:00', 'Presion alta y dolor de cabeza',             'PROGRAMADA'), -- ID 33 -> Cardiologia
+(3,  5,  6,  '2026-05-29 14:00:00', 'Control de asma infantil',                   'PROGRAMADA'), -- ID 34 -> Pediatria
+(2,  4,  4,  '2026-05-30 09:00:00', 'Arritmia, control semestral',                'PROGRAMADA'); -- ID 35 -> Cardiologia
 
 -- ========================
 -- 10. PAGOS
 -- ========================
+-- monto recalculado para coincidir con especialidades.precio del medico asignado
 INSERT INTO pagos (cita_id, monto, metodo_pago, estado, fecha_pago) VALUES
-(1,  80.00,  'EFECTIVO',      'PAGADO', '2026-05-04 08:05:00'),
-(2,  120.00, 'TARJETA',       'PAGADO', '2026-05-05 09:10:00'),
+(1,  140.00, 'EFECTIVO',      'PAGADO', '2026-05-04 08:05:00'),
+(2,  150.00, 'TARJETA',       'PAGADO', '2026-05-05 09:10:00'),
 (3,  90.00,  'EFECTIVO',      'PAGADO', '2026-05-05 14:05:00'),
-(4,  100.00, 'TRANSFERENCIA', 'PAGADO', '2026-05-06 08:05:00'),
-(5,  110.00, 'EFECTIVO',      'PAGADO', '2026-05-06 09:05:00'),
-(6,  130.00, 'TARJETA',       'PAGADO', '2026-05-07 15:05:00'),
+(4,  130.00, 'TRANSFERENCIA', 'PAGADO', '2026-05-06 08:05:00'),
+(5,  120.00, 'EFECTIVO',      'PAGADO', '2026-05-06 09:05:00'),
+(6,  140.00, 'TARJETA',       'PAGADO', '2026-05-07 15:05:00'),
 (7,  80.00,  'EFECTIVO',      'PAGADO', '2026-05-07 08:05:00'),
-(8,  120.00, 'EFECTIVO',      'PAGADO', '2026-05-08 09:05:00'),
-(9,  100.00, 'TARJETA',       'PAGADO', '2026-05-10 08:05:00'),
-(10, 150.00, 'TRANSFERENCIA', 'PAGADO', '2026-05-11 09:05:00'),
-(11, 90.00,  'EFECTIVO',      'PAGADO', '2026-05-11 08:05:00'),
-(12, 80.00,  'EFECTIVO',      'PAGADO', '2026-05-11 09:05:00'),
-(13, 90.00,  'TARJETA',       'PAGADO', '2026-05-12 09:05:00'),
-(14, 100.00, 'EFECTIVO',      'PAGADO', '2026-05-12 08:05:00'),
-(15, 110.00, 'TRANSFERENCIA', 'PAGADO', '2026-05-13 08:05:00'),
-(16, 80.00,  'EFECTIVO',      'PAGADO', '2026-05-13 14:05:00'),
+(8,  150.00, 'EFECTIVO',      'PAGADO', '2026-05-08 09:05:00'),
+(9,  80.00,  'TARJETA',       'PAGADO', '2026-05-10 08:05:00'),
+(10, 100.00, 'TRANSFERENCIA', 'PAGADO', '2026-05-11 09:05:00'),
+(11, 120.00, 'EFECTIVO',      'PAGADO', '2026-05-11 08:05:00'),
+(12, 115.00, 'EFECTIVO',      'PAGADO', '2026-05-11 09:05:00'),
+(13, 115.00, 'TARJETA',       'PAGADO', '2026-05-12 09:05:00'),
+(14, 125.00, 'EFECTIVO',      'PAGADO', '2026-05-12 08:05:00'),
+(15, 80.00,  'TRANSFERENCIA', 'PAGADO', '2026-05-13 08:05:00'),
+(16, 90.00,  'EFECTIVO',      'PAGADO', '2026-05-13 14:05:00'),
 (17, 130.00, 'TARJETA',       'PAGADO', '2026-05-14 08:05:00'),
 (18, 120.00, 'TARJETA',       'PAGADO', '2026-05-14 08:05:00'),
-(19, 80.00,  'EFECTIVO',      'PAGADO', '2026-05-14 08:05:00'),
-(20, 100.00, 'EFECTIVO',      'PAGADO', '2026-05-15 09:05:00'),
-(21, 90.00,  'EFECTIVO',      'PAGADO', '2026-05-18 08:05:00'),
-(22, 90.00,  'TARJETA',       'PAGADO', '2026-05-19 15:05:00'),
-(23, 110.00, 'EFECTIVO',      'PAGADO', '2026-05-19 09:05:00'),
-(24, 100.00, 'TARJETA',       'PAGADO', '2026-05-20 08:05:00'),
-(25, 150.00, 'TRANSFERENCIA', 'PAGADO', '2026-05-20 08:05:00'),
-(26, 80.00,  'EFECTIVO',      'PAGADO', '2026-05-21 14:05:00'),
-(27, 130.00, 'TARJETA',       'PAGADO', '2026-05-21 08:05:00'),
-(28, 80.00,  'EFECTIVO',      'PAGADO', '2026-05-25 08:05:00'),
-(29, 90.00,  'EFECTIVO',      'PAGADO', '2026-05-26 09:05:00'),
-(30, 120.00, 'TARJETA',       'PAGADO', '2026-05-26 09:05:00');
+(19, 125.00, 'EFECTIVO',      'PAGADO', '2026-05-14 08:05:00'),
+(20, 150.00, 'EFECTIVO',      'PAGADO', '2026-05-15 09:05:00'),
+(21, 80.00,  'EFECTIVO',      'PAGADO', '2026-05-18 08:05:00'),
+(22, 140.00, 'TARJETA',       'PAGADO', '2026-05-19 15:05:00'),
+(23, 150.00, 'EFECTIVO',      'PAGADO', '2026-05-19 09:05:00'),
+(24, 125.00, 'TARJETA',       'PAGADO', '2026-05-20 08:05:00'),
+(25, 130.00, 'TRANSFERENCIA', 'PAGADO', '2026-05-20 08:05:00'),
+(26, 90.00,  'EFECTIVO',      'PAGADO', '2026-05-21 14:05:00'),
+(27, 125.00, 'TARJETA',       'PAGADO', '2026-05-21 08:05:00'),
+(28, 120.00, 'EFECTIVO',      'PAGADO', '2026-05-25 08:05:00'),
+(29, 100.00, 'EFECTIVO',      'PAGADO', '2026-05-26 09:05:00'),
+(30, 115.00, 'TARJETA',       'PAGADO', '2026-05-26 09:05:00');
 
 -- ========================
 -- 12. DIAGNOSTICOS
 -- ========================
+-- (contenido sin cambios: ya era coherente con el motivo_consulta;
+--  ahora tambien es coherente con el medico asignado en la seccion 9)
 INSERT INTO diagnosticos (enfermedad, descripcion, receta, indicaciones, cita_id) VALUES
 ('CEFALEA TENSIONAL',                  'Dolor de cabeza de tipo tensional sin signos neurologicos focales',              'Ibuprofeno 400mg / Paracetamol 500mg',                                                                   'Reposo relativo, evitar pantallas, hidratacion. Tomar cada 8 horas con alimentos.',      1),
 ('HIPERTENSION ARTERIAL',              'HTA grado 2, en control farmacologico con enalapril',                            'Enalapril 10mg cada 12h / Hidroclorotiazida 12.5mg',                                                     'Dieta hiposodica, ejercicio moderado diario. No suspender sin consultar.',                2),
@@ -278,6 +350,7 @@ INSERT INTO diagnosticos (enfermedad, descripcion, receta, indicaciones, cita_id
 -- ========================
 -- 13. CONSULTAS
 -- ========================
+-- (formulario publico de contacto, no referencia FKs de pacientes/medicos - sin cambios)
 INSERT INTO consultas (nombre, email, mensaje, fecha_envio, leido, respondido, respuesta, fecha_respuesta, respondido_por) VALUES
 ('María García López', 'maria.garcia@gmail.com', 'Buenos días, quisiera saber si atienden pacientes diabéticos y qué especialista recomiendan para mi caso.', '2026-06-01 09:15:00', TRUE, TRUE, 'Buenos días María. Contamos con endocrinólogos especializados en diabetes. Puede agendar una cita con el Dr. Ricardo Mendoza en nuestras instalaciones. Gracias por contactarnos.', '2026-06-01 10:30:00', 'Dr. Ricardo Mendoza'),
 ('Carlos Paredes Ruiz', 'carlos.paredes@hotmail.com', 'Hola, estoy interesado en saber los precios de las consultas por especialidad. ¿Podrían enviarme un listado?', '2026-06-02 11:00:00', TRUE, TRUE, 'Hola Carlos. Puede ver los precios de cada especialidad directamente en nuestra página web en la sección Especialidades. Los costos van desde S/80 hasta S/150 según la especialidad. Saludos.', '2026-06-02 14:20:00', 'Admin'),
