@@ -100,6 +100,19 @@
   cursor: pointer;
 }
 
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-4px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.animate-fade-in {
+  animation: fadeIn 0.15s ease-out;
+}
+
+/* Scrollbar para el dropdown */
+.notif-scroll::-webkit-scrollbar { width: 4px; }
+.notif-scroll::-webkit-scrollbar-track { background: transparent; }
+.notif-scroll::-webkit-scrollbar-thumb { background: #d1d5db; border-radius: 4px; }
+
 .tab-link.is-active {
   color: #0f8b86;
   border-color: #36b2ac;

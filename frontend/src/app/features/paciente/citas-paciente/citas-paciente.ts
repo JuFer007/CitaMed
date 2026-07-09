@@ -17,6 +17,11 @@ export class CitasPacienteComponent implements OnInit {
   modalAbierto = false;
   citaModal: PortalCita | null = null;
   diagnosticoModal: PortalDiagnostico | null = null;
+  modalDiagnosticoAbierto = false;
+  citaDiagnostico: PortalCita | null = null;
+  cargandoDiagnostico = false;
+  cargandoPdf = false;
+  sinDiagnostico = false;
 
   constructor(
     private portalService: PacientePortalService,
@@ -34,19 +39,53 @@ export class CitasPacienteComponent implements OnInit {
 
   verDetalle(cita: PortalCita): void {
     this.citaModal = cita;
-    this.diagnosticoModal = null;
     this.modalAbierto = true;
   }
 
-  verDiagnostico(citaId: number): void {
-    this.portalService.obtenerDiagnostico(citaId).subscribe({
+  verDiagnostico(cita: PortalCita): void {
+    this.citaDiagnostico = cita;
+    this.diagnosticoModal = null;
+    this.sinDiagnostico = false;
+    this.modalDiagnosticoAbierto = true;
+
+    const diag = cita.diagnostico;
+    if (diag) {
+      this.diagnosticoModal = diag;
+      return;
+    }
+
+    this.portalService.obtenerDiagnostico(cita.id).subscribe({
       next: (data) => {
         this.diagnosticoModal = data;
       },
       error: () => {
-        this.toast.info('No hay diagnóstico disponible para esta cita');
+        this.sinDiagnostico = true;
       },
     });
+  }
+
+  descargarDiagnostico(): void {
+    if (!this.citaDiagnostico) return;
+    this.cargandoPdf = true;
+    this.toast.info('Generando diagnóstico PDF...', { life: 999999 });
+    this.portalService.descargarRecetaPdf(this.citaDiagnostico.id).subscribe({
+      next: (blob) => {
+        const url = window.URL.createObjectURL(blob);
+        window.open(url, '_blank');
+        this.cargandoPdf = false;
+        this.toast.clear();
+        this.toast.success('Diagnóstico descargado');
+      },
+      error: () => {
+        this.cargandoPdf = false;
+        this.toast.clear();
+        this.toast.error('Error al generar el diagnóstico PDF');
+      },
+    });
+  }
+
+  pagarAhora(): void {
+    this.toast.info('Redirigiendo a pasarela de pago...');
   }
 
   cancelarCita(id: number): void {
@@ -64,7 +103,13 @@ export class CitasPacienteComponent implements OnInit {
   cerrarModal(): void {
     this.modalAbierto = false;
     this.citaModal = null;
+  }
+
+  cerrarModalDiagnostico(): void {
+    this.modalDiagnosticoAbierto = false;
+    this.citaDiagnostico = null;
     this.diagnosticoModal = null;
+    this.sinDiagnostico = false;
   }
 
   estadoClase(estado: string): string {

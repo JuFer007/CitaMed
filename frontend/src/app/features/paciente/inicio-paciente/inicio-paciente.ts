@@ -15,7 +15,10 @@ export class InicioPacienteComponent implements OnInit {
 
   proximaCita: PortalCita | null = null;
   totalCitas = 0;
+  proximasCount = 0;
+  atendidasCount = 0;
   cargado = false;
+  errorCarga = false;
 
   hoy = new Date();
   diasSemana = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
@@ -31,10 +34,41 @@ export class InicioPacienteComponent implements OnInit {
     this.portalService.obtenerProximasCitas().subscribe({
       next: (data) => {
         this.proximaCita = data.length > 0 ? data[0] : null;
-        this.totalCitas = data.length;
+        this.proximasCount = data.length;
+        this.totalCitas = data.length + this.atendidasCount;
         this.cargado = true;
       },
-      error: () => { this.cargado = true; },
     });
+    this.portalService.obtenerHistorialCitas().subscribe({
+      next: (data) => {
+        this.atendidasCount = data.length;
+        this.totalCitas = this.proximasCount + data.length;
+        this.cargado = true;
+      },
+      error: () => {
+        this.cargado = true;
+        this.errorCarga = true;
+      },
+    });
+  }
+
+  formatearFechaCita(fecha: string): string {
+    if (!fecha) return '—';
+    try {
+      const d = new Date(fecha);
+      return d.toLocaleDateString('es-PE', { day: 'numeric', month: 'long', year: 'numeric' });
+    } catch {
+      return fecha;
+    }
+  }
+
+  formatearHoraCita(fecha: string): string {
+    if (!fecha) return '';
+    try {
+      const d = new Date(fecha);
+      return d.toLocaleTimeString('es-PE', { hour: '2-digit', minute: '2-digit' });
+    } catch {
+      return '';
+    }
   }
 }

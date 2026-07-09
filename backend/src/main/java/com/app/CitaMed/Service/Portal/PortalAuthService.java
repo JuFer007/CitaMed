@@ -11,6 +11,7 @@ import com.app.CitaMed.Model.Paciente.Paciente;
 import com.app.CitaMed.Repository.Administrativo.UsuarioRepository;
 import com.app.CitaMed.Repository.Paciente.HistorialMedicoRepository;
 import com.app.CitaMed.Repository.Paciente.PacienteRepository;
+import com.app.CitaMed.Service.MicroServicios.EmailService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -24,6 +25,7 @@ public class PortalAuthService {
     private final UsuarioRepository usuarioRepository;
     private final HistorialMedicoRepository historialMedicoRepository;
     private final BCryptPasswordEncoder passwordEncoder;
+    private final EmailService emailService;
 
     @Transactional
     public void registrar(RegisterRequest request) {
@@ -76,6 +78,9 @@ public class PortalAuthService {
             historial.setPaciente(paciente);
             historialMedicoRepository.save(historial);
         }
+
+        String nombreCompleto = paciente.getNombre() + " " + paciente.getApellidoPaterno();
+        emailService.enviarRegistro(nombreCompleto, paciente.getEmail(), paciente.getEmail());
     }
 
     public PortalPerfilDTO obtenerPerfil(Long pacienteId) {

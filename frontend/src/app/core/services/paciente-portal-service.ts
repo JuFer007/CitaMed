@@ -24,15 +24,24 @@ export interface PortalCita {
   hora: string;
   consultorio: string;
   estado: string;
+  diagnostico?: PortalDiagnostico;
+  pago?: PortalPagoEstado;
 }
 
 export interface PortalDiagnostico {
-  id: number;
   citaId: number;
-  diagnostico: string;
+  enfermedad: string;
+  descripcion: string;
   receta: string;
-  fecha: string;
-  medico: string;
+  indicaciones: string;
+}
+
+export interface PortalPagoEstado {
+  id: number;
+  monto: number;
+  metodoPago: string;
+  estado: string;
+  fechaPago: string;
 }
 
 export interface PortalHistorial {
@@ -55,12 +64,17 @@ export interface PortalNotificacion {
 
 export interface PortalPago {
   id: number;
+  citaId: number;
   concepto: string;
   medico: string;
   especialidad: string;
   fecha: string;
+  hora: string;
   monto: number;
+  metodoPago: string;
   estado: string;
+  dniPaciente: string;
+  pacienteNombre: string;
 }
 
 @Injectable({ providedIn: 'root' })
@@ -97,8 +111,8 @@ export class PacientePortalService {
     return this.http.get<PortalDiagnostico>(`${this.api}/diagnosticos/${citaId}`);
   }
 
-  obtenerHistorialClinico(): Observable<PortalHistorial[]> {
-    return this.http.get<PortalHistorial[]>(`${this.api}/historial-clinico`);
+  obtenerHistorialClinico(): Observable<any> {
+    return this.http.get<any>(`${this.api}/historial-clinico`);
   }
 
   obtenerPagos(): Observable<PortalPago[]> {
@@ -115,5 +129,21 @@ export class PacientePortalService {
 
   marcarNotificacionLeida(id: number): Observable<any> {
     return this.http.patch(`${this.api}/notificaciones/${id}/leer`, {});
+  }
+
+  marcarTodasNotificacionesLeidas(): Observable<any> {
+    return this.http.patch(`${this.api}/notificaciones/leer-todas`, {});
+  }
+
+  descargarRecetaPdf(citaId: number): Observable<Blob> {
+    return this.http.get(`http://localhost:8080/api/pdf/receta/cita/${citaId}`, { responseType: 'blob' });
+  }
+
+  descargarTicketPdf(data: any): Observable<Blob> {
+    return this.http.post(`http://localhost:8080/api/pdf/ticket`, data, { responseType: 'blob' });
+  }
+
+  descargarHistorialPdf(data: any): Observable<Blob> {
+    return this.http.post(`http://localhost:8080/api/pdf/historial`, data, { responseType: 'blob' });
   }
 }

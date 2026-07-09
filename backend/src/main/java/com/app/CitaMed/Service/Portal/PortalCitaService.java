@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -99,12 +100,17 @@ public class PortalCitaService {
             Cita cita = p.getCita();
             return PortalPagoDTO.builder()
                     .id(p.getId())
+                    .citaId(cita.getId())
                     .concepto(cita.getMotivoConsulta())
                     .medico("DR. " + cita.getMedico().getNombre() + " " + cita.getMedico().getApellidoPaterno())
                     .especialidad(cita.getMedico().getEspecialidad().getNombre())
                     .fecha(p.getFechaPago() != null ? p.getFechaPago().toString() : null)
+                    .hora(cita.getFechaHora() != null ? cita.getFechaHora().format(DateTimeFormatter.ofPattern("HH:mm")) : null)
                     .monto(p.getMonto())
+                    .metodoPago(p.getMetodoPago() != null ? p.getMetodoPago().name() : null)
                     .estado(p.getEstado().name())
+                    .dniPaciente(cita.getPaciente().getDni())
+                    .pacienteNombre(cita.getPaciente().getNombre() + " " + cita.getPaciente().getApellidoPaterno() + " " + cita.getPaciente().getApellidoMaterno())
                     .build();
         }).collect(Collectors.toList());
     }
@@ -134,11 +140,15 @@ public class PortalCitaService {
                     .build();
         }
 
+        LocalDateTime fh = cita.getFechaHora();
         return PortalCitaDTO.builder()
                 .id(cita.getId())
-                .fechaHora(cita.getFechaHora())
+                .fechaHora(fh)
+                .fecha(fh.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME))
+                .hora(fh.format(DateTimeFormatter.ofPattern("HH:mm")))
                 .medicoNombre(cita.getMedico().getNombre())
                 .medicoApellido(cita.getMedico().getApellidoPaterno())
+                .medico(cita.getMedico().getNombre() + " " + cita.getMedico().getApellidoPaterno())
                 .especialidad(cita.getMedico().getEspecialidad().getNombre())
                 .consultorio(cita.getConsultorio().getNumero())
                 .estado(cita.getEstado().name())

@@ -11,8 +11,11 @@ import java.time.LocalDateTime;
 public class PortalCitaDTO {
     private Long id;
     private LocalDateTime fechaHora;
+    private String fecha;
+    private String hora;
     private String medicoNombre;
     private String medicoApellido;
+    private String medico;
     private String especialidad;
     private String consultorio;
     private String estado;

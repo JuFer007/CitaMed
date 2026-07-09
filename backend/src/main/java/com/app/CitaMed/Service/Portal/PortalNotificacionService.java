@@ -37,6 +37,14 @@ public class PortalNotificacionService {
     }
 
     @Transactional
+    public void marcarTodasComoLeidas(Long pacienteId) {
+        List<Notificacion> noLeidas = notificacionRepository
+                .findByPacienteIdAndLeidoFalseOrderByFechaCreacionDesc(pacienteId);
+        noLeidas.forEach(n -> n.setLeido(true));
+        notificacionRepository.saveAll(noLeidas);
+    }
+
+    @Transactional
     public void crearNotificacion(Paciente paciente, String mensaje, String tipo,
                                    Long referenciaId, String tabDestino) {
         Notificacion n = new Notificacion();

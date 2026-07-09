@@ -89,6 +89,22 @@ public class EmailService {
     }
 
     @Async
+    public void enviarRegistro(String nombre, String usuario, String email) {
+        try {
+            Context context = new Context();
+            context.setVariable("nombre", nombre);
+            context.setVariable("usuario", usuario);
+            context.setVariable("email", email);
+            context.setVariable("portalUrl", "http://localhost:4200/login");
+
+            String html = templateEngine.process("email/registro", context);
+            enviarCorreo(email, "Bienvenido a CitaMed - Tu cuenta ha sido creada", html);
+        } catch (Exception e) {
+            LOG.warning("Error enviando correo de registro: " + e.getMessage());
+        }
+    }
+
+    @Async
     public void enviarRespuestaConsulta(String nombre, String email, String mensajeOriginal, String respuesta) {
         try {
             Context context = new Context();

@@ -12,6 +12,7 @@ import { PacientePortalService, PortalPago } from '../../../core/services/pacien
 })
 export class PagosPacienteComponent implements OnInit {
   pagos: PortalPago[] = [];
+  descargandoId: number | null = null;
 
   constructor(
     private portalService: PacientePortalService,
@@ -25,11 +26,42 @@ export class PagosPacienteComponent implements OnInit {
   }
 
   pagarAhora(item: PortalPago): void {
-    this.toast.success('Redirigiendo a pasarela de pago...');
+    this.toast.info('Redirigiendo a pasarela de pago...');
   }
 
   descargarTicket(item: PortalPago): void {
-    this.toast.success('Descargando comprobante...');
+    this.descargandoId = item.id;
+    this.toast.info('Generando ticket PDF...', { life: 999999 });
+
+    const fecha = new Date(item.fecha);
+    const ticketData = {
+      numeroCita: item.citaId.toString(),
+      cliente: item.pacienteNombre,
+      dni: item.dniPaciente,
+      fecha: fecha.toLocaleDateString('es-PE', { year: 'numeric', month: 'long', day: 'numeric' }),
+      hora: fecha.toLocaleTimeString('es-PE', { hour: '2-digit', minute: '2-digit' }),
+      medico: item.medico,
+      especialidad: item.especialidad,
+      metodoPago: item.metodoPago || '—',
+      monto: item.monto,
+      subtotal: item.monto,
+      descuento: 0,
+    };
+
+    this.portalService.descargarTicketPdf(ticketData).subscribe({
+      next: (blob) => {
+        const url = window.URL.createObjectURL(blob);
+        window.open(url, '_blank');
+        this.descargandoId = null;
+        this.toast.clear();
+        this.toast.success('Ticket descargado correctamente');
+      },
+      error: () => {
+        this.descargandoId = null;
+        this.toast.clear();
+        this.toast.error('Error al generar el ticket PDF');
+      },
+    });
   }
 
   estadoClase(estado: string): string {

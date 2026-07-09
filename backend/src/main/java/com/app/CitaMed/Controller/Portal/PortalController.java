@@ -154,6 +154,17 @@ public class PortalController {
         }
     }
 
+    @PatchMapping("/notificaciones/leer-todas")
+    public ResponseEntity<?> marcarTodasComoLeidas(Authentication auth) {
+        try {
+            Long pacienteId = obtenerPacienteId(auth);
+            portalNotificacionService.marcarTodasComoLeidas(pacienteId);
+            return ResponseEntity.ok(Map.of("mensaje", "Todas las notificaciones marcadas como leídas"));
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
+        }
+    }
+
     private Long obtenerPacienteId(Authentication auth) {
         String username = (String) auth.getPrincipal();
         var usuario = usuarioService.findByUsuario(username)
