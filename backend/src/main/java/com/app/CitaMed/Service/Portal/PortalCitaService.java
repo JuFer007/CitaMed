@@ -4,15 +4,27 @@ import com.app.CitaMed.DTO.DiagnosticoDTO;
 import com.app.CitaMed.DTO.PagoEstadoDTO;
 import com.app.CitaMed.DTO.PortalCitaDTO;
 import com.app.CitaMed.DTO.PortalPagoDTO;
+import com.app.CitaMed.DTO.PortalReservaRequest;
+import com.app.CitaMed.DTO.SlotDisponibleDTO;
 import com.app.CitaMed.Enums.EstadoCita;
 import com.app.CitaMed.Enums.EstadoPago;
+import com.app.CitaMed.Enums.MetodoPago;
 import com.app.CitaMed.Model.Administrativo.Pago;
 import com.app.CitaMed.Model.Agenda.Cita;
 import com.app.CitaMed.Model.Medico.Diagnostico;
+import com.app.CitaMed.Model.Medico.Especialidad;
+import com.app.CitaMed.Model.Medico.Medico;
+import com.app.CitaMed.Model.Paciente.Paciente;
 import com.app.CitaMed.Repository.Agenda.CitaRepository;
 import com.app.CitaMed.Repository.Administrativo.PagoRepository;
 import com.app.CitaMed.Repository.Medico.DiagnosticoRepository;
+import com.app.CitaMed.Repository.Medico.EspecialidadRepository;
+import com.app.CitaMed.Repository.Medico.MedicoRepository;
+import com.app.CitaMed.Repository.Paciente.PacienteRepository;
 import com.app.CitaMed.Service.Agenda.CitaService;
+import com.app.CitaMed.Service.Administrativo.ReservaService;
+import com.app.CitaMed.Service.MicroServicios.EmailService;
+import com.app.CitaMed.Util.HorarioValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -32,6 +44,12 @@ public class PortalCitaService {
     private final DiagnosticoRepository diagnosticoRepository;
     private final PagoRepository pagoRepository;
     private final CitaService citaService;
+    private final ReservaService reservaService;
+    private final EspecialidadRepository especialidadRepository;
+    private final MedicoRepository medicoRepository;
+    private final PacienteRepository pacienteRepository;
+    private final PortalNotificacionService portalNotificacionService;
+    private final EmailService emailService;
 
     public List<PortalCitaDTO> obtenerProximas(Long pacienteId) {
         List<Cita> citas = citaRepository
@@ -113,6 +131,75 @@ public class PortalCitaService {
                     .pacienteNombre(cita.getPaciente().getNombre() + " " + cita.getPaciente().getApellidoPaterno() + " " + cita.getPaciente().getApellidoMaterno())
                     .build();
         }).collect(Collectors.toList());
+    }
+
+    public List<Especialidad> obtenerEspecialidades() {
+        return especialidadRepository.findAll();
+    }
+
+    public List<Medico> obtenerMedicosPorEspecialidad(Long especialidadId) {
+        return medicoRepository.findByEspecialidadIdAndActivoTrue(especialidadId);
+    }
+
+    public List<SlotDisponibleDTO> obtenerSlotsDisponibles(Long especialidadId, String fecha) {
+        return reservaService.obtenerSlotsDisponibles(especialidadId, fecha);
+    }
+
+    @Transactional
+    public void reservar(Long pacienteId, PortalReservaRequest request) {
+        Paciente paciente = pacienteRepository.findById(pacienteId)
+                .orElseThrow(() -> new RuntimeException("Paciente no encontrado"));
+
+        Medico medico = medicoRepository.findById(request.getMedicoId())
+                .orElseThrow(() -> new RuntimeException("Médico no encontrado"));
+
+        if (!medico.isActivo())
+            throw new RuntimeException("El médico no está activo");
+
+        if (medico.getConsultorio() == null || !medico.getConsultorio().getId().equals(request.getConsultorioId()))
+            throw new RuntimeException("El médico no tiene el consultorio seleccionado");
+
+        LocalDateTime fechaHora = LocalDateTime.parse(request.getFechaHora(),
+                DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss"));
+
+        HorarioValidator.validar(fechaHora);
+
+        LocalDateTime fin = fechaHora.plusHours(1);
+        if (citaRepository.countOverlapByMedico(medico.getId(), EstadoCita.CANCELADA, fechaHora.minusHours(1), fin) > 0)
+            throw new RuntimeException("El horario seleccionado ya no está disponible");
+
+        if (citaRepository.countOverlapByPaciente(paciente.getId(), EstadoCita.CANCELADA, fechaHora.minusHours(1), fin) > 0)
+            throw new RuntimeException("Ya tienes una cita en ese horario");
+
+        Cita cita = new Cita();
+        cita.setPaciente(paciente);
+        cita.setMedico(medico);
+        cita.setConsultorio(medico.getConsultorio());
+        cita.setFechaHora(fechaHora);
+        cita.setMotivoConsulta(request.getMotivoConsulta());
+        cita.setEstado(EstadoCita.PROGRAMADA);
+        citaRepository.save(cita);
+
+        Pago pago = new Pago();
+        pago.setCita(cita);
+        pago.setMonto(medico.getEspecialidad().getPrecio());
+        pago.setMetodoPago(MetodoPago.EFECTIVO);
+        pago.setEstado(EstadoPago.PENDIENTE);
+        pago.setFechaPago(LocalDateTime.now());
+        pagoRepository.save(pago);
+
+        portalNotificacionService.crearNotificacion(
+                paciente,
+                "Cita reservada con " + medico.getNombre() + " " + medico.getApellidoPaterno()
+                        + " para el " + fechaHora.format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")),
+                "CITA",
+                cita.getId(),
+                "citas"
+        );
+
+        try {
+            emailService.enviarConfirmacion(cita);
+        } catch (Exception ignored) {}
     }
 
     private PortalCitaDTO toPortalCitaDTO(Cita cita) {

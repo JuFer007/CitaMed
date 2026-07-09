@@ -22,7 +22,7 @@
       <div class="text-sm font-semibold text-[#083d3a]">S/ {{ p.monto.toFixed(2) }}</div>
       <div><span class="px-3 py-1 rounded-full text-[11px] font-semibold w-fit inline-block" [class]="estadoClase(p.estado)">{{ p.estado }}</span></div>
       <div class="flex sm:justify-end gap-2">
-        <button *ngIf="p.estado !== 'PAGADO'" (click)="pagarAhora(p)" class="bg-[#36b2ac] text-white px-4 py-2 rounded-md text-xs font-semibold hover:bg-[#2b9a95] shadow-lg shadow-[#36b2ac]/20 transition">Pagar ahora</button>
+        <button *ngIf="p.estado !== 'PAGADO'" (click)="pagarAhora(p)" class="bg-[#36b2ac] text-white px-4 py-2 rounded-md text-xs font-semibold hover:bg-[#2b9a95] transition">Pagar ahora</button>
         <button *ngIf="p.estado === 'PAGADO'" (click)="descargarTicket(p)" [disabled]="descargandoId === p.id" class="bg-white text-[#36b2ac] ring-1 ring-inset ring-[#36b2ac]/20 px-4 py-2 rounded-md text-xs font-semibold hover:bg-[#f5ffff] transition disabled:opacity-50 flex items-center gap-1.5">
           <span *ngIf="descargandoId === p.id" class="w-3.5 h-3.5 border-2 border-[#36b2ac] border-t-transparent rounded-full animate-spin inline-block"></span>
           {{ descargandoId === p.id ? 'Generando...' : 'Descargar ticket' }}

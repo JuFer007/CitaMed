@@ -1,5 +1,6 @@
 package com.app.CitaMed.Service.Agenda;
 import com.app.CitaMed.DTO.HorarioMedicoDTO;
+import com.app.CitaMed.Enums.DiaSemana;
 import com.app.CitaMed.Model.Administrativo.Consultorio;
 import com.app.CitaMed.Model.Agenda.HorarioMedico;
 import com.app.CitaMed.Model.Medico.Medico;
@@ -23,8 +24,18 @@ public class HorarioMedicoService {
         return horarioMedicoRepository.findByMedicoIdAndActivoTrue(medicoId);
     }
 
+    private String validarDia(DiaSemana dia) {
+        if (dia == DiaSemana.SABADO || dia == DiaSemana.DOMINGO) {
+            return "Solo se permiten horarios de lunes a viernes";
+        }
+        return null;
+    }
+
     @Transactional
     public String save(HorarioMedicoDTO dto) {
+        String errorDia = validarDia(dto.getDia());
+        if (errorDia != null) return errorDia;
+
         Medico medico = medicoRepository.findById(dto.getMedicoId()).orElse(null);
         if (medico == null) return "Médico no encontrado";
 
@@ -58,6 +69,9 @@ public class HorarioMedicoService {
 
     @Transactional
     public String update(Long id, HorarioMedicoDTO dto) {
+        String errorDia = validarDia(dto.getDia());
+        if (errorDia != null) return errorDia;
+
         HorarioMedico horario = horarioMedicoRepository.findById(id).orElse(null);
         if (horario == null) return "Horario no encontrado";
 

@@ -1,53 +1,53 @@
-<div class="min-h-screen bg-[#f5f5f5] dot-pattern">
+<div class="min-h-screen bg-[#f5f5f5]">
 
-  <!-- Navbar -->
-  <header id="navbar"
-    class="fixed top-0 left-0 right-0 z-50 transition-all duration-500 ease-in-out"
-    [ngClass]="isScrolled ? 'bg-white/80 backdrop-blur-md border-b border-[#52b788]/20 shadow-sm' : 'bg-transparent'">
-    <div class="max-w-[1320px] mx-auto px-4 sm:px-6 py-4 flex items-center justify-between">
-      <div class="flex items-center gap-2">
-        <a routerLink="/inicio"><img src="/logoCitaMed.png" alt="CitaMed" class="w-18 h-18"></a>
+  <!-- Navbar (mismo estilo que landing page) -->
+  <nav [ngClass]="{
+      'py-4 bg-white/80 backdrop-blur-md border-b border-[#52b788]/20': isScrolled,
+      'py-8 bg-transparent': !isScrolled
+    }" class="fixed top-0 left-0 right-0 z-50 transition-all duration-500 ease-in-out text-[#1b1b1b]">
+    <div class="max-w-7xl mx-auto px-6 flex items-center justify-between">
+
+      <div class="flex items-center space-x-2">
+        <a routerLink="/inicio" class="font-display text-2xl tracking-tighter">
+          <img src="/logoCitaMed.png" alt="Logo" class="w-18 h-18">
+        </a>
       </div>
-      <div class="text-sm font-bold text-[#083d3a] tracking-[0.12em] uppercase underline underline-offset-4 decoration-[#36b2ac]/50 hidden sm:block">Portal del Paciente</div>
-      <div class="flex items-center gap-3">
-        <div class="flex items-center gap-2 pl-3 sm:border-l border-[#e5e7eb]">
+
+      <div class="flex items-center gap-4">
+        <div class="flex items-center gap-2 pr-3 border-r border-[#e5e7eb]">
           <div class="w-8 h-8 rounded-full bg-gradient-to-br from-[#36b1ae] to-[#0d5450] text-white text-xs font-semibold flex items-center justify-center">{{ iniciales }}</div>
           <span class="hidden sm:block text-sm font-medium text-[#083d3a]">{{ nombrePaciente }}</span>
         </div>
+
         <div class="relative" #notificacionPanel>
-          <button (click)="toggleNotificaciones()" class="relative inline-flex items-center gap-1.5 text-xs uppercase tracking-[0.14em] font-semibold text-[#6b7280] hover:text-[#0f8b86] transition">
-            <span class="mso !text-[18px]">notifications</span>
+          <button (click)="toggleNotificaciones()" class="relative flex items-center gap-1.5 text-xs uppercase tracking-[0.14em] font-semibold text-[#6b7280] hover:text-[#0f8b86] transition bg-transparent border-none cursor-pointer">
+            <span class="material-symbols-outlined !text-lg">notifications</span>
             <span *ngIf="noLeidas > 0" class="absolute -top-1.5 -right-1.5 bg-red-500 text-white text-[10px] font-bold rounded-full min-w-[16px] h-4 flex items-center justify-center px-1 leading-none shadow-sm">{{ noLeidas > 9 ? '9+' : noLeidas }}</span>
           </button>
 
           <!-- Dropdown -->
           <div *ngIf="dropdownAbierto" class="absolute right-0 top-[calc(100%+8px)] w-[360px] sm:w-[400px] bg-white rounded-xl shadow-xl border border-[#e5e7eb] z-[100] overflow-hidden animate-fade-in">
-            <!-- Header -->
             <div class="flex items-center justify-between px-4 py-3 border-b border-[#e5e7eb] bg-[#fafafa]">
               <span class="text-xs font-semibold uppercase tracking-[0.12em] text-[#083d3a]">Notificaciones</span>
-              <button *ngIf="noLeidas > 0" (click)="marcarTodasLeidas($event)" class="text-[11px] font-semibold text-[#0f8b86] hover:text-[#0d6b67] transition uppercase tracking-wider">Marcar todas leídas</button>
+              <button *ngIf="noLeidas > 0" (click)="marcarTodasLeidas($event)" class="text-[11px] font-semibold text-[#0f8b86] hover:text-[#0d6b67] transition uppercase tracking-wider bg-transparent border-none cursor-pointer">Marcar todas leídas</button>
             </div>
-
-            <!-- Lista -->
             <div class="max-h-[320px] overflow-y-auto divide-y divide-[#f0f0f0] notif-scroll">
               <div *ngIf="notificaciones.length === 0" class="flex flex-col items-center justify-center py-10 text-[#9ca3af]">
-                <span class="mso !text-[32px] text-[#d1d5db] mb-2">notifications_off</span>
-                <span class="text-xs font-medium uppercase tracking-wider">No tienes notificaciones</span>
+                <span class="material-symbols-outlined !text-[32px] text-[#d1d5db] mb-2">notifications_off</span>
+                <span class="text-xs font-medium uppercase tracking-wider">Sin notificaciones</span>
               </div>
-              <button *ngFor="let n of notificaciones" (click)="irANotificacion(n)"
-                class="w-full text-left px-4 py-3 transition hover:bg-[#f9fffe] flex items-start gap-3"
+              <button *ngFor="let n of notificaciones" (click)="irANotificacion(n, $event)"
+                class="w-full text-left px-4 py-3 transition hover:bg-[#f9fffe] flex items-start gap-3 bg-transparent border-none cursor-pointer"
                 [class.bg-[#f2fcfb]]="!n.leido">
-                <!-- Icono según tipo -->
                 <div class="mt-0.5 w-7 h-7 rounded-full flex items-center justify-center flex-shrink-0"
                   [class.bg-blue-100]="n.tipo === 'CITA'"
                   [class.bg-green-100]="n.tipo === 'PAGO'"
                   [class.bg-amber-100]="n.tipo === 'SISTEMA'">
-                  <span class="mso !text-[14px]"
+                  <span class="material-symbols-outlined !text-[14px]"
                     [class.text-blue-600]="n.tipo === 'CITA'"
                     [class.text-green-600]="n.tipo === 'PAGO'"
                     [class.text-amber-600]="n.tipo === 'SISTEMA'">event</span>
                 </div>
-                <!-- Contenido -->
                 <div class="flex-1 min-w-0">
                   <div class="flex items-start justify-between gap-2">
                     <p class="text-sm text-[#374151] leading-snug line-clamp-2" [class.font-semibold]="!n.leido">{{ n.mensaje }}</p>
@@ -68,12 +68,14 @@
             </div>
           </div>
         </div>
-        <button (click)="cerrarSesion()" class="text-xs font-semibold text-[#6b7280] hover:text-red-500 transition uppercase tracking-wider">
-          <span class="mso !text-lg">logout</span>
+
+        <button (click)="cerrarSesion()" class="flex items-center gap-1.5 text-xs uppercase tracking-[0.14em] font-semibold text-[#6b7280] hover:text-red-500 transition bg-transparent border-none cursor-pointer">
+          <span class="material-symbols-outlined !text-lg">logout</span>
+          <span class="hidden sm:inline">Salir</span>
         </button>
       </div>
     </div>
-  </header>
+  </nav>
 
   <!-- Hero / Portada -->
   <section class="banner-section">
@@ -116,10 +118,12 @@
   <!-- Tab content -->
   <main class="max-w-[1320px] mx-auto px-4 sm:px-6 py-8 sm:py-10">
     <app-inicio-paciente [hidden]="tabActivo !== 'inicio'" [perfil]="perfil" (cambiarTab)="cambiarTab($event)" />
+    <app-reservar-cita-paciente [hidden]="tabActivo !== 'reservar'" />
     <app-citas-paciente [hidden]="tabActivo !== 'citas'" />
     <app-historial-paciente [hidden]="tabActivo !== 'historial'" />
     <app-pagos-paciente [hidden]="tabActivo !== 'pagos'" />
     <app-perfil-paciente [hidden]="tabActivo !== 'perfil'" [perfil]="perfil" (perfilActualizado)="cargarPerfil()" />
   </main>
 
+  <app-footer />
 </div>

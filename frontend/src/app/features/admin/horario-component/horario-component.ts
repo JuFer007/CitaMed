@@ -85,8 +85,6 @@ export class HorarioComponent implements OnInit {
     { valor: 'MIERCOLES', label: 'Miércoles', corto: 'Mié' },
     { valor: 'JUEVES', label: 'Jueves', corto: 'Jue' },
     { valor: 'VIERNES', label: 'Viernes', corto: 'Vie' },
-    { valor: 'SABADO', label: 'Sábado', corto: 'Sáb' },
-    { valor: 'DOMINGO', label: 'Domingo', corto: 'Dom' },
   ];
 
   ngOnInit(): void {

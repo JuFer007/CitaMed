@@ -146,4 +146,20 @@ export class PacientePortalService {
   descargarHistorialPdf(data: any): Observable<Blob> {
     return this.http.post(`http://localhost:8080/api/pdf/historial`, data, { responseType: 'blob' });
   }
+
+  obtenerEspecialidades(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.api}/especialidades`);
+  }
+
+  obtenerMedicos(especialidadId: number): Observable<any[]> {
+    return this.http.get<any[]>(`${this.api}/medicos?especialidadId=${especialidadId}`);
+  }
+
+  obtenerSlots(especialidadId: number, fecha: string): Observable<any[]> {
+    return this.http.get<any[]>(`${this.api}/slots?especialidadId=${especialidadId}&fecha=${fecha}`);
+  }
+
+  reservarCita(data: any): Observable<any> {
+    return this.http.post(`${this.api}/citas/reservar`, data);
+  }
 }

@@ -20,7 +20,7 @@ export interface HorarioMedicoDTO {
 
 export type DiaSemana =
   | 'LUNES' | 'MARTES' | 'MIERCOLES' | 'JUEVES'
-  | 'VIERNES' | 'SABADO' | 'DOMINGO';
+  | 'VIERNES';
 
 export interface Medico {
   id: number;
