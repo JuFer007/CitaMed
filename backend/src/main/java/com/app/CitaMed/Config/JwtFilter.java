@@ -17,7 +17,6 @@ import java.io.IOException;
 @Component
 
 public class JwtFilter extends OncePerRequestFilter {
-
     private final JwtUtil jwtUtil;
     private static final Logger logger = LoggerFactory.getLogger(JwtFilter.class);
 
@@ -39,6 +38,9 @@ public class JwtFilter extends OncePerRequestFilter {
                 || path.startsWith("/api/landing")
                 || path.startsWith("/api/contacto")
                 || path.startsWith("/uploads/")
+                || path.startsWith("/api/portal/registro")
+                || path.startsWith("/api/portal/recuperar-password")
+                || path.startsWith("/api/portal/restablecer-password")
                 || (path.equals("/api/consultas") && "POST".equalsIgnoreCase(request.getMethod()))) {
             filterChain.doFilter(request, response);
             return;

@@ -69,11 +69,21 @@ app.post("/generar-ticket-cita", async (req, res) => {
       medico,
       especialidad,
       metodoPago,
-      monto
+      monto,
+      subtotal,
+      descuento
     } = req.body;
 
     const templatePath = path.join(__dirname, "templates", "ticket-cita.html");
     let template = fs.readFileSync(templatePath, "utf8");
+
+    const montoStr = Number(monto).toFixed(2);
+    const subtotalStr = subtotal !== undefined ? Number(subtotal).toFixed(2) : montoStr;
+    const descuentoStr = descuento !== undefined ? Number(descuento).toFixed(2) : '0.00';
+    const serviciosHtml = `<div class="fila-total" style="display:flex;justify-content:space-between;font-size:8.5px;color:#444;margin-bottom:3px;">
+  <div>Consulta de ${especialidad}</div>
+  <div><span class="moneda">S/.</span>${montoStr}</div>
+</div>`;
 
     template = template
         .replace("{{cliente}}", cliente)
@@ -84,7 +94,10 @@ app.post("/generar-ticket-cita", async (req, res) => {
         .replace("{{medico}}", medico)
         .replace("{{especialidad}}", especialidad)
         .replace("{{metodoPago}}", metodoPago)
-        .replace("{{monto}}", monto.toFixed(2));
+        .replace("{{monto}}", montoStr)
+        .replace("{{servicios}}", serviciosHtml)
+        .replace("{{subtotal}}", subtotalStr)
+        .replace("{{descuento}}", descuentoStr);
 
     const pdf = await renderPdf(template, 300);
 

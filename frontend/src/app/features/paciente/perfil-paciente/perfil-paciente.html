@@ -1,0 +1,61 @@
+<div>
+  <span class="inline-block px-4 py-1.5 rounded-full bg-[#36b1ae]/10 text-[#0f8b86] text-xs font-semibold tracking-widest uppercase mb-4">Mi perfil</span>
+  <h2 class="text-3xl font-bold text-[#083d3a] leading-tight">Tus datos</h2>
+  <p class="text-sm text-[#4d6d6b] mt-2 mb-8">Mantén tu información actualizada para una atención más rápida.</p>
+
+  <div class="bg-white rounded-3xl shadow-xl shadow-[#36b1ae]/10 ring-1 ring-[#36b1ae]/10 overflow-hidden">
+    <!-- Header info -->
+    <div class="p-6 sm:p-8 grid sm:grid-cols-2 gap-5 border-b border-[#e5e7eb]">
+      <div class="sm:col-span-2">
+        <label class="text-xs font-semibold text-[#6b8c89] uppercase tracking-wide">Nombre completo</label>
+        <p class="mt-1.5 text-sm font-semibold text-[#083d3a]">{{ perfil?.nombre }} {{ perfil?.apellidoPaterno }} {{ perfil?.apellidoMaterno }}</p>
+      </div>
+      <div>
+        <label class="text-xs font-semibold text-[#6b8c89] uppercase tracking-wide">DNI</label>
+        <p class="mt-1.5 text-sm font-semibold text-[#083d3a]">{{ perfil?.dni }}</p>
+      </div>
+      <div>
+        <label class="text-xs font-semibold text-[#6b8c89] uppercase tracking-wide">Fecha de nacimiento</label>
+        <p class="mt-1.5 text-sm font-semibold text-[#083d3a]">{{ perfil?.fechaNacimiento }}</p>
+      </div>
+      <div>
+        <label class="text-xs font-semibold text-[#6b8c89] uppercase tracking-wide">Género</label>
+        <p class="mt-1.5 text-sm font-semibold text-[#083d3a]">{{ perfil?.genero === 'MASCULINO' ? 'Masculino' : 'Femenino' }}</p>
+      </div>
+      <div>
+        <label class="text-xs font-semibold text-[#6b8c89] uppercase tracking-wide">Grupo sanguíneo</label>
+        <p class="mt-1.5 text-sm font-semibold text-[#083d3a]">{{ perfil?.grupoSanguineo }}</p>
+      </div>
+    </div>
+
+    <!-- Edit form -->
+    <form [formGroup]="perfilForm" (ngSubmit)="guardar()" class="p-6 sm:p-8 grid sm:grid-cols-2 gap-5">
+      <div>
+        <label class="text-xs font-semibold text-[#6b8c89] uppercase tracking-wide">Teléfono</label>
+        <input type="tel" formControlName="telefono" maxlength="9"
+          class="mt-1.5 w-full px-4 py-3 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-[#36b1ae] focus:border-transparent outline-none"
+          [class.bg-slate-50]="!editando" [class.readonly]="!editando" [readonly]="!editando">
+      </div>
+      <div>
+        <label class="text-xs font-semibold text-[#6b8c89] uppercase tracking-wide">Email</label>
+        <input type="email" formControlName="email"
+          class="mt-1.5 w-full px-4 py-3 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-[#36b1ae] focus:border-transparent outline-none"
+          [class.bg-slate-50]="!editando" [readonly]="!editando">
+      </div>
+      <div class="sm:col-span-2">
+        <label class="text-xs font-semibold text-[#6b8c89] uppercase tracking-wide">Dirección</label>
+        <input type="text" formControlName="direccion"
+          class="mt-1.5 w-full px-4 py-3 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-[#36b1ae] focus:border-transparent outline-none"
+          [class.bg-slate-50]="!editando" [readonly]="!editando">
+      </div>
+
+      <div class="sm:col-span-2 flex justify-end gap-3 pt-2">
+        <button *ngIf="!editando" type="button" (click)="toggleEditar()" class="bg-[#36b2ac] text-white px-6 py-3 rounded-md text-sm font-medium hover:bg-[#2b9a95] shadow-lg shadow-[#36b2ac]/20 transition">Editar perfil</button>
+        <ng-container *ngIf="editando">
+          <button type="button" (click)="toggleEditar()" class="bg-white text-[#36b2ac] ring-1 ring-inset ring-[#36b2ac]/20 px-6 py-3 rounded-md text-sm font-medium hover:bg-[#f5ffff] transition">Cancelar</button>
+          <button type="submit" [disabled]="perfilForm.invalid" class="bg-[#36b2ac] text-white px-6 py-3 rounded-md text-sm font-medium hover:bg-[#2b9a95] shadow-lg shadow-[#36b2ac]/20 transition disabled:opacity-50">Guardar cambios</button>
+        </ng-container>
+      </div>
+    </form>
+  </div>
+</div>

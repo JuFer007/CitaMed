@@ -21,10 +21,11 @@ export class FooterComponent implements OnInit {
   constructor(private http: HttpClient) {}
 
   ngOnInit(): void {
+    console.log('FooterComponent: ngOnInit llamado');
     this.http.get<Especialidad[]>('http://localhost:8080/api/lading/especialidades')
       .subscribe({
-        next: (data) => { this.especialidades = data; },
-        error: () => {}
+        next: (data) => { console.log('FooterComponent: datos recibidos', data); this.especialidades = data; },
+        error: (err) => { console.error('FooterComponent: error', err); }
       });
   }
 }

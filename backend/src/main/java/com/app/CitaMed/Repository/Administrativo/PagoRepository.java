@@ -16,6 +16,8 @@ import java.util.Optional;
 public interface PagoRepository extends JpaRepository<Pago, Long> {
     boolean existsByCitaId(Long citaId);
     Optional<Pago> findByCitaId(Long citaId);
+    @Query("SELECT p FROM Pago p WHERE p.cita.paciente.id = :pacienteId ORDER BY p.fechaPago DESC")
+    List<Pago> findByPacienteId(@Param("pacienteId") Long pacienteId);
     @Query("SELECT COALESCE(SUM(p.monto),0) FROM Pago p WHERE p.fechaPago BETWEEN :inicio AND :fin")
     Double ingresos(@Param("inicio") LocalDateTime inicio, @Param("fin") LocalDateTime fin);
     @Query("SELECT COALESCE(SUM(p.monto),0) FROM Pago p WHERE p.cita.medico.id = :medicoId AND p.fechaPago BETWEEN :inicio AND :fin")

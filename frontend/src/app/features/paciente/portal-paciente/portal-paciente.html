@@ -1,0 +1,125 @@
+<div class="min-h-screen bg-[#f5f5f5] dot-pattern">
+
+  <!-- Navbar -->
+  <header id="navbar"
+    class="fixed top-0 left-0 right-0 z-50 transition-all duration-500 ease-in-out"
+    [ngClass]="isScrolled ? 'bg-white/80 backdrop-blur-md border-b border-[#52b788]/20 shadow-sm' : 'bg-transparent'">
+    <div class="max-w-[1320px] mx-auto px-4 sm:px-6 py-4 flex items-center justify-between">
+      <div class="flex items-center gap-2">
+        <a routerLink="/inicio"><img src="/logoCitaMed.png" alt="CitaMed" class="w-18 h-18"></a>
+      </div>
+      <div class="text-sm font-bold text-[#083d3a] tracking-[0.12em] uppercase underline underline-offset-4 decoration-[#36b2ac]/50 hidden sm:block">Portal del Paciente</div>
+      <div class="flex items-center gap-3">
+        <div class="flex items-center gap-2 pl-3 sm:border-l border-[#e5e7eb]">
+          <div class="w-8 h-8 rounded-full bg-gradient-to-br from-[#36b1ae] to-[#0d5450] text-white text-xs font-semibold flex items-center justify-center">{{ iniciales }}</div>
+          <span class="hidden sm:block text-sm font-medium text-[#083d3a]">{{ nombrePaciente }}</span>
+        </div>
+        <div class="relative" #notificacionPanel>
+          <button (click)="toggleNotificaciones()" class="relative inline-flex items-center gap-1.5 text-xs uppercase tracking-[0.14em] font-semibold text-[#6b7280] hover:text-[#0f8b86] transition">
+            <span class="mso !text-[18px]">notifications</span>
+            <span *ngIf="noLeidas > 0" class="absolute -top-1.5 -right-1.5 bg-red-500 text-white text-[10px] font-bold rounded-full min-w-[16px] h-4 flex items-center justify-center px-1 leading-none shadow-sm">{{ noLeidas > 9 ? '9+' : noLeidas }}</span>
+          </button>
+
+          <!-- Dropdown -->
+          <div *ngIf="dropdownAbierto" class="absolute right-0 top-[calc(100%+8px)] w-[360px] sm:w-[400px] bg-white rounded-xl shadow-xl border border-[#e5e7eb] z-[100] overflow-hidden animate-fade-in">
+            <!-- Header -->
+            <div class="flex items-center justify-between px-4 py-3 border-b border-[#e5e7eb] bg-[#fafafa]">
+              <span class="text-xs font-semibold uppercase tracking-[0.12em] text-[#083d3a]">Notificaciones</span>
+              <button *ngIf="noLeidas > 0" (click)="marcarTodasLeidas($event)" class="text-[11px] font-semibold text-[#0f8b86] hover:text-[#0d6b67] transition uppercase tracking-wider">Marcar todas leídas</button>
+            </div>
+
+            <!-- Lista -->
+            <div class="max-h-[320px] overflow-y-auto divide-y divide-[#f0f0f0] notif-scroll">
+              <div *ngIf="notificaciones.length === 0" class="flex flex-col items-center justify-center py-10 text-[#9ca3af]">
+                <span class="mso !text-[32px] text-[#d1d5db] mb-2">notifications_off</span>
+                <span class="text-xs font-medium uppercase tracking-wider">No tienes notificaciones</span>
+              </div>
+              <button *ngFor="let n of notificaciones" (click)="irANotificacion(n)"
+                class="w-full text-left px-4 py-3 transition hover:bg-[#f9fffe] flex items-start gap-3"
+                [class.bg-[#f2fcfb]]="!n.leido">
+                <!-- Icono según tipo -->
+                <div class="mt-0.5 w-7 h-7 rounded-full flex items-center justify-center flex-shrink-0"
+                  [class.bg-blue-100]="n.tipo === 'CITA'"
+                  [class.bg-green-100]="n.tipo === 'PAGO'"
+                  [class.bg-amber-100]="n.tipo === 'SISTEMA'">
+                  <span class="mso !text-[14px]"
+                    [class.text-blue-600]="n.tipo === 'CITA'"
+                    [class.text-green-600]="n.tipo === 'PAGO'"
+                    [class.text-amber-600]="n.tipo === 'SISTEMA'">event</span>
+                </div>
+                <!-- Contenido -->
+                <div class="flex-1 min-w-0">
+                  <div class="flex items-start justify-between gap-2">
+                    <p class="text-sm text-[#374151] leading-snug line-clamp-2" [class.font-semibold]="!n.leido">{{ n.mensaje }}</p>
+                    <span class="text-[10px] text-[#9ca3af] whitespace-nowrap mt-0.5">{{ tiempoRelativo(n.fechaCreacion) }}</span>
+                  </div>
+                  <div class="flex items-center gap-2 mt-1">
+                    <span class="text-[10px] font-medium uppercase tracking-wider px-1.5 py-0.5 rounded"
+                      [class.text-blue-700]="n.tipo === 'CITA'"
+                      [class.text-green-700]="n.tipo === 'PAGO'"
+                      [class.text-amber-700]="n.tipo === 'SISTEMA'"
+                      [class.bg-blue-50]="n.tipo === 'CITA'"
+                      [class.bg-green-50]="n.tipo === 'PAGO'"
+                      [class.bg-amber-50]="n.tipo === 'SISTEMA'">{{ n.tipo }}</span>
+                    <span *ngIf="!n.leido" class="w-1.5 h-1.5 rounded-full bg-[#36b2ac]"></span>
+                  </div>
+                </div>
+              </button>
+            </div>
+          </div>
+        </div>
+        <button (click)="cerrarSesion()" class="text-xs font-semibold text-[#6b7280] hover:text-red-500 transition uppercase tracking-wider">
+          <span class="mso !text-lg">logout</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero / Portada -->
+  <section class="banner-section">
+    <div class="banner" [style.background-image]="'url(' + bannerImagen + ')'">
+      <div class="deco"></div>
+    </div>
+    <div class="max-w-[1320px] mx-auto px-4 sm:px-6">
+      <div class="profile-identity">
+        <div class="identity-left">
+          <div class="profile-avatar">{{ iniciales }}</div>
+          <div class="identity-text">
+            <h1>{{ nombrePaciente }}</h1>
+            <div class="identity-tags">
+              <span class="id-tag" *ngIf="perfil">PAC-{{ perfil.id }}</span>
+              <span class="id-tag" *ngIf="perfil?.grupoSanguineo">{{ perfil?.grupoSanguineo }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Tab strip -->
+  <nav id="tab-strip" class="sticky top-[104px] z-35 bg-[#f5f5f5] border-b border-[#e5e7eb]">
+    <div class="max-w-[1320px] mx-auto px-4 sm:px-6 flex gap-1 overflow-x-auto">
+      <button *ngFor="let t of tabs" (click)="cambiarTab(t.id)"
+        class="tab-link whitespace-nowrap text-xs uppercase tracking-[0.18em] font-semibold px-4 py-3.5 border-b-2 transition flex items-center gap-1.5"
+        [class.is-active]="tabActivo === t.id"
+        [class.text-[#6b7280]]="tabActivo !== t.id"
+        [class.text-[#0f8b86]]="tabActivo === t.id"
+        [class.border-[#36b2ac]]="tabActivo === t.id"
+        [class.border-transparent]="tabActivo !== t.id"
+        [class.hover:text-[#0f8b86]]="tabActivo !== t.id">
+        <span class="mso !text-base">{{ t.icon }}</span>
+        {{ t.label }}
+      </button>
+    </div>
+  </nav>
+
+  <!-- Tab content -->
+  <main class="max-w-[1320px] mx-auto px-4 sm:px-6 py-8 sm:py-10">
+    <app-inicio-paciente [hidden]="tabActivo !== 'inicio'" [perfil]="perfil" (cambiarTab)="cambiarTab($event)" />
+    <app-citas-paciente [hidden]="tabActivo !== 'citas'" />
+    <app-historial-paciente [hidden]="tabActivo !== 'historial'" />
+    <app-pagos-paciente [hidden]="tabActivo !== 'pagos'" />
+    <app-perfil-paciente [hidden]="tabActivo !== 'perfil'" [perfil]="perfil" (perfilActualizado)="cargarPerfil()" />
+  </main>
+
+</div>

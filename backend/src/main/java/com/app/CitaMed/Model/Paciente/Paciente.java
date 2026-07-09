@@ -1,6 +1,7 @@
 package com.app.CitaMed.Model.Paciente;
 import com.app.CitaMed.Enums.Genero;
 import com.app.CitaMed.Enums.GrupoSanguineo;
+import com.app.CitaMed.Model.Administrativo.Usuario;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
@@ -66,6 +67,10 @@ public class Paciente {
     @JsonIgnore
     @OneToOne(mappedBy = "paciente", cascade = CascadeType.ALL)
     private HistorialMedico historialMedico;
+
+    @OneToOne
+    @JoinColumn(name = "usuario_id")
+    private Usuario usuario;
 
     private Boolean activo = true;
 }

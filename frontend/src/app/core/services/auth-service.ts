@@ -15,11 +15,12 @@ export class AuthService {
 
   login(usuario: string, clave: string): Observable<LoginResponse> {
     return this.http.post<LoginResponse>(`${this.apiUrl}/login`, { usuario, clave }).pipe(
-      tap((response) => {
+      tap((response: any) => {
         localStorage.setItem('token', response.token);
         localStorage.setItem('nombreUsuario', response.nombre);
         localStorage.setItem('usuario', response.usuario);
         localStorage.setItem('rol', response.perfil);
+        if (response.pacienteId) localStorage.setItem('pacienteId', response.pacienteId);
       }),
     );
   }

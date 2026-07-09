@@ -43,7 +43,9 @@ export class LoginComponent implements OnInit {
       this.authService.login(usuario, clave).subscribe({
         next: (response) => {
           this.loaderService.hide();
-          if (response.perfil === 'MEDICO') {
+          if (response.perfil === 'PACIENTE') {
+            this.router.navigate(['/portal']);
+          } else if (response.perfil === 'MEDICO') {
             this.router.navigate(['/admin/citas']);
           } else {
             this.router.navigate(['/admin/dashboard']);
@@ -51,8 +53,7 @@ export class LoginComponent implements OnInit {
         },
         error: (err) => {
           this.loaderService.hide();
-          this.errorMessage = 'Usuario o contraseña incorrectos';
-          console.error('Error en login:', err);
+          this.errorMessage = err.error?.error || err.error?.message || 'Usuario o contraseña incorrectos';
         }
       });
     }
