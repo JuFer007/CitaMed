@@ -25,7 +25,7 @@
       <span class="px-3 py-1 rounded-full text-[11px] font-semibold whitespace-nowrap w-fit" [class]="estadoClase(c.estado)">{{ c.estado }}</span>
       <div class="flex gap-2 flex-shrink-0">
         <button (click)="verDetalle(c)" class="bg-[#36b2ac] text-white px-4 py-2 rounded-md text-xs font-semibold hover:bg-[#2b9a95] shadow-lg shadow-[#36b2ac]/20 transition">Ver detalle</button>
-        <button *ngIf="c.pago && c.pago.estado !== 'PAGADO'" (click)="verDetalle(c)" class="bg-[#ba7517] text-white px-4 py-2 rounded-md text-xs font-semibold hover:bg-[#9e6213] shadow-lg shadow-[#ba7517]/20 transition">Pagar</button>
+        <button *ngIf="c.pago && c.pago.estado !== 'PAGADO'" (click)="verDetalle(c)" class="bg-[#ba7517] text-white px-4 py-2 rounded-md text-xs font-semibold hover:bg-[#9e6213] transition">Pagar</button>
         <button (click)="cancelarCita(c.id)" class="bg-white text-[#36b2ac] ring-1 ring-inset ring-[#36b2ac]/20 px-4 py-2 rounded-md text-xs font-semibold hover:bg-[#f5ffff] transition">Cancelar</button>
       </div>
     </div>
@@ -98,7 +98,7 @@
         <span>Método:</span>
         <span>{{ citaModal!.pago!.metodoPago }}</span>
       </div>
-      <button *ngIf="citaModal!.pago!.estado !== 'PAGADO'" (click)="pagarAhora()" class="w-full mt-2 bg-[#36b2ac] text-white px-4 py-2.5 rounded-md text-sm font-medium hover:bg-[#2b9a95] shadow-lg shadow-[#36b2ac]/20 transition">
+      <button *ngIf="citaModal!.pago!.estado !== 'PAGADO'" (click)="pagarAhora()" class="w-full mt-2 bg-[#36b2ac] text-white px-4 py-2.5 rounded-md text-sm font-medium hover:bg-[#2b9a95] transition">
         Pagar ahora
       </button>
     </div>

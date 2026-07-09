@@ -8,6 +8,8 @@ import { CitasPacienteComponent } from '../citas-paciente/citas-paciente';
 import { HistorialPacienteComponent } from '../historial-paciente/historial-paciente';
 import { PagosPacienteComponent } from '../pagos-paciente/pagos-paciente';
 import { PerfilPacienteComponent } from '../perfil-paciente/perfil-paciente';
+import { ReservarCitaPacienteComponent } from '../reservar-cita-paciente/reservar-cita-paciente';
+import { FooterComponent } from '../../home/footer-component/footer-component';
 import { interval, Subscription } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 
@@ -22,6 +24,8 @@ import { switchMap } from 'rxjs/operators';
     HistorialPacienteComponent,
     PagosPacienteComponent,
     PerfilPacienteComponent,
+    ReservarCitaPacienteComponent,
+    FooterComponent,
   ],
   templateUrl: './portal-paciente.html',
   styleUrl: './portal-paciente.css',
@@ -40,6 +44,7 @@ export class PortalPacienteComponent implements OnInit, OnDestroy {
   noLeidas = 0;
   dropdownAbierto = false;
   private pollingSub?: Subscription;
+  private notifSub?: Subscription;
 
   @HostListener('window:scroll', [])
   onWindowScroll() {
@@ -55,14 +60,17 @@ export class PortalPacienteComponent implements OnInit, OnDestroy {
 
   bannerImagen = '';
   bannerImagenes = [
+    'https://images.unsplash.com/photo-1579684385127-1ef15d508118?w=1600&q=80',
     'https://images.unsplash.com/photo-1588776814546-1ffcf47267a5?w=1600&q=80',
-    'https://images.unsplash.com/photo-1631217868264-e5b90bb7e133?w=1600&q=80',
     'https://www.crp.com.pe/wp-content/uploads/2023/11/1-en-el-Top-Ranking-LATAM.jpg',
-    'https://media.istockphoto.com/id/1719539154/es/foto/profesional-de-la-salud-de-atenci%C3%B3n-domiciliaria-abrazando-a-un-paciente-mayor.jpg?s=612x612&w=0&k=20&c=uFHBPKClBOn5ky1GSk9xIK_xnU9R7bqnPivhILxyEFw='
+    'https://images.unsplash.com/photo-1581056771107-24ca5f033842?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+    'https://images.unsplash.com/photo-1758691461990-03b49d969495?q=80&w=1332&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+    'https://images.unsplash.com/photo-1758691462878-6edc3d3da1be?q=80&w=1332&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'
   ];
 
   tabs = [
     { id: 'inicio', label: 'Inicio', icon: 'home' },
+    { id: 'reservar', label: 'Reservar cita', icon: 'add_circle' },
     { id: 'citas', label: 'Mis citas', icon: 'calendar_month' },
     { id: 'historial', label: 'Historial clínico', icon: 'history' },
     { id: 'pagos', label: 'Pagos', icon: 'payments' },
@@ -83,14 +91,15 @@ export class PortalPacienteComponent implements OnInit, OnDestroy {
       return;
     }
     this.cargarPerfil();
-    this.cargarNoLeidas();
-    this.pollingSub = interval(30000).pipe(
-      switchMap(() => this.portalService.contarNotificacionesNoLeidas())
-    ).subscribe(res => this.noLeidas = res.cantidad);
+    this.cargarNotificaciones();
+    this.pollingSub = interval(30000).subscribe(() => {
+      this.cargarNotificaciones();
+    });
   }
 
   ngOnDestroy(): void {
     this.pollingSub?.unsubscribe();
+    this.notifSub?.unsubscribe();
   }
 
   obtenerPacienteId(): number | null {
@@ -108,24 +117,19 @@ export class PortalPacienteComponent implements OnInit, OnDestroy {
     });
   }
 
-  cargarNoLeidas(): void {
-    this.portalService.contarNotificacionesNoLeidas().subscribe({
-      next: res => this.noLeidas = res.cantidad,
-    });
-  }
-
   toggleNotificaciones(): void {
     this.dropdownAbierto = !this.dropdownAbierto;
-    if (this.dropdownAbierto) {
-      this.cargarNotificaciones();
-    }
   }
 
   cargarNotificaciones(): void {
-    this.portalService.obtenerNotificaciones().subscribe({
+    this.notifSub?.unsubscribe();
+    this.notifSub = this.portalService.obtenerNotificaciones().subscribe({
       next: (data) => {
         this.notificaciones = data;
         this.noLeidas = data.filter(n => !n.leido).length;
+      },
+      error: (err) => {
+        console.error('Error al cargar notificaciones', err);
       },
     });
   }
@@ -151,7 +155,8 @@ export class PortalPacienteComponent implements OnInit, OnDestroy {
     });
   }
 
-  irANotificacion(notif: PortalNotificacion): void {
+  irANotificacion(notif: PortalNotificacion, event: Event): void {
+    event.stopPropagation();
     if (!notif.leido) {
       this.portalService.marcarNotificacionLeida(notif.id).subscribe({
         next: () => {

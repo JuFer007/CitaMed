@@ -1,6 +1,7 @@
 package com.app.CitaMed.Controller.Portal;
 import com.app.CitaMed.DTO.PerfilRequest;
 import com.app.CitaMed.DTO.PortalPerfilDTO;
+import com.app.CitaMed.DTO.PortalReservaRequest;
 import com.app.CitaMed.Model.Paciente.Paciente;
 import com.app.CitaMed.Repository.Paciente.PacienteRepository;
 import com.app.CitaMed.Service.Administrativo.UsuarioService;
@@ -160,6 +161,44 @@ public class PortalController {
             Long pacienteId = obtenerPacienteId(auth);
             portalNotificacionService.marcarTodasComoLeidas(pacienteId);
             return ResponseEntity.ok(Map.of("mensaje", "Todas las notificaciones marcadas como leídas"));
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
+        }
+    }
+
+    @GetMapping("/especialidades")
+    public ResponseEntity<?> listarEspecialidades() {
+        try {
+            return ResponseEntity.ok(portalCitaService.obtenerEspecialidades());
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
+        }
+    }
+
+    @GetMapping("/medicos")
+    public ResponseEntity<?> listarMedicos(@RequestParam Long especialidadId) {
+        try {
+            return ResponseEntity.ok(portalCitaService.obtenerMedicosPorEspecialidad(especialidadId));
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
+        }
+    }
+
+    @GetMapping("/slots")
+    public ResponseEntity<?> obtenerSlots(@RequestParam Long especialidadId, @RequestParam String fecha) {
+        try {
+            return ResponseEntity.ok(portalCitaService.obtenerSlotsDisponibles(especialidadId, fecha));
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
+        }
+    }
+
+    @PostMapping("/citas/reservar")
+    public ResponseEntity<?> reservarCita(@Valid @RequestBody PortalReservaRequest request, Authentication auth) {
+        try {
+            Long pacienteId = obtenerPacienteId(auth);
+            portalCitaService.reservar(pacienteId, request);
+            return ResponseEntity.ok(Map.of("mensaje", "Cita reservada correctamente"));
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
         }
