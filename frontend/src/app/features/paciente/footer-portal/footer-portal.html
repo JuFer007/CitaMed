@@ -1,35 +1,32 @@
 <footer class="bg-[#046c6b] text-white">
   <div class="container mx-auto px-6 py-12">
-    <!-- Grid principal -->
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+
       <!-- Columna 1: Logo + tagline -->
       <div class="flex flex-col gap-4">
         <div class="flex items-center gap-3">
           <div class="w-10 h-10">
             <img src="/logoCitaMed.png" alt="CitaMed Logo" class="w-full h-full object-contain">
           </div>
-
           <span class="text-2xl font-extrabold tracking-tight">
             Cita<span class="text-[#36b2ac]">Med</span>
           </span>
         </div>
-
         <p class="text-sm text-white leading-relaxed text-justify">
           Tu centro de salud digital. Reserva citas, accede a tu historial y cuida tu salud con los mejores especialistas.
         </p>
       </div>
 
-      <!-- Columna 2 -->
+      <!-- Columna 2: Mi portal (2 columnas) -->
       <div class="flex flex-col gap-4">
         <h4 class="text-xs font-bold uppercase tracking-widest text-white border-b border-white/10 pb-2">
-          Especialidades
+          Mi portal
         </h4>
-
-        <ul class="grid grid-cols-2 gap-x-16 list-none p-0 m-0">
-          <li *ngFor="let e of especialidades">
-            <button (click)="scrollToSection('especialidades')"
+        <ul class="grid grid-cols-2 gap-x-8 gap-y-2 list-none p-0 m-0">
+          <li *ngFor="let link of links">
+            <button (click)="ir(link.tab)"
               class="text-sm text-white hover:text-white transition-all hover:underline underline-offset-2 whitespace-nowrap bg-transparent border-none cursor-pointer p-0 text-left">
-              {{ e.nombre }}
+              {{ link.label }}
             </button>
           </li>
         </ul>
@@ -64,10 +61,11 @@
       </div>
 
     </div>
+
     <!-- Footer Bottom -->
     <div class="mt-10 pt-6 border-t border-white/10 text-center">
       <span class="text-xs text-white">
-        © 2026 CitaMed - Todos los derechos reservados.
+        &copy; 2026 CitaMed - Todos los derechos reservados.
       </span>
     </div>
   </div>

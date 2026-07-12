@@ -108,6 +108,18 @@
 
     <hr class="border-gray-200">
 
+    @if (isLoggedIn) {
+      <button (click)="cerrarSesion()"
+        class="text-left text-[10px] uppercase tracking-[0.2em] font-medium text-red-500 hover:text-red-700 transition-colors bg-transparent border-none cursor-pointer flex items-center gap-2">
+        <span class="material-symbols-outlined !text-base">logout</span>
+        Cerrar sesión
+      </button>
+    } @else {
+      <a routerLink="/login"
+        class="text-left text-[10px] uppercase tracking-[0.2em] font-medium text-[#0f8b86] hover:text-[#046c6b] transition-colors">
+        Iniciar sesión
+      </a>
+    }
 
   </div>
   }

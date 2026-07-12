@@ -1,0 +1,92 @@
+<div class="space-y-8">
+
+  <!-- Header -->
+  <div>
+    <h2 class="text-2xl font-bold text-[#083d3a]">Mis reseñas</h2>
+    <p class="text-sm text-[#6b7280] mt-1">Comparte tu experiencia con CitaMed</p>
+  </div>
+
+  <!-- Formulario para crear reseña -->
+  @if (puedeCrear) {
+    <div class="bg-white rounded-2xl p-6 shadow-lg ring-1 ring-[#36b1ae]/10">
+      <h3 class="text-sm font-semibold uppercase tracking-[0.15em] text-[#083d3a] mb-4">Nueva reseña</h3>
+
+      <!-- Estrellas -->
+      <div class="flex items-center gap-1 mb-4">
+        @for (estrella of getEstrellas(); track estrella) {
+          <button (click)="setCalificacion(estrella)"
+            (mouseenter)="setCalificacionHover(estrella)"
+            (mouseleave)="setCalificacionHover(0)"
+            class="bg-transparent border-none cursor-pointer p-0.5 transition-transform hover:scale-110">
+            <iconify-icon icon="solar:star-bold" width="28"
+              [style.color]="estrella <= (calificacionHover || calificacion) ? '#f59e0b' : '#d1d5db'">
+            </iconify-icon>
+          </button>
+        }
+        @if (calificacion > 0) {
+          <span class="ml-2 text-sm text-[#6b7280] font-medium">{{ calificacion }}/5</span>
+        }
+      </div>
+
+      <!-- Textarea -->
+      <textarea
+        [(ngModel)]="mensaje"
+        rows="3"
+        maxlength="500"
+        placeholder="Escribe tu experiencia..."
+        class="w-full px-4 py-3 rounded-xl border border-[#e5e7eb] bg-[#fafafa] text-sm text-[#1b1b1b] placeholder-[#9ca3af] focus:outline-none focus:ring-2 focus:ring-[#36b2ac]/40 focus:border-[#36b2ac] transition resize-none">
+      </textarea>
+      <div class="flex items-center justify-between mt-2">
+        <span class="text-xs text-[#9ca3af]">{{ mensaje.length }}/500</span>
+        <button (click)="enviar()" [disabled]="enviando"
+          class="px-5 py-2 rounded-xl bg-[#0f8b86] text-white text-sm font-semibold hover:bg-[#0d6b67] transition disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer border-none">
+          {{ enviando ? 'Publicando...' : 'Publicar reseña' }}
+        </button>
+      </div>
+    </div>
+  } @else if (!cargando) {
+    <div class="bg-white rounded-2xl p-8 shadow-lg ring-1 ring-[#36b1ae]/10 text-center">
+      <span class="material-symbols-outlined !text-[48px] text-[#d1d5db] block mb-3">rate_review</span>
+      <p class="text-sm text-[#6b7280]">Debes tener al menos una consulta atendida para dejar una reseña.</p>
+    </div>
+  }
+
+  <!-- Lista de reseñas -->
+  @if (cargando) {
+    <div class="flex items-center justify-center py-12">
+      <div class="w-8 h-8 border-3 border-[#36b2ac] border-t-transparent rounded-full animate-spin"></div>
+    </div>
+  } @else if (testimonios.length === 0) {
+    <div class="bg-white rounded-2xl p-8 shadow-lg ring-1 ring-[#36b1ae]/10 text-center">
+      <span class="material-symbols-outlined !text-[48px] text-[#d1d5db] block mb-3">chat_bubble_outline</span>
+      <p class="text-sm text-[#6b7280]">Aún no has publicado ninguna reseña.</p>
+    </div>
+  } @else {
+    <div class="space-y-4">
+      @for (t of testimonios; track t.id) {
+        <div class="bg-white rounded-2xl p-5 shadow-md ring-1 ring-[#36b1ae]/5 flex items-start justify-between gap-4">
+          <div class="flex-1 min-w-0">
+            <div class="flex items-center gap-2 mb-2">
+              @for (estrella of getEstrellas(); track estrella) {
+                <iconify-icon icon="solar:star-bold" width="16"
+                  [style.color]="estrella <= t.calificacion ? '#f59e0b' : '#d1d5db'">
+                </iconify-icon>
+              }
+              <span class="text-xs text-[#9ca3af] ml-1">{{ formatearFecha(t.fechaCreacion) }}</span>
+            </div>
+            <p class="text-sm text-[#374151] leading-relaxed">{{ t.mensaje }}</p>
+          </div>
+          <button (click)="eliminar(t.id)" [disabled]="enviandoEliminar === t.id"
+            class="flex-shrink-0 p-2 rounded-lg text-[#9ca3af] hover:text-red-500 hover:bg-red-50 transition bg-transparent border-none cursor-pointer disabled:opacity-50"
+            title="Eliminar reseña">
+            @if (enviandoEliminar === t.id) {
+              <div class="w-4 h-4 border-2 border-red-400 border-t-transparent rounded-full animate-spin"></div>
+            } @else {
+              <span class="material-symbols-outlined !text-lg">delete_outline</span>
+            }
+          </button>
+        </div>
+      }
+    </div>
+  }
+</div>

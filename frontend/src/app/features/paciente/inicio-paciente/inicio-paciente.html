@@ -62,28 +62,33 @@
   <h2 class="text-lg font-bold text-[#083d3a]">Acceso rápido</h2>
 </div>
 
-<div class="grid grid-cols-2 lg:grid-cols-5 gap-4">
-  <button (click)="cambiarTab.emit('reservar')" class="bg-white rounded-2xl ring-1 ring-gray-100 p-6 text-left hover:bg-[#f5f5f5] transition-all group">
+<div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
+  <button (click)="cambiarTab.emit('reservar')" class="bg-white rounded-2xl ring-1 ring-gray-100 p-6 text-left hover:bg-[#f0fdfa] hover:ring-[#36b2ac]/30 transition-all group">
     <span class="mso text-[#36b1ae] !text-3xl block mb-2">add_circle</span>
     <span class="text-sm font-bold text-[#083d3a] group-hover:text-[#0f8b86] block leading-tight">Reservar cita</span>
     <span class="text-xs text-[#6b8c89] mt-1 block">Agenda una nueva consulta</span>
   </button>
-  <button (click)="cambiarTab.emit('citas')" class="bg-white rounded-2xl ring-1 ring-gray-100 p-6 text-left hover:bg-[#f5f5f5] transition-all group">
+  <button (click)="cambiarTab.emit('citas')" class="bg-white rounded-2xl ring-1 ring-gray-100 p-6 text-left hover:bg-[#f0fdfa] hover:ring-[#36b2ac]/30 transition-all group">
     <span class="mso text-[#36b1ae] !text-3xl block mb-2">calendar_month</span>
     <span class="text-sm font-bold text-[#083d3a] group-hover:text-[#0f8b86] block leading-tight">Mis citas</span>
     <span class="text-xs text-[#6b8c89] mt-1 block">Reserva o revisa tus citas</span>
   </button>
-  <button (click)="cambiarTab.emit('historial')" class="bg-white rounded-2xl ring-1 ring-gray-100 p-6 text-left hover:bg-[#f5f5f5] transition-all group">
+  <button (click)="cambiarTab.emit('historial')" class="bg-white rounded-2xl ring-1 ring-gray-100 p-6 text-left hover:bg-[#f0fdfa] hover:ring-[#36b2ac]/30 transition-all group">
     <span class="mso text-[#36b1ae] !text-3xl block mb-2">history</span>
     <span class="text-sm font-bold text-[#083d3a] group-hover:text-[#0f8b86] block leading-tight">Historial clínico</span>
     <span class="text-xs text-[#6b8c89] mt-1 block">Consulta tu historial médico</span>
   </button>
-  <button (click)="cambiarTab.emit('pagos')" class="bg-white rounded-2xl ring-1 ring-gray-100 p-6 text-left hover:bg-[#f5f5f5] transition-all group">
+  <button (click)="cambiarTab.emit('pagos')" class="bg-white rounded-2xl ring-1 ring-gray-100 p-6 text-left hover:bg-[#f0fdfa] hover:ring-[#36b2ac]/30 transition-all group">
     <span class="mso text-[#36b1ae] !text-3xl block mb-2">payments</span>
     <span class="text-sm font-bold text-[#083d3a] group-hover:text-[#0f8b86] block leading-tight">Pagos</span>
     <span class="text-xs text-[#6b8c89] mt-1 block">Revisa tus facturas pendientes</span>
   </button>
-  <button (click)="cambiarTab.emit('perfil')" class="bg-white rounded-2xl ring-1 ring-gray-100 p-6 text-left hover:bg-[#f5f5f5] transition-all group">
+  <button (click)="cambiarTab.emit('testimonios')" class="bg-white rounded-2xl ring-1 ring-gray-100 p-6 text-left hover:bg-[#f0fdfa] hover:ring-[#36b2ac]/30 transition-all group">
+    <span class="mso text-[#36b1ae] !text-3xl block mb-2">rate_review</span>
+    <span class="text-sm font-bold text-[#083d3a] group-hover:text-[#0f8b86] block leading-tight">Mis reseñas</span>
+    <span class="text-xs text-[#6b8c89] mt-1 block">Califica tus experiencias</span>
+  </button>
+  <button (click)="cambiarTab.emit('perfil')" class="bg-white rounded-2xl ring-1 ring-gray-100 p-6 text-left hover:bg-[#f0fdfa] hover:ring-[#36b2ac]/30 transition-all group">
     <span class="mso text-[#36b1ae] !text-3xl block mb-2">person</span>
     <span class="text-sm font-bold text-[#083d3a] group-hover:text-[#0f8b86] block leading-tight">Mi perfil</span>
     <span class="text-xs text-[#6b8c89] mt-1 block">Actualiza tus datos personales</span>

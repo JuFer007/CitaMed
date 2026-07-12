@@ -4,6 +4,7 @@ import com.app.CitaMed.DTO.MedicoPerfilDTO;
 import com.app.CitaMed.DTO.ReservaDTO;
 import com.app.CitaMed.DTO.SlotDisponibleDTO;
 import com.app.CitaMed.DTO.ReniecDataDTO;
+import com.app.CitaMed.DTO.TestimonioPublicoDTO;
 import com.app.CitaMed.Model.Medico.Especialidad;
 import com.app.CitaMed.Model.Medico.Medico;
 import com.app.CitaMed.Model.Paciente.Paciente;
@@ -12,6 +13,7 @@ import com.app.CitaMed.Service.Administrativo.ReservaService;
 import com.app.CitaMed.Service.Medico.EspecialidadService;
 import com.app.CitaMed.Service.Medico.MedicoService;
 import com.app.CitaMed.Service.MicroServicios.ReniecService;
+import com.app.CitaMed.Service.Portal.PortalTestimonioService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -29,6 +31,7 @@ public class LadingPageController {
     private final ReservaService reservaService;
     private final PacienteRepository pacienteRepository;
     private final ReniecService reniecService;
+    private final PortalTestimonioService portalTestimonioService;
 
     @GetMapping("/random")
     public ResponseEntity<?> obtenerMedicoRandom() {
@@ -36,6 +39,11 @@ public class LadingPageController {
         if (medico == null)
             return ResponseEntity.status(404).body("No hay médicos disponibles");
         return ResponseEntity.ok(medico);
+    }
+
+    @GetMapping("/testimonios")
+    public ResponseEntity<List<TestimonioPublicoDTO>> listarTestimonios() {
+        return ResponseEntity.ok(portalTestimonioService.obtenerTestimoniosPublicos());
     }
 
     @GetMapping("/medicos")

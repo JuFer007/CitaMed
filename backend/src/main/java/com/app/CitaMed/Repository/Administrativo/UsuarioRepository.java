@@ -9,5 +9,5 @@ import java.util.Optional;
 public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
     boolean existsByUserName(String userName);
     Optional<Usuario> findByUserName(String userName);
-
+    Optional<Usuario> findByResetToken(String resetToken);
 }

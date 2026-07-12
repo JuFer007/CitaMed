@@ -119,6 +119,20 @@ public class EmailService {
         }
     }
 
+    @Async
+    public void enviarCodigoRecuperacion(String nombre, String email, String codigo) {
+        try {
+            Context context = new Context();
+            context.setVariable("nombre", nombre);
+            context.setVariable("codigo", codigo);
+
+            String html = templateEngine.process("email/recuperar-password", context);
+            enviarCorreo(email, "Código de recuperación de contraseña - CitaMed", html);
+        } catch (Exception e) {
+            LOG.warning("Error enviando código de recuperación: " + e.getMessage());
+        }
+    }
+
     public void enviarCorreo(String destino, String asunto, String html) {
         try {
             MimeMessage message = mailSender.createMimeMessage();

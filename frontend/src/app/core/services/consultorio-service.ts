@@ -36,6 +36,6 @@ export class ConsultorioService {
   }
 
   toggleDisponible(id: number): Observable<string> {
-    return this.http.patch(`${this.api}/${id}/disponible`, {}, { responseType: 'text' });
+    return this.http.patch(`${this.api}/${id}/disponibilidad`, {}, { responseType: 'text' });
   }
 }

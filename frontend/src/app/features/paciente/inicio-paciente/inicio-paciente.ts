@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { PacientePortalService, PortalPerfil, PortalCita } from '../../../core/services/paciente-portal-service';
 
@@ -24,7 +24,7 @@ export class InicioPacienteComponent implements OnInit {
   diasSemana = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
   meses = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Setiembre', 'Octubre', 'Noviembre', 'Diciembre'];
 
-  constructor(private portalService: PacientePortalService) {}
+  constructor(private portalService: PacientePortalService, private cdr: ChangeDetectorRef) {}
 
   ngOnInit(): void {
     this.cargarDatos();
@@ -37,6 +37,7 @@ export class InicioPacienteComponent implements OnInit {
         this.proximasCount = data.length;
         this.totalCitas = data.length + this.atendidasCount;
         this.cargado = true;
+        this.cdr.detectChanges();
       },
     });
     this.portalService.obtenerHistorialCitas().subscribe({
@@ -44,10 +45,12 @@ export class InicioPacienteComponent implements OnInit {
         this.atendidasCount = data.length;
         this.totalCitas = this.proximasCount + data.length;
         this.cargado = true;
+        this.cdr.detectChanges();
       },
       error: () => {
         this.cargado = true;
         this.errorCarga = true;
+        this.cdr.detectChanges();
       },
     });
   }

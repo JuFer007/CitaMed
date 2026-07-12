@@ -75,7 +75,7 @@ public class DashboardService {
 
     public List<MedicoActivoDTO> medicosActivosPorMedico(Long medicoId) {
         log.info("Consultando datos del médico activo {}.", medicoId);
-        return List.of();
+        return medicoRepository.medicosActivosPorMedico(medicoId);
     }
 
     public List<UltimoPagoDTO> pagos() {

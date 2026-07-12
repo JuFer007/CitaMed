@@ -2,6 +2,9 @@ package com.app.CitaMed.Controller.Portal;
 import com.app.CitaMed.DTO.PerfilRequest;
 import com.app.CitaMed.DTO.PortalPerfilDTO;
 import com.app.CitaMed.DTO.PortalReservaRequest;
+import com.app.CitaMed.DTO.RecuperarPasswordDTO;
+import com.app.CitaMed.DTO.RestablecerPasswordDTO;
+import com.app.CitaMed.DTO.TestimonioDTO;
 import com.app.CitaMed.Model.Paciente.Paciente;
 import com.app.CitaMed.Repository.Paciente.PacienteRepository;
 import com.app.CitaMed.Service.Administrativo.UsuarioService;
@@ -9,6 +12,7 @@ import com.app.CitaMed.Service.Portal.PortalAuthService;
 import com.app.CitaMed.Service.Portal.PortalCitaService;
 import com.app.CitaMed.Service.Portal.PortalHistorialService;
 import com.app.CitaMed.Service.Portal.PortalNotificacionService;
+import com.app.CitaMed.Service.Portal.PortalTestimonioService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -26,6 +30,7 @@ public class PortalController {
     private final PortalCitaService portalCitaService;
     private final PortalHistorialService portalHistorialService;
     private final PortalNotificacionService portalNotificacionService;
+    private final PortalTestimonioService portalTestimonioService;
     private final UsuarioService usuarioService;
     private final PacienteRepository pacienteRepository;
 
@@ -199,6 +204,69 @@ public class PortalController {
             Long pacienteId = obtenerPacienteId(auth);
             portalCitaService.reservar(pacienteId, request);
             return ResponseEntity.ok(Map.of("mensaje", "Cita reservada correctamente"));
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
+        }
+    }
+
+    @GetMapping("/testimonios/puede-crear")
+    public ResponseEntity<?> puedeCrearTestimonio(Authentication auth) {
+        try {
+            Long pacienteId = obtenerPacienteId(auth);
+            return ResponseEntity.ok(Map.of("puedeCrear", portalTestimonioService.tieneAtendida(pacienteId)));
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
+        }
+    }
+
+    @GetMapping("/testimonios")
+    public ResponseEntity<?> obtenerMisTestimonios(Authentication auth) {
+        try {
+            Long pacienteId = obtenerPacienteId(auth);
+            return ResponseEntity.ok(portalTestimonioService.obtenerMisResenas(pacienteId));
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
+        }
+    }
+
+    @PostMapping("/testimonios")
+    public ResponseEntity<?> crearTestimonio(@Valid @RequestBody TestimonioDTO dto, Authentication auth) {
+        try {
+            Long pacienteId = obtenerPacienteId(auth);
+            Paciente paciente = pacienteRepository.findById(pacienteId)
+                    .orElseThrow(() -> new RuntimeException("Paciente no encontrado"));
+            return ResponseEntity.ok(portalTestimonioService.crear(pacienteId, dto, paciente));
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
+        }
+    }
+
+    @DeleteMapping("/testimonios/{id}")
+    public ResponseEntity<?> eliminarTestimonio(@PathVariable Long id, Authentication auth) {
+        try {
+            Long pacienteId = obtenerPacienteId(auth);
+            portalTestimonioService.eliminar(id, pacienteId);
+            return ResponseEntity.ok(Map.of("mensaje", "Reseña eliminada correctamente"));
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
+        }
+    }
+
+    @PostMapping("/recuperar-password")
+    public ResponseEntity<?> recuperarPassword(@Valid @RequestBody RecuperarPasswordDTO dto) {
+        try {
+            portalAuthService.solicitarRecuperarPassword(dto.getEmail());
+            return ResponseEntity.ok(Map.of("mensaje", "Se ha enviado un código de recuperación a tu correo"));
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
+        }
+    }
+
+    @PostMapping("/restablecer-password")
+    public ResponseEntity<?> restablecerPassword(@Valid @RequestBody RestablecerPasswordDTO dto) {
+        try {
+            portalAuthService.restablecerPassword(dto.getToken(), dto.getNuevaPassword());
+            return ResponseEntity.ok(Map.of("mensaje", "Contraseña actualizada correctamente"));
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
         }

@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { PacientePortalService, PortalPerfil } from '../../../core/services/paciente-portal-service';
@@ -12,7 +12,7 @@ import { LoaderService } from '../../../core/services/loader-service';
   templateUrl: './perfil-paciente.html',
   styleUrl: './perfil-paciente.css',
 })
-export class PerfilPacienteComponent implements OnInit {
+export class PerfilPacienteComponent implements OnInit, OnChanges {
   @Input() perfil: PortalPerfil | null = null;
   @Output() perfilActualizado = new EventEmitter<void>();
 
@@ -33,6 +33,10 @@ export class PerfilPacienteComponent implements OnInit {
       email: ['', [Validators.required, Validators.email]],
     });
     if (this.perfil) this.cargarForm();
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['perfil'] && this.perfil) this.cargarForm();
   }
 
   cargarForm(): void {

@@ -181,7 +181,6 @@ INSERT INTO usuarios (user_name, password, rol, activo) VALUES
 ('alejandro.santisteban@gmail.com', '$2a$10$800I/8HGwCkjx0iApGb/kevpKOnZ1jp2UjTTWCg9CKaUNKdFhoywa', 'PACIENTE', true);
 SET @u_pac25 = LAST_INSERT_ID();
 
-
 -- ============================================================
 -- 2. ESPECIALIDADES
 -- ============================================================
@@ -220,7 +219,6 @@ SET @esp_gastro = LAST_INSERT_ID();
 
 INSERT INTO especialidades (nombre, descripcion, precio) VALUES ('Oftalmología',              'Enfermedades y cirugías del ojo', 135.00);
 SET @esp_oftalmologia = LAST_INSERT_ID();
-
 
 -- ============================================================
 -- 3. CONSULTORIOS
@@ -297,7 +295,6 @@ INSERT INTO consultorios (numero, descripcion, disponible, especialidad_id, cupo
 ('C-1101','Consultorio de Gastroenterología N°1',  true,  @esp_gastro, 3);
 SET @cons_gastro_1 = LAST_INSERT_ID();
 
-
 -- ============================================================
 -- 4. EMPLEADOS
 -- ============================================================
@@ -309,7 +306,6 @@ INSERT INTO empleados (nombre, apellido_paterno, apellido_materno, dni, telefono
 ('MARIA',          'LOPEZ',     'SANCHEZ',  '45678902', '987654322', 'Jr. Los Pinos 456, Chiclayo',           'maria.lopez@citamed.com',      '1990-07-22', 'FEMENINO',  1800.00, '2020-03-01', true,  @u_recep01),
 ('ANA',            'PEREZ',     'CASTILLO', '45678903', '987654323', 'Calle Manco Capac 789, Chiclayo',       'ana.perez@citamed.com',        '1992-11-05', 'FEMENINO',  1800.00, '2021-06-15', true,  @u_recep02),
 ('LUCIA',          'MEJIA',     'SOTO',     '45678904', '987654324', 'Jr. Progreso 890, Chiclayo',            'lucia.mejia@citamed.com',      '1994-02-19', 'FEMENINO',  1800.00, '2023-09-01', false, @u_recep03);
-
 
 -- ============================================================
 -- 5. MEDICOS
@@ -362,7 +358,6 @@ INSERT INTO medicos (nombre, apellido_paterno, apellido_materno, dni, telefono, 
 ('RENZO',     'SILVA',    'CORDOVA',  '12345612', '912345612', 'Jr. Piura 1212, Chiclayo',           'renzo.silva@citamed.com',    '1979-03-09', 'MASCULINO', 'CMP-071899', true, '/uploads/medicos/medRenzoSilva.jpg',    @esp_gastro,            @u_med_silva,   @cons_gastro_1);
 SET @med_silva_id = LAST_INSERT_ID();
 
-
 -- ============================================================
 -- 6. HORARIOS MEDICOS
 -- ============================================================
@@ -395,7 +390,6 @@ INSERT INTO horarios_medicos (dia, hora_inicio, hora_fin, activo, medico_id, con
 ('LUNES',     '15:00:00', '19:00:00', true, @med_silva_id,   @cons_gastro_1),
 ('MIERCOLES', '15:00:00', '19:00:00', true, @med_silva_id,   @cons_gastro_1);
 
-
 -- ============================================================
 -- 7. PACIENTES
 -- ============================================================
@@ -426,12 +420,10 @@ INSERT INTO pacientes (nombre, apellido_paterno, apellido_materno, dni, telefono
 ('FIORELLA MILAGROS','TELLO',       'PERALES',    '71234524', '951234524', 'Av. Venezuela 500, Chiclayo',        'fiorella.tello@gmail.com',         '2003-04-05', 'FEMENINO',  'AB_POSITIVO', TRUE, @u_pac24),
 ('ALEJANDRO LUIS',   'SANTISTEBAN', 'CABREJOS',   '71234525', '951234525', 'Jr. Elias Aguirre 600, Chiclayo',    'alejandro.santisteban@gmail.com',  '1960-06-20', 'MASCULINO', 'O_POSITIVO', TRUE, @u_pac25);
 
-
 -- ============================================================
 -- 8. HISTORIALES MEDICOS
 -- ============================================================
 INSERT INTO historiales_medicos (paciente_id) SELECT id FROM pacientes;
-
 
 -- ============================================================
 -- 9. CITAS
@@ -576,12 +568,8 @@ INSERT INTO citas (paciente_id, medico_id, consultorio_id, fecha_hora, motivo_co
 ((SELECT id FROM pacientes WHERE dni = '71234502'), @med_flores_id,  @cons_cardio_1,     '2026-05-28 08:00:00', 'Arritmia, control semestral',                'PROGRAMADA');
 SET @cita35 = LAST_INSERT_ID();
 
-
 -- ============================================================
 -- 10. PAGOS
--- Regla de consistencia: toda cita ATENDIDA tiene pago PAGADO,
--- toda cita PROGRAMADA tiene pago PENDIENTE (aun no se cobra).
--- El monto siempre corresponde al precio de la especialidad del medico.
 -- ============================================================
 INSERT INTO pagos (cita_id, monto, metodo_pago, estado, fecha_pago) VALUES
 (@cita1,  140.00, 'EFECTIVO',      'PAGADO', '2026-05-06 09:05:00'),
@@ -621,12 +609,8 @@ INSERT INTO pagos (cita_id, monto, metodo_pago, estado, fecha_pago) VALUES
 (@cita34, 90.00,  NULL, 'PENDIENTE', NULL),
 (@cita35, 150.00, NULL, 'PENDIENTE', NULL);
 
-
 -- ============================================================
 -- 11. DIAGNOSTICOS
--- Regla de consistencia: toda cita ATENDIDA (1-30) tiene su
--- diagnostico correspondiente. Las citas PROGRAMADAS (31-35)
--- aun no tienen diagnostico porque todavia no se atienden.
 -- ============================================================
 INSERT INTO diagnosticos (enfermedad, descripcion, receta, indicaciones, cita_id) VALUES
 ('CEFALEA TENSIONAL',                  'Dolor de cabeza de tipo tensional sin signos neurologicos focales',              'Ibuprofeno 400mg / Paracetamol 500mg',                                                                   'Reposo relativo, evitar pantallas, hidratacion. Tomar cada 8 horas con alimentos.',      @cita1),
@@ -659,7 +643,6 @@ INSERT INTO diagnosticos (enfermedad, descripcion, receta, indicaciones, cita_id
 ('ESGUINCE DE TOBILLO GRADO II',       'Lesion ligamentosa parcial en tobillo izquierdo',                             'Ibuprofeno 400mg cada 8h / Diclofenaco gel 1% topico',                                                   'Inmovilizacion 10 dias. Hielo local. Aplicar gel con masaje suave.',                     @cita28),
 ('ACNE VULGAR GRADO 2',                'Acne inflamatorio moderado en region facial y dorsal',                        'Tretinona crema 0.025% nocturna / Doxiciclina 100mg cada 12h',                                           'Protector solar diario. Doxiciclina con abundante agua. No acostarse inmediatamente.',   @cita29),
 ('DIABETES MELLITUS TIPO 2',           'DM2 descompensada con HbA1c de 9.2%',                                        'Metformina 850mg cada 12h / Insulina Glargina 10 UI nocturna',                                           'Control glucemico diario. Dieta diabetica estricta. Rotar zonas de insulina.',           @cita30);
-
 
 -- ============================================================
 -- 12. CONSULTAS (formulario público de contacto)
@@ -695,3 +678,28 @@ INSERT INTO consultas (nombre, email, mensaje, fecha_envio, leido, respondido, r
 ('Aldo Seminario Cruz', 'aldo.seminario@gmail.com', '¿Puede un familiar recoger mis resultados de exámenes o solo yo como paciente?', '2026-06-28 11:40:00', FALSE, FALSE, NULL, NULL, NULL),
 ('Katherine Jiménez Rivas', 'kathy.jimenez@gmail.com', 'Me gustaría saber si tienen nutricionista. Quiero iniciar un plan de alimentación saludable.', '2026-06-29 15:20:00', FALSE, FALSE, NULL, NULL, NULL),
 ('Ronald Flores Baca', 'ronald.flores@outlook.com', 'Estoy muy agradecido con la Dra. Merino por su dedicación y profesionalismo. Es una excelente médica.', '2026-06-30 17:00:00', FALSE, FALSE, NULL, NULL, NULL);
+
+-- ============================================================
+-- 13. TESTIMONIOS
+-- ============================================================
+INSERT INTO testimonios (calificacion, mensaje, fecha_creacion, activo, paciente_id) VALUES
+(5, 'La Dra. Mora me ayudó mucho con mis dolores de cabeza. Después de años con migrañas, por fin encontré un tratamiento que funciona. Muy profesional.', '2026-05-10 14:30:00', TRUE, (SELECT id FROM pacientes WHERE dni = '71234501')),
+(5, 'La Dra. Flores es excelente cardióloga. Detectó mi hipertension a tiempo y el tratamiento ha dado muy buenos resultados. Totalmente recomendable.', '2026-05-12 10:00:00', TRUE, (SELECT id FROM pacientes WHERE dni = '71234502')),
+(4, 'El Dr. Castro atendió muy bien a mi hijo. Le explicó todo con paciencia y el niño se sintió cómodo. Solo mejoraría los tiempos de espera.', '2026-05-14 16:45:00', TRUE, (SELECT id FROM pacientes WHERE dni = '71234503')),
+(5, 'La Dra. Herrera es excepcional. Me acompañó durante mi consulta ginecológica con mucha profesionalismo y empatía. Las instalaciones son impecables.', '2026-05-15 09:20:00', TRUE, (SELECT id FROM pacientes WHERE dni = '71234504')),
+(5, 'El Dr. Vega trató mi fractura de rodilla con excelencia. La recuperación fue rápida y el seguimiento postoperatorio muy detallado. Gran traumatólogo.', '2026-05-17 11:00:00', TRUE, (SELECT id FROM pacientes WHERE dni = '71234505')),
+(4, 'Muy buena experiencia con la Dra. Mora. Logró controlar mis migrañas con aura que arrastraba hace años. El seguimiento postconsulta es muy bueno.', '2026-05-19 13:15:00', TRUE, (SELECT id FROM pacientes WHERE dni = '71234506')),
+(5, 'El Dr. Ramírez es excelente médico general. Me atendió por una infección respiratoria y el tratamiento fue efectivo. Trato cercano y profesional.', '2026-05-20 08:30:00', TRUE, (SELECT id FROM pacientes WHERE dni = '71234507')),
+(5, 'La Dra. Flores me ayudó a controlar mi presión arterial. Es muy detallista en las explicaciones y seguimiento. La recomiendo ampliamente.', '2026-05-22 14:00:00', TRUE, (SELECT id FROM pacientes WHERE dni = '71234508')),
+(4, 'El Dr. Rivas trató mi dermatitis en brazos con mucha eficacia. En pocas semanas mejoró notablemente. Las instalaciones del consultorio son excelentes.', '2026-05-25 10:45:00', TRUE, (SELECT id FROM pacientes WHERE dni = '71234509')),
+(5, 'La Dra. Aguilar es muy competente en endocrinología. Gracias a ella mi hipotiroidismo está perfectamente controlado. Muy recomendable.', '2026-05-27 16:00:00', TRUE, (SELECT id FROM pacientes WHERE dni = '71234510')),
+(5, 'El Dr. Silva trató mi gastritis con un enfoque integral. No solo medicación sino también orientación nutricional. Excelente gastroenterólogo.', '2026-05-29 09:30:00', TRUE, (SELECT id FROM pacientes WHERE dni = '71234511')),
+(4, 'El Dr. Ramírez me atendió mi chequeo general con mucha amabilidad. Explica todo con claridad y te da confianza. Muy buen médico.', '2026-06-01 11:15:00', TRUE, (SELECT id FROM pacientes WHERE dni = '71234512')),
+(5, 'La Dra. Aguilar es la mejor endocrinóloga que he visitado. Su tratamiento para mi hipotiroidismo es impecable. El personal es muy amable y atento.', '2026-06-05 10:00:00', TRUE, (SELECT id FROM pacientes WHERE dni = '71234515')),
+(5, 'La Dra. Herrera brindó una atención personalizada durante mi control ginecológico. Muy profesional y empática. 100% recomendable.', '2026-06-10 09:00:00', TRUE, (SELECT id FROM pacientes WHERE dni = '71234514')),
+(4, 'Buena experiencia en cardiología. La Dra. Flores detectó a tiempo mi taquicardia y ajustó el tratamiento. El sistema de citas es muy práctico.', '2026-06-12 14:20:00', TRUE, (SELECT id FROM pacientes WHERE dni = '71234518')),
+(5, 'La Dra. Mora diagnosticó correctamente mi neuropatía periférica después de años sin respuestas en otros centros. Muy agradecido.', '2026-06-14 11:30:00', TRUE, (SELECT id FROM pacientes WHERE dni = '71234517')),
+(5, 'El Dr. Silva es excelente. Me ayudó con mi gastritis crónica con un plan de tratamiento efectivo. El trato es muy humano y profesional.', '2026-06-16 08:45:00', TRUE, (SELECT id FROM pacientes WHERE dni = '71234519')),
+(5, 'La Dra. Herrera es muy atenta. Mi control de quiste ovárico fue tranquilo y bien explicado. Las instalaciones de ginecología son de primer nivel.', '2026-06-18 09:00:00', TRUE, (SELECT id FROM pacientes WHERE dni = '71234520')),
+(4, 'El Dr. Rivas trató mi acne con mucha profesionalismo. El tratamiento ha dado excelentes resultados. Muy recomendable el servicio de dermatología.', '2026-06-20 14:00:00', TRUE, (SELECT id FROM pacientes WHERE dni = '71234524')),
+(5, 'CitaMed superó mis expectativas. La Dra. Aguilar es excelente endocrinóloga y mi diabetes está bajo control. La atención es rápida y los doctores son muy capacitados.', '2026-06-22 16:00:00', TRUE, (SELECT id FROM pacientes WHERE dni = '71234525'));

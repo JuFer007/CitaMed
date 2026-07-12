@@ -11,6 +11,7 @@ import com.app.CitaMed.Model.Paciente.Paciente;
 import com.app.CitaMed.Repository.Administrativo.UsuarioRepository;
 import com.app.CitaMed.Repository.Paciente.HistorialMedicoRepository;
 import com.app.CitaMed.Repository.Paciente.PacienteRepository;
+import com.app.CitaMed.Service.Administrativo.UsuarioService;
 import com.app.CitaMed.Service.MicroServicios.EmailService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -26,6 +27,7 @@ public class PortalAuthService {
     private final HistorialMedicoRepository historialMedicoRepository;
     private final BCryptPasswordEncoder passwordEncoder;
     private final EmailService emailService;
+    private final UsuarioService usuarioService;
 
     @Transactional
     public void registrar(RegisterRequest request) {
@@ -116,5 +118,23 @@ public class PortalAuthService {
         p.setDireccion(request.getDireccion());
         p.setEmail(request.getEmail());
         pacienteRepository.save(p);
+    }
+
+    public void solicitarRecuperarPassword(String email) {
+        Paciente paciente = pacienteRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("No existe una cuenta registrada con este email"));
+
+        if (paciente.getUsuario() == null) {
+            throw new RuntimeException("No se encontró la cuenta asociada");
+        }
+
+        Usuario usuario = paciente.getUsuario();
+        String codigo = usuarioService.generarCodigoRecuperacion(usuario);
+        String nombre = paciente.getNombre() + " " + paciente.getApellidoPaterno();
+        emailService.enviarCodigoRecuperacion(nombre, email, codigo);
+    }
+
+    public void restablecerPassword(String token, String nuevaPassword) {
+        usuarioService.restablecerContrasena(token, nuevaPassword);
     }
 }
