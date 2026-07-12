@@ -1,5 +1,4 @@
 package com.app.CitaMed.Service.Paciente;
-
 import com.app.CitaMed.DTO.HistorialMedicoDetalleDTO;
 import com.app.CitaMed.DTO.HistorialMedicoDetalleDTO.CitaHistorialDTO;
 import com.app.CitaMed.DTO.HistorialMedicoDetalleDTO.DiagnosticoHistorialDTO;
@@ -14,12 +13,12 @@ import com.app.CitaMed.Repository.Paciente.HistorialMedicoRepository;
 import com.app.CitaMed.Repository.Paciente.PacienteRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-
 import java.util.ArrayList;
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+
 public class HistorialMedicoService {
     private final HistorialMedicoRepository historialMedicoRepository;
     private final PacienteRepository pacienteRepository;

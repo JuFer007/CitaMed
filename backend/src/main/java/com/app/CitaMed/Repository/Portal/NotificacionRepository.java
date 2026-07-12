@@ -5,6 +5,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
+
 public interface NotificacionRepository extends JpaRepository<Notificacion, Long> {
     List<Notificacion> findByPacienteIdOrderByFechaCreacionDesc(Long pacienteId);
     List<Notificacion> findByPacienteIdAndLeidoFalseOrderByFechaCreacionDesc(Long pacienteId);

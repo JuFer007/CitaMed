@@ -1,5 +1,4 @@
 package com.app.CitaMed.Util;
-
 public class NombreValidator {
 
     private static final int MAX_LENGTH = 80;

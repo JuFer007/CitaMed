@@ -5,6 +5,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
+
 public interface TestimonioRepository extends JpaRepository<Testimonio, Long> {
     List<Testimonio> findByPacienteIdOrderByFechaCreacionDesc(Long pacienteId);
     List<Testimonio> findByActivoTrueOrderByFechaCreacionDesc();

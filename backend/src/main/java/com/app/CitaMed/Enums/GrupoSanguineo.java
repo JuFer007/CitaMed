@@ -1,5 +1,4 @@
 package com.app.CitaMed.Enums;
-
 public enum GrupoSanguineo {
     A_POSITIVO,
     A_NEGATIVO,

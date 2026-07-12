@@ -1,5 +1,4 @@
 package com.app.CitaMed.Util;
-
 public class UserNameValidator {
 
     public static void validar(String userName) {

@@ -1,5 +1,4 @@
 package com.app.CitaMed.Service.MicroServicios;
-
 import com.app.CitaMed.DTO.*;
 import com.app.CitaMed.Enums.EstadoCita;
 import com.app.CitaMed.Repository.Administrativo.PagoRepository;
@@ -11,7 +10,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
-
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -20,6 +18,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @Component
 @Slf4j
+
 public class DashboardService {
 
     private final CitaRepository citaRepository;

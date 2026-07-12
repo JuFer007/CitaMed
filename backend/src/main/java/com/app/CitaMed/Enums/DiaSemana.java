@@ -1,5 +1,4 @@
 package com.app.CitaMed.Enums;
-
 public enum DiaSemana {
     LUNES,
     MARTES,

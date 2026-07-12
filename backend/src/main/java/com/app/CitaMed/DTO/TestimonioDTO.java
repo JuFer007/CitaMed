@@ -3,6 +3,7 @@ import jakarta.validation.constraints.*;
 import lombok.Data;
 
 @Data
+
 public class TestimonioDTO {
     @NotNull(message = "La calificación es obligatoria")
     @Min(value = 1, message = "La calificación mínima es 1")

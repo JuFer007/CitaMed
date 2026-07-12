@@ -1,5 +1,4 @@
 package com.app.CitaMed.Service.Portal;
-
 import com.app.CitaMed.DTO.DiagnosticoDTO;
 import com.app.CitaMed.DTO.PagoEstadoDTO;
 import com.app.CitaMed.DTO.PortalCitaDTO;
@@ -28,7 +27,6 @@ import com.app.CitaMed.Util.HorarioValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Collections;
@@ -38,6 +36,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+
 public class PortalCitaService {
 
     private final CitaRepository citaRepository;

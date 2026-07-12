@@ -4,6 +4,7 @@ import jakarta.validation.constraints.Size;
 import lombok.Data;
 
 @Data
+
 public class RestablecerPasswordDTO {
     @NotBlank(message = "El código es obligatorio")
     private String token;

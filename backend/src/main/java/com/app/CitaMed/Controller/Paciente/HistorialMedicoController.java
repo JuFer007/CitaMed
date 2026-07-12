@@ -1,18 +1,17 @@
 package com.app.CitaMed.Controller.Paciente;
-
 import com.app.CitaMed.DTO.HistorialMedicoDetalleDTO;
 import com.app.CitaMed.Model.Paciente.HistorialMedico;
 import com.app.CitaMed.Service.Paciente.HistorialMedicoService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 
 @RestController
 @CrossOrigin(origins = "*")
 @RequestMapping("/api/historialMedico")
 @RequiredArgsConstructor
+
 public class HistorialMedicoController {
     private final HistorialMedicoService historialMedicoService;
 

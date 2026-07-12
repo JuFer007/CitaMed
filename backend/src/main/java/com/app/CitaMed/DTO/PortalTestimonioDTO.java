@@ -7,6 +7,7 @@ import java.time.LocalDateTime;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+
 public class PortalTestimonioDTO {
     private Long id;
     private Integer calificacion;

@@ -24,6 +24,7 @@ import java.util.List;
 @RequestMapping("/api/lading")
 @CrossOrigin(origins = "*")
 @AllArgsConstructor
+
 public class LadingPageController {
 
     private final MedicoService medicoService;

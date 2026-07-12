@@ -4,6 +4,7 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 
 @Data
+
 public class RecuperarPasswordDTO {
     @NotBlank(message = "El email es obligatorio")
     @Email(message = "Debe ingresar un email válido")

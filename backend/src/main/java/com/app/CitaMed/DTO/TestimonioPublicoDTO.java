@@ -7,6 +7,7 @@ import java.time.LocalDateTime;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+
 public class TestimonioPublicoDTO {
     private String nombrePaciente;
     private Integer calificacion;
