@@ -13,6 +13,7 @@ import java.util.List;
 @CrossOrigin(origins = "*")
 @RequestMapping("/api/diagnostico")
 @RequiredArgsConstructor
+
 public class DiagnosticoController {
     private final DiagnosticoService diagnosticoService;
 

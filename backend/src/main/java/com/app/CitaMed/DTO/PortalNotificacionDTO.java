@@ -7,6 +7,7 @@ import java.time.LocalDateTime;
 @Data
 @Builder
 @AllArgsConstructor
+
 public class PortalNotificacionDTO {
     private Long id;
     private String mensaje;

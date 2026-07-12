@@ -1,5 +1,4 @@
 package com.app.CitaMed.Service.MicroServicios;
-
 import com.app.CitaMed.DTO.*;
 import com.app.CitaMed.Repository.Administrativo.PagoRepository;
 import com.app.CitaMed.Repository.Agenda.CitaRepository;
@@ -16,6 +15,7 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 @Slf4j
+
 public class ReporteService {
     private final CitaRepository citaRepository;
     private final PagoRepository pagoRepository;

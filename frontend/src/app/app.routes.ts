@@ -22,6 +22,8 @@ import { DoctoresPage } from './features/home/doctores-page/doctores-page';
 import { roleGuard } from './core/guards/role.guard';
 import { PortalRegistroComponent } from './features/auth/portal-registro/portal-registro';
 import { PortalPacienteComponent } from './features/paciente/portal-paciente/portal-paciente';
+import { RecuperarPasswordComponent } from './features/auth/recuperar-password/recuperar-password';
+import { RestablecerPasswordComponent } from './features/auth/restablecer-password/restablecer-password';
 
 export const routes: Routes = [
   {
@@ -38,6 +40,16 @@ export const routes: Routes = [
     path: 'portal/registro',
     component: PortalRegistroComponent,
     title: 'CitaMed - Registro',
+  },
+  {
+    path: 'portal/recuperar-password',
+    component: RecuperarPasswordComponent,
+    title: 'CitaMed - Recuperar Contraseña',
+  },
+  {
+    path: 'portal/restablecer-password',
+    component: RestablecerPasswordComponent,
+    title: 'CitaMed - Restablecer Contraseña',
   },
   {
     path: 'portal',

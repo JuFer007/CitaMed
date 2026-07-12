@@ -12,6 +12,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+
 public class PortalNotificacionService {
 
     private final NotificacionRepository notificacionRepository;

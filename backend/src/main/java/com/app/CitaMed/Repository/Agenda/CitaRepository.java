@@ -17,20 +17,17 @@ import java.util.List;
 
 public interface CitaRepository extends JpaRepository<Cita, Long> {
     List<Cita> findByMedicoId(Long medicoId);
-
     List<Cita> findByMedicoIdAndFechaHoraBetweenAndEstadoNot(Long medicoId, LocalDateTime inicio, LocalDateTime fin, EstadoCita estado);
 
     @Query("SELECT c FROM Cita c WHERE c.medico.id IN :medicoIds AND c.fechaHora BETWEEN :inicio AND :fin AND c.estado <> :estado")
     List<Cita> findByMedicoIdInAndFechaHoraBetweenAndEstadoNot(@Param("medicoIds") List<Long> medicoIds, @Param("inicio") LocalDateTime inicio, @Param("fin") LocalDateTime fin, @Param("estado") EstadoCita estado);
-
     List<Cita> findByPacienteId(Long pacienteId);
-
     List<Cita> findByPacienteIdOrderByFechaHoraDesc(Long pacienteId);
 
     @Query("SELECT COUNT(c) FROM Cita c WHERE c.medico.id = :medicoId " +
-           "AND c.estado <> :estadoCancelada " +
-           "AND c.fechaHora < :nuevaFin " +
-           "AND :nuevaInicioMinus1h < c.fechaHora")
+   "AND c.estado <> :estadoCancelada " +
+   "AND c.fechaHora < :nuevaFin " +
+   "AND :nuevaInicioMinus1h < c.fechaHora")
     long countOverlapByMedico(@Param("medicoId") Long medicoId,
                               @Param("estadoCancelada") EstadoCita estadoCancelada,
                               @Param("nuevaInicioMinus1h") LocalDateTime nuevaInicioMinus1h,
@@ -179,4 +176,11 @@ public interface CitaRepository extends JpaRepository<Cita, Long> {
 
     List<Cita> findByPacienteIdAndEstadoInAndFechaHoraAfterOrderByFechaHoraAsc(
             Long pacienteId, List<EstadoCita> estados, LocalDateTime fechaHora);
+
+    @Query("SELECT c FROM Cita c JOIN FETCH c.paciente JOIN FETCH c.medico JOIN FETCH c.medico.especialidad " +
+           "WHERE c.estado = :estado AND c.fechaHora BETWEEN :inicio AND :fin")
+    List<Cita> findCitasProximasParaRecordatorio(
+            @Param("estado") EstadoCita estado,
+            @Param("inicio") LocalDateTime inicio,
+            @Param("fin") LocalDateTime fin);
 }

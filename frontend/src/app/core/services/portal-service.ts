@@ -15,4 +15,12 @@ export class PortalService {
   consultarReniec(dni: string): Observable<any> {
     return this.http.get(`${this.apiUrl}/reniec/dni/${dni}`);
   }
+
+  recuperarPassword(email: string): Observable<any> {
+    return this.http.post(`${this.apiUrl}/portal/recuperar-password`, { email });
+  }
+
+  restablecerPassword(token: string, nuevaPassword: string): Observable<any> {
+    return this.http.post(`${this.apiUrl}/portal/restablecer-password`, { token, nuevaPassword });
+  }
 }

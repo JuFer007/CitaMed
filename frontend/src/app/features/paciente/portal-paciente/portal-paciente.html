@@ -122,8 +122,9 @@
     <app-citas-paciente [hidden]="tabActivo !== 'citas'" />
     <app-historial-paciente [hidden]="tabActivo !== 'historial'" />
     <app-pagos-paciente [hidden]="tabActivo !== 'pagos'" />
+    <app-testimonios-paciente [hidden]="tabActivo !== 'testimonios'" />
     <app-perfil-paciente [hidden]="tabActivo !== 'perfil'" [perfil]="perfil" (perfilActualizado)="cargarPerfil()" />
   </main>
 
-  <app-footer />
+  <app-footer-portal (cambiarTab)="cambiarTab($event)" />
 </div>

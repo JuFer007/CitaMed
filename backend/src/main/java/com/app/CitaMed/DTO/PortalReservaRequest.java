@@ -3,6 +3,7 @@ import jakarta.validation.constraints.*;
 import lombok.Data;
 
 @Data
+
 public class PortalReservaRequest {
     @NotNull(message = "Debe seleccionar una especialidad")
     private Long especialidadId;

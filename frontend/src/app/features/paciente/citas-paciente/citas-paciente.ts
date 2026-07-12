@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { PacientePortalService, PortalCita, PortalDiagnostico } from '../../../core/services/paciente-portal-service';
 import { GlobalToast } from '../../../core/services/global-toast';
@@ -25,15 +25,16 @@ export class CitasPacienteComponent implements OnInit {
 
   constructor(
     private portalService: PacientePortalService,
-    private toast: GlobalToast
+    private toast: GlobalToast,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
     this.portalService.obtenerProximasCitas().subscribe({
-      next: (data) => { this.proximas = data; },
+      next: (data) => { this.proximas = data; this.cdr.detectChanges(); },
     });
     this.portalService.obtenerHistorialCitas().subscribe({
-      next: (data) => { this.historial = data; },
+      next: (data) => { this.historial = data; this.cdr.detectChanges(); },
     });
   }
 

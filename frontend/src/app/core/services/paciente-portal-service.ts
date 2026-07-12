@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { Testimonio, TestimonioPublico } from '../../model/Testimonio';
 
 export interface PortalPerfil {
   id: number;
@@ -161,5 +162,25 @@ export class PacientePortalService {
 
   reservarCita(data: any): Observable<any> {
     return this.http.post(`${this.api}/citas/reservar`, data);
+  }
+
+  puedeCrearTestimonio(): Observable<{ puedeCrear: boolean }> {
+    return this.http.get<{ puedeCrear: boolean }>(`${this.api}/testimonios/puede-crear`);
+  }
+
+  obtenerMisTestimonios(): Observable<Testimonio[]> {
+    return this.http.get<Testimonio[]>(`${this.api}/testimonios`);
+  }
+
+  crearTestimonio(dto: { calificacion: number; mensaje: string }): Observable<Testimonio> {
+    return this.http.post<Testimonio>(`${this.api}/testimonios`, dto);
+  }
+
+  eliminarTestimonio(id: number): Observable<any> {
+    return this.http.delete(`${this.api}/testimonios/${id}`);
+  }
+
+  obtenerTestimoniosPublicos(): Observable<TestimonioPublico[]> {
+    return this.http.get<TestimonioPublico[]>('http://localhost:8080/api/lading/testimonios');
   }
 }

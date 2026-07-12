@@ -1,5 +1,4 @@
 package com.app.CitaMed.Service.Portal;
-
 import com.app.CitaMed.DTO.DiagnosticoDTO;
 import com.app.CitaMed.DTO.PagoEstadoDTO;
 import com.app.CitaMed.DTO.PortalCitaDTO;
@@ -28,7 +27,6 @@ import com.app.CitaMed.Util.HorarioValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Collections;
@@ -38,6 +36,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+
 public class PortalCitaService {
 
     private final CitaRepository citaRepository;
@@ -51,6 +50,7 @@ public class PortalCitaService {
     private final PortalNotificacionService portalNotificacionService;
     private final EmailService emailService;
 
+    @Transactional(readOnly = true)
     public List<PortalCitaDTO> obtenerProximas(Long pacienteId) {
         List<Cita> citas = citaRepository
                 .findByPacienteIdAndEstadoAndFechaHoraAfterOrderByFechaHoraAsc(
@@ -58,6 +58,7 @@ public class PortalCitaService {
         return citas.stream().map(this::toPortalCitaDTO).collect(Collectors.toList());
     }
 
+    @Transactional(readOnly = true)
     public List<PortalCitaDTO> obtenerHistorial(Long pacienteId) {
         List<Cita> citas = citaRepository
                 .findByPacienteIdAndFechaHoraBeforeOrderByFechaHoraDesc(
@@ -72,6 +73,7 @@ public class PortalCitaService {
                 .collect(Collectors.toList());
     }
 
+    @Transactional(readOnly = true)
     public PortalCitaDTO obtenerDetalle(Long citaId, Long pacienteId) {
         Cita cita = citaRepository.findById(citaId)
                 .orElseThrow(() -> new RuntimeException("Cita no encontrada"));
@@ -94,6 +96,7 @@ public class PortalCitaService {
         }
     }
 
+    @Transactional(readOnly = true)
     public DiagnosticoDTO obtenerDiagnostico(Long citaId, Long pacienteId) {
         Cita cita = citaRepository.findById(citaId)
                 .orElseThrow(() -> new RuntimeException("Cita no encontrada"));
@@ -112,6 +115,7 @@ public class PortalCitaService {
         return dto;
     }
 
+    @Transactional(readOnly = true)
     public List<PortalPagoDTO> obtenerPagos(Long pacienteId) {
         List<Pago> pagos = pagoRepository.findByPacienteId(pacienteId);
         return pagos.stream().map(p -> {
@@ -221,8 +225,8 @@ public class PortalCitaService {
             pagoDTO = PagoEstadoDTO.builder()
                     .id(pago.getId())
                     .monto(pago.getMonto())
-                    .metodoPago(pago.getMetodoPago().name())
-                    .estado(pago.getEstado().name())
+                    .metodoPago(pago.getMetodoPago() != null ? pago.getMetodoPago().name() : null)
+                    .estado(pago.getEstado() != null ? pago.getEstado().name() : null)
                     .fechaPago(pago.getFechaPago() != null ? pago.getFechaPago().toString() : null)
                     .build();
         }

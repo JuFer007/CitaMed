@@ -19,42 +19,61 @@ public interface MedicoRepository extends JpaRepository<Medico, Long> {
     List<Medico> findByEspecialidadIdAndActivoTrue(@Param("especialidadId") Long especialidadId);
 
     @Query("""
-            SELECT new com.app.CitaMed.DTO.MedicoActivoDTO(
-            SUBSTRING(c.medico.nombre,1,1),
-            CONCAT(c.medico.nombre,' ',c.medico.apellidoPaterno),
-            c.medico.numeroColegiatura,
-            c.medico.especialidad.nombre,
-            COUNT(c)
-            )
-            FROM Cita c
-            GROUP BY c.medico.id,
-            c.medico.nombre,
-            c.medico.apellidoPaterno,
-            c.medico.numeroColegiatura,
-            c.medico.especialidad.nombre
-            ORDER BY COUNT(c) DESC
-            """)
+    SELECT new com.app.CitaMed.DTO.MedicoActivoDTO(
+    SUBSTRING(c.medico.nombre,1,1),
+    CONCAT(c.medico.nombre,' ',c.medico.apellidoPaterno),
+    c.medico.numeroColegiatura,
+    c.medico.especialidad.nombre,
+    COUNT(c)
+    )
+    FROM Cita c
+    GROUP BY c.medico.id,
+    c.medico.nombre,
+    c.medico.apellidoPaterno,
+    c.medico.numeroColegiatura,
+    c.medico.especialidad.nombre
+    ORDER BY COUNT(c) DESC
+    """)
     List<MedicoActivoDTO> medicosActivos();
-    @Query("""
-            SELECT new com.app.CitaMed.DTO.MedicoActivoDTO(
-            SUBSTRING(c.medico.nombre,1,1),
-            CONCAT(c.medico.nombre,' ',c.medico.apellidoPaterno),
-            c.medico.numeroColegiatura,
-            c.medico.especialidad.nombre,
-            COUNT(c)
-            )
-            FROM Cita c
-            WHERE YEAR(c.fechaHora) = :anio
-            GROUP BY c.medico.id,
-            c.medico.nombre,
-            c.medico.apellidoPaterno,
-            c.medico.numeroColegiatura,
-            c.medico.especialidad.nombre
-            ORDER BY COUNT(c) DESC
-            """)
-    List<MedicoActivoDTO> medicosMasActivosPorAnio(@Param("anio") int anio, Pageable pageable);
 
+    @Query("""
+    SELECT new com.app.CitaMed.DTO.MedicoActivoDTO(
+    SUBSTRING(c.medico.nombre,1,1),
+    CONCAT(c.medico.nombre,' ',c.medico.apellidoPaterno),
+    c.medico.numeroColegiatura,
+    c.medico.especialidad.nombre,
+    COUNT(c)
+    )
+    FROM Cita c
+    WHERE YEAR(c.fechaHora) = :anio
+    GROUP BY c.medico.id,
+    c.medico.nombre,
+    c.medico.apellidoPaterno,
+    c.medico.numeroColegiatura,
+    c.medico.especialidad.nombre
+    ORDER BY COUNT(c) DESC
+    """)
+
+    List<MedicoActivoDTO> medicosMasActivosPorAnio(@Param("anio") int anio, Pageable pageable);
     Optional<Medico> findByUsuarioUserName(String userName);
+
+    @Query("""
+    SELECT new com.app.CitaMed.DTO.MedicoActivoDTO(
+    SUBSTRING(c.medico.nombre,1,1),
+    CONCAT(c.medico.nombre,' ',c.medico.apellidoPaterno),
+    c.medico.numeroColegiatura,
+    c.medico.especialidad.nombre,
+    COUNT(c)
+    )
+    FROM Cita c
+    WHERE c.medico.id = :medicoId
+    GROUP BY c.medico.id,
+    c.medico.nombre,
+    c.medico.apellidoPaterno,
+    c.medico.numeroColegiatura,
+    c.medico.especialidad.nombre
+    """)
+    List<MedicoActivoDTO> medicosActivosPorMedico(@Param("medicoId") Long medicoId);
 
     @Query("SELECT m FROM Medico m JOIN FETCH m.especialidad LEFT JOIN FETCH m.consultorio WHERE m.activo = true")
     List<Medico> findByActivoTrue();

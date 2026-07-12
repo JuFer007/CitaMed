@@ -123,6 +123,9 @@ export class DoctoresPage implements OnInit, OnDestroy {
   }
 
   obtenerFoto(medico: Medico): string {
+    if (medico.fotoUrl) {
+      return `http://localhost:8080${medico.fotoUrl}`;
+    }
     const lista = medico.genero === 'FEMENINO' ? this.fotosMujeres : this.fotosHombres;
     const index = medico.id ? medico.id % lista.length : 0;
     const url = lista[index];

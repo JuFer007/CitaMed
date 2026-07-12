@@ -87,6 +87,12 @@
           <div *ngIf="errorMessage" class="text-red-500 text-sm text-center">
             {{ errorMessage }}
           </div>
+          <!-- Olvidaste tu contraseña -->
+          <div class="flex justify-end">
+            <a routerLink="/portal/recuperar-password" class="text-xs font-bold text-[#00796B]/70 hover:text-[#00796B]">
+              ¿Olvidaste tu contraseña?
+            </a>
+          </div>
           <!-- Botón -->
           <div class="flex justify-center mt-2">
             <button type="submit" [disabled]="loginForm.invalid"

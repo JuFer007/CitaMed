@@ -1,5 +1,4 @@
 package com.app.CitaMed.Util;
-
 public class MotivoValidator {
 
     private static final int MAX_LENGTH = 300;

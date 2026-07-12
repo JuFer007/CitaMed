@@ -1,16 +1,15 @@
 package com.app.CitaMed.Controller.MicroControllers;
-
 import com.app.CitaMed.DTO.*;
 import com.app.CitaMed.Service.MicroServicios.ReporteService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
-
 import java.time.LocalDate;
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/reportes")
 @RequiredArgsConstructor
+
 public class ReporteController {
     
     private final ReporteService reporteService;

@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, HostListener, ElementRef, ViewChild } from '@angular/core';
+import { Component, OnInit, OnDestroy, HostListener, ElementRef, ViewChild, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../../core/services/auth-service';
@@ -9,7 +9,8 @@ import { HistorialPacienteComponent } from '../historial-paciente/historial-paci
 import { PagosPacienteComponent } from '../pagos-paciente/pagos-paciente';
 import { PerfilPacienteComponent } from '../perfil-paciente/perfil-paciente';
 import { ReservarCitaPacienteComponent } from '../reservar-cita-paciente/reservar-cita-paciente';
-import { FooterComponent } from '../../home/footer-component/footer-component';
+import { TestimoniosPacienteComponent } from '../testimonios-paciente/testimonios-paciente';
+import { FooterPortalComponent } from '../footer-portal/footer-portal';
 import { interval, Subscription } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 
@@ -25,7 +26,8 @@ import { switchMap } from 'rxjs/operators';
     PagosPacienteComponent,
     PerfilPacienteComponent,
     ReservarCitaPacienteComponent,
-    FooterComponent,
+    TestimoniosPacienteComponent,
+    FooterPortalComponent,
   ],
   templateUrl: './portal-paciente.html',
   styleUrl: './portal-paciente.css',
@@ -63,9 +65,8 @@ export class PortalPacienteComponent implements OnInit, OnDestroy {
     'https://images.unsplash.com/photo-1579684385127-1ef15d508118?w=1600&q=80',
     'https://images.unsplash.com/photo-1588776814546-1ffcf47267a5?w=1600&q=80',
     'https://www.crp.com.pe/wp-content/uploads/2023/11/1-en-el-Top-Ranking-LATAM.jpg',
-    'https://images.unsplash.com/photo-1581056771107-24ca5f033842?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-    'https://images.unsplash.com/photo-1758691461990-03b49d969495?q=80&w=1332&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-    'https://images.unsplash.com/photo-1758691462878-6edc3d3da1be?q=80&w=1332&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'
+    'https://images.unsplash.com/photo-1758691462878-6edc3d3da1be?q=80&w=1332&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+    'https://images.unsplash.com/photo-1758691462119-792279713969?q=80&w=1332&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
   ];
 
   tabs = [
@@ -74,13 +75,15 @@ export class PortalPacienteComponent implements OnInit, OnDestroy {
     { id: 'citas', label: 'Mis citas', icon: 'calendar_month' },
     { id: 'historial', label: 'Historial clínico', icon: 'history' },
     { id: 'pagos', label: 'Pagos', icon: 'payments' },
+    { id: 'testimonios', label: 'Mis reseñas', icon: 'rate_review' },
     { id: 'perfil', label: 'Mi perfil', icon: 'person' },
   ];
 
   constructor(
     private authService: AuthService,
     private portalService: PacientePortalService,
-    private router: Router
+    private router: Router,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
@@ -113,6 +116,7 @@ export class PortalPacienteComponent implements OnInit, OnDestroy {
         this.perfil = data;
         this.nombrePaciente = `${data.nombre} ${data.apellidoPaterno} ${data.apellidoMaterno}`;
         this.iniciales = (data.nombre.charAt(0) + data.apellidoPaterno.charAt(0)).toUpperCase();
+        this.cdr.detectChanges();
       },
     });
   }
@@ -127,6 +131,7 @@ export class PortalPacienteComponent implements OnInit, OnDestroy {
       next: (data) => {
         this.notificaciones = data;
         this.noLeidas = data.filter(n => !n.leido).length;
+        this.cdr.detectChanges();
       },
       error: (err) => {
         console.error('Error al cargar notificaciones', err);
