@@ -110,19 +110,19 @@ export class PortalPacienteComponent implements OnInit, OnDestroy {
     return id ? Number(id) : null;
   }
 
+  toggleNotificaciones(): void {
+    this.dropdownAbierto = !this.dropdownAbierto;
+  }
+
   cargarPerfil(): void {
     this.portalService.obtenerPerfil().subscribe({
       next: (data) => {
         this.perfil = data;
         this.nombrePaciente = `${data.nombre} ${data.apellidoPaterno} ${data.apellidoMaterno}`;
         this.iniciales = (data.nombre.charAt(0) + data.apellidoPaterno.charAt(0)).toUpperCase();
-        this.cdr.detectChanges();
+        this.cdr.markForCheck(); // en vez de detectChanges()
       },
     });
-  }
-
-  toggleNotificaciones(): void {
-    this.dropdownAbierto = !this.dropdownAbierto;
   }
 
   cargarNotificaciones(): void {
@@ -131,7 +131,7 @@ export class PortalPacienteComponent implements OnInit, OnDestroy {
       next: (data) => {
         this.notificaciones = data;
         this.noLeidas = data.filter(n => !n.leido).length;
-        this.cdr.detectChanges();
+        this.cdr.markForCheck(); // en vez de detectChanges()
       },
       error: (err) => {
         console.error('Error al cargar notificaciones', err);

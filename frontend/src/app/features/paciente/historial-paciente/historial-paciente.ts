@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { PacientePortalService } from '../../../core/services/paciente-portal-service';
 import { GlobalToast } from '../../../core/services/global-toast';
@@ -32,7 +32,8 @@ export class HistorialPacienteComponent implements OnInit {
   constructor(
     private portalService: PacientePortalService,
     private historialMedicoService: HistorialMedicoService,
-    private toast: GlobalToast
+    private toast: GlobalToast,
+    private cdr: ChangeDetectorRef,
   ) {}
 
   ngOnInit(): void {
@@ -52,9 +53,11 @@ export class HistorialPacienteComponent implements OnInit {
           rawFecha: c.fechaHora,
         }));
         this.cargado = true;
+        this.cdr.detectChanges();
       },
       error: () => {
         this.cargado = true;
+        this.cdr.detectChanges();
         this.errorCarga = true;
       },
     });

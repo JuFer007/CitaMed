@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { PacientePortalService } from '../../../core/services/paciente-portal-service';
@@ -40,7 +40,8 @@ export class ReservarCitaPacienteComponent implements OnInit {
 
   constructor(
     private portalService: PacientePortalService,
-    private toast: GlobalToast
+    private toast: GlobalToast,
+    private cdr: ChangeDetectorRef,
   ) {
     const hoy = new Date();
     this.minDate = hoy.toISOString().split('T')[0];
@@ -49,7 +50,10 @@ export class ReservarCitaPacienteComponent implements OnInit {
 
   ngOnInit(): void {
     this.portalService.obtenerEspecialidades().subscribe({
-      next: (data) => this.especialidades = data,
+      next: (data) => {
+        this.especialidades = data;
+        this.cdr.detectChanges();
+      },
       error: () => this.toast.error('Error al cargar especialidades'),
     });
   }
