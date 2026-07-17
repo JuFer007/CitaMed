@@ -1,6 +1,13 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
+
+export interface ReportFilter {
+  anio?: number | null;
+  mes?: number | null;
+  fechaInicio?: string | null;
+  fechaFin?: string | null;
+}
 
 export interface ReporteCitasMes { mes: string; total: number; }
 export interface ReporteIngresoMes { mes: string; total: number; }
@@ -20,23 +27,32 @@ export class ReporteService {
 
   constructor(private http: HttpClient) {}
 
-  citasPorMes(anio: number): Observable<ReporteCitasMes[]> {
-    return this.http.get<ReporteCitasMes[]>(`${this.apiUrl}/citas-por-mes`, { params: { anio } });
+  private buildParams(filter: ReportFilter): HttpParams {
+    let params = new HttpParams();
+    if (filter.anio != null) params = params.set('anio', filter.anio);
+    if (filter.mes != null) params = params.set('mes', filter.mes);
+    if (filter.fechaInicio) params = params.set('fechaInicio', filter.fechaInicio);
+    if (filter.fechaFin) params = params.set('fechaFin', filter.fechaFin);
+    return params;
   }
 
-  ingresosPorMes(anio: number): Observable<ReporteIngresoMes[]> {
-    return this.http.get<ReporteIngresoMes[]>(`${this.apiUrl}/ingresos-por-mes`, { params: { anio } });
+  citasPorMes(filter: ReportFilter): Observable<ReporteCitasMes[]> {
+    return this.http.get<ReporteCitasMes[]>(`${this.apiUrl}/citas-por-mes`, { params: this.buildParams(filter) });
   }
 
-  citasPorEstado(anio: number): Observable<ReporteEstado[]> {
-    return this.http.get<ReporteEstado[]>(`${this.apiUrl}/citas-por-estado`, { params: { anio } });
+  ingresosPorMes(filter: ReportFilter): Observable<ReporteIngresoMes[]> {
+    return this.http.get<ReporteIngresoMes[]>(`${this.apiUrl}/ingresos-por-mes`, { params: this.buildParams(filter) });
   }
 
-  citasPorEspecialidad(anio: number): Observable<ReporteEspecialidad[]> {
-    return this.http.get<ReporteEspecialidad[]>(`${this.apiUrl}/citas-por-especialidad`, { params: { anio } });
+  citasPorEstado(filter: ReportFilter): Observable<ReporteEstado[]> {
+    return this.http.get<ReporteEstado[]>(`${this.apiUrl}/citas-por-estado`, { params: this.buildParams(filter) });
   }
 
-  topMedicos(anio: number): Observable<ReporteMedico[]> {
-    return this.http.get<ReporteMedico[]>(`${this.apiUrl}/top-medicos`, { params: { anio } });
+  citasPorEspecialidad(filter: ReportFilter): Observable<ReporteEspecialidad[]> {
+    return this.http.get<ReporteEspecialidad[]>(`${this.apiUrl}/citas-por-especialidad`, { params: this.buildParams(filter) });
+  }
+
+  topMedicos(filter: ReportFilter): Observable<ReporteMedico[]> {
+    return this.http.get<ReporteMedico[]>(`${this.apiUrl}/top-medicos`, { params: this.buildParams(filter) });
   }
 }

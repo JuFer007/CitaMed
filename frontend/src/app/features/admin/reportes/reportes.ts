@@ -5,21 +5,51 @@ import { BaseChartDirective } from 'ng2-charts';
 import { ChartConfiguration } from 'chart.js';
 import { forkJoin, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
+import { SelectModule } from 'primeng/select';
+import { DatePickerModule } from 'primeng/datepicker';
 import {
   ReporteService,
+  ReportFilter,
   ReporteMedico,
 } from '../../../core/services/reporte-service';
+
+interface SelectOption {
+  label: string;
+  value: number | null;
+}
 
 @Component({
   selector: 'app-reportes',
   standalone: true,
-  imports: [CommonModule, FormsModule, BaseChartDirective],
+  imports: [CommonModule, FormsModule, BaseChartDirective, SelectModule, DatePickerModule],
   templateUrl: './reportes.html',
   styleUrl: './reportes.css',
 })
 export class Reportes implements OnInit {
-  aniosDisponibles: number[] = [];
-  anioSeleccionado: number = new Date().getFullYear();
+  aniosDisponibles: SelectOption[] = [];
+  anioSeleccionado: number | null = new Date().getFullYear();
+
+  mesesDisponibles: SelectOption[] = [
+    { label: 'Todos', value: null },
+    { label: 'Enero', value: 1 },
+    { label: 'Febrero', value: 2 },
+    { label: 'Marzo', value: 3 },
+    { label: 'Abril', value: 4 },
+    { label: 'Mayo', value: 5 },
+    { label: 'Junio', value: 6 },
+    { label: 'Julio', value: 7 },
+    { label: 'Agosto', value: 8 },
+    { label: 'Setiembre', value: 9 },
+    { label: 'Octubre', value: 10 },
+    { label: 'Noviembre', value: 11 },
+    { label: 'Diciembre', value: 12 },
+  ];
+  mesSeleccionado: number | null = null;
+
+  fechaDesde: Date | null = null;
+  fechaHasta: Date | null = null;
+
+  filtroLabel = '';
 
   loading = false;
   error = false;
@@ -87,46 +117,101 @@ export class Reportes implements OnInit {
 
   ngOnInit(): void {
     const actual = new Date().getFullYear();
-    this.aniosDisponibles = [actual, actual - 1, actual - 2];
+    this.aniosDisponibles = [
+      { label: String(actual), value: actual },
+      { label: String(actual - 1), value: actual - 1 },
+      { label: String(actual - 2), value: actual - 2 },
+      { label: String(actual - 3), value: actual - 3 },
+      { label: String(actual - 4), value: actual - 4 },
+      { label: String(actual - 5), value: actual - 5 },
+    ];
+    this.actualizarFiltroLabel();
     this.cargarTodo();
   }
 
-  cambiarAnio(anio: number | string): void {
-    this.anioSeleccionado = Number(anio);
+  onFilterChange(): void {
+    if (this.fechaDesde && this.fechaHasta) {
+      this.mesSeleccionado = null;
+    } else if (this.mesSeleccionado) {
+      this.fechaDesde = null;
+      this.fechaHasta = null;
+    }
+    this.actualizarFiltroLabel();
     this.cargarTodo();
+  }
+
+  limpiarFiltros(): void {
+    this.anioSeleccionado = new Date().getFullYear();
+    this.mesSeleccionado = null;
+    this.fechaDesde = null;
+    this.fechaHasta = null;
+    this.actualizarFiltroLabel();
+    this.cargarTodo();
+  }
+
+  private actualizarFiltroLabel(): void {
+    if (this.fechaDesde && this.fechaHasta) {
+      const d = (dt: Date) =>
+        `${String(dt.getDate()).padStart(2, '0')}/${String(dt.getMonth() + 1).padStart(2, '0')}/${dt.getFullYear()}`;
+      this.filtroLabel = `${d(this.fechaDesde)} - ${d(this.fechaHasta)}`;
+    } else if (this.mesSeleccionado) {
+      const mes = this.mesesDisponibles.find(m => m.value === this.mesSeleccionado);
+      this.filtroLabel = `${mes?.label ?? ''} ${this.anioSeleccionado ?? ''}`;
+    } else if (this.anioSeleccionado) {
+      this.filtroLabel = String(this.anioSeleccionado);
+    } else {
+      this.filtroLabel = '';
+    }
+  }
+
+  private buildFilter(): ReportFilter {
+    if (this.fechaDesde && this.fechaHasta) {
+      return {
+        fechaInicio: this.fechaDesde.toISOString().split('T')[0],
+        fechaFin: this.fechaHasta.toISOString().split('T')[0],
+      };
+    }
+    if (this.mesSeleccionado) {
+      return {
+        anio: this.anioSeleccionado,
+        mes: this.mesSeleccionado,
+      };
+    }
+    return { anio: this.anioSeleccionado };
   }
 
   cargarTodo(): void {
     this.loading = true;
     this.error = false;
     this.errorMsg = '';
+    const filter = this.buildFilter();
 
     forkJoin({
-      citasPorMes: this.reporteService.citasPorMes(this.anioSeleccionado).pipe(
+      citasPorMes: this.reporteService.citasPorMes(filter).pipe(
         catchError(err => {
           console.error('Error cargando citas por mes:', err);
           return of([]);
         })
       ),
-      ingresosPorMes: this.reporteService.ingresosPorMes(this.anioSeleccionado).pipe(
+      ingresosPorMes: this.reporteService.ingresosPorMes(filter).pipe(
         catchError(err => {
           console.error('Error cargando ingresos por mes:', err);
           return of([]);
         })
       ),
-      citasPorEstado: this.reporteService.citasPorEstado(this.anioSeleccionado).pipe(
+      citasPorEstado: this.reporteService.citasPorEstado(filter).pipe(
         catchError(err => {
           console.error('Error cargando citas por estado:', err);
           return of([]);
         })
       ),
-      citasPorEspecialidad: this.reporteService.citasPorEspecialidad(this.anioSeleccionado).pipe(
+      citasPorEspecialidad: this.reporteService.citasPorEspecialidad(filter).pipe(
         catchError(err => {
           console.error('Error cargando citas por especialidad:', err);
           return of([]);
         })
       ),
-      topMedicos: this.reporteService.topMedicos(this.anioSeleccionado).pipe(
+      topMedicos: this.reporteService.topMedicos(filter).pipe(
         catchError(err => {
           console.error('Error cargando top médicos:', err);
           return of([]);
@@ -147,7 +232,7 @@ export class Reportes implements OnInit {
 
         if (totalSinDatos) {
           this.error = true;
-          this.errorMsg = 'No se encontraron datos para el año seleccionado.';
+          this.errorMsg = 'No se encontraron datos para los filtros seleccionados.';
         }
 
         this.loading = false;

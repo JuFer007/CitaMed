@@ -40,4 +40,11 @@ public interface PagoRepository extends JpaRepository<Pago, Long> {
     "GROUP BY MONTH(fecha_pago) " +
     "ORDER BY MONTH(fecha_pago)", nativeQuery = true)
     List<Object[]> ingresosPorMesNative(@Param("anio") int anio);
+
+    @Query(value = "SELECT MONTH(fecha_pago) AS mes, COALESCE(SUM(monto),0) AS total " +
+    "FROM pagos " +
+    "WHERE fecha_pago BETWEEN :inicio AND :fin " +
+    "GROUP BY MONTH(fecha_pago) " +
+    "ORDER BY MONTH(fecha_pago)", nativeQuery = true)
+    List<Object[]> ingresosPorMesBetween(@Param("inicio") LocalDateTime inicio, @Param("fin") LocalDateTime fin);
 }
