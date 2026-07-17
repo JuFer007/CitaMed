@@ -8,7 +8,7 @@ import { InputTextModule } from 'primeng/inputtext';
 import { SelectModule } from 'primeng/select';
 import { PasswordModule } from 'primeng/password';
 import { SortEvent } from 'primeng/api';
-import { Usuario, UsuarioDTO, Rol } from '../../../model/Usuario';
+import { Usuario, UsuarioUpdateDTO, Rol } from '../../../model/Usuario';
 import { UsuarioService } from '../../../core/services/usuario-service';
 import { GlobalToast } from '../../../core/services/global-toast';
 
@@ -44,7 +44,8 @@ export class UsuarioComponent implements OnInit {
   terminoBusqueda = '';
 
   mostrarModal = false;
-  usuarioForm: UsuarioDTO = { userName: '', password: '', rol: Rol.RECEPCIONISTA };
+  usuarioEditando: Usuario | null = null;
+  usuarioForm: UsuarioUpdateDTO = { userName: '', password: '', rol: Rol.RECEPCIONISTA };
 
   mostrarModalRol = false;
   usuarioRolEditando: Usuario | null = null;
@@ -52,6 +53,9 @@ export class UsuarioComponent implements OnInit {
 
   mostrarConfirmarEstado = false;
   usuarioCambiandoEstado: Usuario | null = null;
+
+  mostrarConfirmarEliminar = false;
+  usuarioEliminando: Usuario | null = null;
 
   constructor(
     private usuarioService: UsuarioService,
@@ -138,28 +142,26 @@ export class UsuarioComponent implements OnInit {
     });
   }
 
-  abrirNueva(): void {
-    this.usuarioForm = { userName: '', password: '', rol: Rol.RECEPCIONISTA };
+  abrirEditar(usuario: Usuario): void {
+    this.usuarioEditando = usuario;
+    this.usuarioForm = { userName: usuario.userName, password: '', rol: usuario.rol };
     this.mostrarModal = true;
   }
 
   guardar(): void {
-    if (!this.usuarioForm.userName.trim()) {
+    if (!this.usuarioForm.userName?.trim()) {
       this.toast.warn('El nombre de usuario es obligatorio');
       return;
     }
-    if (!this.usuarioForm.password || this.usuarioForm.password.length < 6) {
-      this.toast.warn('La contraseña debe tener al menos 6 caracteres');
-      return;
-    }
 
-    this.usuarioService.crear(this.usuarioForm).subscribe({
+    this.usuarioService.actualizar(this.usuarioEditando!.id!, this.usuarioForm).subscribe({
       next: (res) => {
         this.toast.success(res);
         this.mostrarModal = false;
+        this.usuarioEditando = null;
         this.cargarUsuarios();
       },
-      error: (err) => this.toast.error(err?.error || 'Error al registrar el usuario'),
+      error: (err) => this.toast.error(err?.error || 'Error al actualizar el usuario'),
     });
   }
 
@@ -203,6 +205,25 @@ export class UsuarioComponent implements OnInit {
         this.cargarUsuarios();
       },
       error: (err) => this.toast.error(err?.error || 'Error al cambiar el estado'),
+    });
+  }
+
+  confirmarEliminar(usuario: Usuario): void {
+    this.usuarioEliminando = usuario;
+    this.mostrarConfirmarEliminar = true;
+  }
+
+  eliminarUsuario(): void {
+    if (!this.usuarioEliminando) return;
+
+    this.usuarioService.eliminar(this.usuarioEliminando.id!).subscribe({
+      next: (res) => {
+        this.toast.success(res);
+        this.mostrarConfirmarEliminar = false;
+        this.usuarioEliminando = null;
+        this.cargarUsuarios();
+      },
+      error: (err) => this.toast.error(err?.error || 'Error al eliminar el usuario'),
     });
   }
 

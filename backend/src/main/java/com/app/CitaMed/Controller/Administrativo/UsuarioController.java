@@ -1,4 +1,5 @@
 package com.app.CitaMed.Controller.Administrativo;
+import com.app.CitaMed.DTO.UsuarioUpdateDTO;
 import com.app.CitaMed.Enums.Rol;
 import com.app.CitaMed.Model.Administrativo.Usuario;
 import com.app.CitaMed.Service.Administrativo.UsuarioService;
@@ -50,6 +51,26 @@ public class UsuarioController {
         String resultado = usuarioService.changeRol(id, nuevoRol);
         if (resultado.equals("Usuario no encontrado"))
             return ResponseEntity.notFound().build();
+        return ResponseEntity.ok(resultado);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<String> update(@PathVariable Long id, @RequestBody UsuarioUpdateDTO dto) {
+        String resultado = usuarioService.updateUser(id, dto);
+        if (resultado.equals("Usuario no encontrado"))
+            return ResponseEntity.notFound().build();
+        if (resultado.equals("El nombre de usuario ya está en uso"))
+            return ResponseEntity.badRequest().body(resultado);
+        return ResponseEntity.ok(resultado);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> delete(@PathVariable Long id) {
+        String resultado = usuarioService.deleteUser(id);
+        if (resultado.equals("Usuario no encontrado"))
+            return ResponseEntity.notFound().build();
+        if (resultado.equals("El usuario ya está inactivo"))
+            return ResponseEntity.badRequest().body(resultado);
         return ResponseEntity.ok(resultado);
     }
 }

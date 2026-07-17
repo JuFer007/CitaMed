@@ -1,4 +1,5 @@
 package com.app.CitaMed.Service.Administrativo;
+import com.app.CitaMed.DTO.UsuarioUpdateDTO;
 import com.app.CitaMed.Enums.Rol;
 import com.app.CitaMed.Model.Administrativo.Usuario;
 import com.app.CitaMed.Repository.Administrativo.UsuarioRepository;
@@ -89,5 +90,42 @@ public class UsuarioService {
         usuario.setResetToken(null);
         usuario.setResetTokenExpiry(null);
         usuarioRepository.save(usuario);
+    }
+
+    @Transactional
+    public String updateUser(Long id, UsuarioUpdateDTO dto) {
+        Usuario usuario = usuarioRepository.findById(id).orElse(null);
+        if (usuario == null) return "Usuario no encontrado";
+
+        if (dto.getUserName() != null && !dto.getUserName().isBlank()) {
+            String newName = dto.getUserName().trim();
+            if (!newName.equals(usuario.getUserName()) && usuarioRepository.existsByUserName(newName)) {
+                return "El nombre de usuario ya está en uso";
+            }
+            usuario.setUserName(newName);
+        }
+
+        if (dto.getPassword() != null && !dto.getPassword().isBlank()) {
+            usuario.setPassword(passwordEncoder.encode(dto.getPassword()));
+        }
+
+        if (dto.getRol() != null) {
+            usuario.setRol(dto.getRol());
+        }
+
+        usuarioRepository.save(usuario);
+        return "Usuario actualizado correctamente";
+    }
+
+    @Transactional
+    public String deleteUser(Long id) {
+        Usuario usuario = usuarioRepository.findById(id).orElse(null);
+        if (usuario == null) return "Usuario no encontrado";
+
+        if (!usuario.isActivo()) return "El usuario ya está inactivo";
+
+        usuario.setActivo(false);
+        usuarioRepository.save(usuario);
+        return "Usuario eliminado correctamente";
     }
 }

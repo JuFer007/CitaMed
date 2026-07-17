@@ -12,6 +12,12 @@ export interface UsuarioDTO {
   rol: Rol;
 }
 
+export interface UsuarioUpdateDTO {
+  userName?: string;
+  password?: string;
+  rol?: Rol;
+}
+
 export enum Rol {
   ADMIN = 'ADMIN',
   MEDICO = 'MEDICO',
