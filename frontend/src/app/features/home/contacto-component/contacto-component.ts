@@ -16,6 +16,7 @@ import {
 import { loadStripe, Stripe } from '@stripe/stripe-js';
 import { Especialidad } from '../../../model/Especialidad';
 import { STRIPE_PUBLISHABLE_KEY } from '../../../core/services/stripe-config';
+import { environment } from '../../../../environments/environment';
 import 'iconify-icon';
 
 export interface SlotDisponible {
@@ -49,8 +50,8 @@ export interface SlotSeleccionado {
 })
 export class ContactoComponent implements OnInit, OnDestroy {
 
-  private baseUrl = 'http://localhost:8080/api/lading';
-  private apiUrl  = 'http://localhost:8080/api';
+  private baseUrl = `${environment.apiUrl}/api/lading`;
+  private apiUrl  = `${environment.apiUrl}/api`;
 
   // Sujeto para cancelar suscripciones al destruir el componente
   private destroy$ = new Subject<void>();

@@ -234,6 +234,7 @@ app.post("/generar-historial", async (req, res) => {
   }
 });
 
-app.listen(3005, () => {
-  console.log("CitaMed PDF Service running on port 3005");
+const PORT = process.env.PORT || 3005;
+app.listen(PORT, () => {
+  console.log(`CitaMed PDF Service running on port ${PORT}`);
 });

@@ -2,11 +2,12 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Diagnostico, DiagnosticoDTO } from '../../model/Diagnostico';
+import { environment } from '../../../environments/environment';
 
 @Injectable({ providedIn: 'root' })
 export class DiagnosticoService {
-  private apiUrl = 'http://localhost:8080/api/diagnostico';
-  private pdfApi = 'http://localhost:8080/api/pdf';
+  private apiUrl = `${environment.apiUrl}/api/diagnostico`;
+  private pdfApi = `${environment.apiUrl}/api/pdf`;
 
   constructor(private http: HttpClient) {}
 

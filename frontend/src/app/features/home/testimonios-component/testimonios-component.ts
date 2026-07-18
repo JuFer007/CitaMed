@@ -2,6 +2,7 @@ import { Component, CUSTOM_ELEMENTS_SCHEMA, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { TestimonioPublico } from '../../../model/Testimonio';
+import { environment } from '../../../../environments/environment';
 import 'iconify-icon';
 
 @Component({
@@ -35,7 +36,7 @@ export class TestimoniosComponent implements OnInit {
   constructor(private http: HttpClient) {}
 
   ngOnInit(): void {
-    this.http.get<TestimonioPublico[]>('http://localhost:8080/api/lading/testimonios')
+    this.http.get<TestimonioPublico[]>(`${environment.apiUrl}/api/lading/testimonios`)
       .subscribe({
         next: (data) => {
           this.testimonios = data.length > 0 ? data : this.fallbackTestimonios;
