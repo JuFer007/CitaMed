@@ -4,6 +4,15 @@ import { FormsModule } from '@angular/forms';
 import { PacientePortalService } from '../../../core/services/paciente-portal-service';
 import { GlobalToast } from '../../../core/services/global-toast';
 
+interface ConfirmacionData {
+  especialidad: string;
+  medico: string;
+  fechaHora: string;
+  precio: number;
+  motivo: string;
+  consultorio: string;
+}
+
 interface Slot {
   medicoId: number;
   medicoNombre: string;
@@ -37,6 +46,8 @@ export class ReservarCitaPacienteComponent implements OnInit {
   motivoConsulta = '';
   minDate = '';
   reservando = false;
+  fechaSinHorarios = false;
+  confirmacion?: ConfirmacionData;
 
   constructor(
     private portalService: PacientePortalService,
@@ -52,7 +63,7 @@ export class ReservarCitaPacienteComponent implements OnInit {
     this.portalService.obtenerEspecialidades().subscribe({
       next: (data) => {
         this.especialidades = data;
-        this.cdr.detectChanges();
+        this.cdr.markForCheck();
       },
       error: () => this.toast.error('Error al cargar especialidades'),
     });
@@ -78,7 +89,9 @@ export class ReservarCitaPacienteComponent implements OnInit {
     this.portalService.obtenerSlots(this.especialidadSeleccionada, this.fechaSeleccionada).subscribe({
       next: (data) => {
         this.slots = data;
+        this.fechaSinHorarios = this.slots.length === 0;
         if (this.slots.length > 0) this.paso = 3;
+        this.cdr.detectChanges();
       },
       error: () => this.toast.error('Error al cargar horarios'),
     });
@@ -88,6 +101,7 @@ export class ReservarCitaPacienteComponent implements OnInit {
     this.slots = [];
     this.slotSeleccionado = null;
     this.medicoId = null;
+    this.fechaSinHorarios = false;
     this.cargarSlots();
   }
 
@@ -116,8 +130,16 @@ export class ReservarCitaPacienteComponent implements OnInit {
     }).subscribe({
       next: () => {
         this.reservando = false;
-        this.toast.success('Cita reservada correctamente');
-        this.reiniciar();
+        this.confirmacion = {
+          especialidad: this.especialidades.find(e => e.id === this.especialidadSeleccionada)?.nombre || '',
+          medico: `Dr. ${this.medicoNombre} ${this.medicoApellido}`,
+          fechaHora: this.slotSeleccionado ?? '',
+          precio: this.precio,
+          motivo: this.motivoConsulta.trim(),
+          consultorio: this.consultorio,
+        };
+        this.paso = 5;
+        this.portalService.notificarRecargarCitas();
       },
       error: (err) => {
         this.reservando = false;
@@ -136,6 +158,7 @@ export class ReservarCitaPacienteComponent implements OnInit {
     this.medicoApellido = '';
     this.motivoConsulta = '';
     this.slots = [];
+    this.confirmacion = undefined;
   }
 
   formatearHora(fechaHora: string): string {

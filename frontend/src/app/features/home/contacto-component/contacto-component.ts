@@ -13,7 +13,9 @@ import {
   timeout,
   finalize
 } from 'rxjs/operators';
+import { loadStripe, Stripe } from '@stripe/stripe-js';
 import { Especialidad } from '../../../model/Especialidad';
+import { STRIPE_PUBLISHABLE_KEY } from '../../../core/services/stripe-config';
 import 'iconify-icon';
 
 export interface SlotDisponible {
@@ -34,6 +36,7 @@ export interface SlotSeleccionado {
   especialidadNombre: string;
   consultorioId: number;
   hora: string;
+  precio: number;
 }
 
 @Component({
@@ -63,12 +66,19 @@ export class ContactoComponent implements OnInit, OnDestroy {
   cargandoSlots = false;
   cargandoDni   = false;
   reservando    = false;
-  reservaExitosa = false;
   errorReserva  = '';
   dniEncontrado = false;
   pacienteExistente = false;
 
   slotSeleccionado: SlotSeleccionado | null = null;
+
+  // Stripe
+  private stripe: Stripe | null = null;
+  private cardElement: any = null;
+  clientSecret = '';
+  citaIdConfirmada = 0;
+  procesandoPago = false;
+  errorPago = '';
 
   gruposSanguineos = [
     'A_POSITIVO', 'A_NEGATIVO', 'B_POSITIVO', 'B_NEGATIVO',
@@ -86,6 +96,7 @@ export class ContactoComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
+    if (this.cardElement) { this.cardElement.destroy(); }
   }
 
   private initForms(): void {
@@ -165,6 +176,7 @@ export class ContactoComponent implements OnInit, OnDestroy {
   }
 
   seleccionarSlot(slot: SlotDisponible, hora: string): void {
+    const esp = this.especialidades.find(e => e.id === Number(this.reservaForm.get('especialidadId')?.value));
     this.slotSeleccionado = {
       medicoId: slot.medicoId,
       medicoNombre: slot.medicoNombre,
@@ -172,7 +184,8 @@ export class ContactoComponent implements OnInit, OnDestroy {
       medicoGenero: slot.medicoGenero,
       especialidadNombre: slot.especialidadNombre,
       consultorioId: slot.consultorioId,
-      hora
+      hora,
+      precio: esp?.precio ?? 0
     };
   }
 
@@ -229,7 +242,7 @@ export class ContactoComponent implements OnInit, OnDestroy {
     });
   }
 
-  // ── PASO 3: confirmar reserva ────────────────────────────────────────
+  // ── PASO 3: confirmar y crear pago ────────────────────────────────────
   confirmarReserva(): void {
     if (!this.slotSeleccionado) return;
     const formValue = this.contactoForm.getRawValue();
@@ -254,22 +267,85 @@ export class ContactoComponent implements OnInit, OnDestroy {
       motivoConsulta:  this.reservaForm.value.motivoConsulta
     };
 
-    this.http.post(this.baseUrl + '/reserva', payload, { responseType: 'text' })
+    this.http.post<{ citaId: number; clientSecret: string }>(this.baseUrl + '/reserva', payload)
       .pipe(
         takeUntil(this.destroy$),
         timeout(60000),
         finalize(() => { this.reservando = false; })
       )
       .subscribe({
-        next: () => {
-          this.reservaExitosa = true;
-          this.pasoActual = 3;
+        next: (res) => {
+          this.citaIdConfirmada = res.citaId;
+          this.clientSecret = res.clientSecret;
+          this.pasoActual = 4;
           this.cd.detectChanges();
+          setTimeout(() => this.iniciarStripe(), 100);
         },
         error: (err) => {
-          this.errorReserva = err?.error || 'Error al procesar la reserva. Intente nuevamente.';
+          this.errorReserva = err?.error?.error || 'Error al procesar la reserva. Intente nuevamente.';
         }
       });
+  }
+
+  // ── PASO 4: Stripe Elements ───────────────────────────────────────────
+  private async iniciarStripe(): Promise<void> {
+    this.stripe = await loadStripe(STRIPE_PUBLISHABLE_KEY);
+    if (!this.stripe) return;
+    const elements = this.stripe.elements();
+    this.cardElement = elements.create('card', {
+      style: {
+        base: {
+          fontSize: '16px',
+          color: '#083d3a',
+          fontFamily: 'Inter, system-ui, sans-serif',
+          '::placeholder': { color: '#9ca3af' },
+        },
+        invalid: { color: '#dc2626' },
+      },
+    });
+    const container = document.getElementById('card-element');
+    if (container) {
+      this.cardElement.mount(container);
+    }
+  }
+
+  async procesarPago(): Promise<void> {
+    if (!this.stripe || !this.cardElement) return;
+    this.procesandoPago = true;
+    this.errorPago = '';
+
+    const { error, paymentIntent } = await this.stripe.confirmCardPayment(this.clientSecret, {
+      payment_method: { card: this.cardElement },
+    });
+
+    if (error) {
+      this.errorPago = error.message || 'Error al procesar el pago';
+      this.procesandoPago = false;
+      this.cd.detectChanges();
+      return;
+    }
+
+    if (paymentIntent?.status === 'succeeded') {
+      this.http.post(this.baseUrl + '/reserva/confirmar', {
+        citaId: this.citaIdConfirmada,
+        paymentIntentId: paymentIntent.id,
+      }).pipe(takeUntil(this.destroy$)).subscribe({
+        next: () => {
+          this.procesandoPago = false;
+          this.pasoActual = 5;
+          this.cd.detectChanges();
+        },
+        error: () => {
+          this.errorPago = 'Error al confirmar la reserva. Contacta al soporte.';
+          this.procesandoPago = false;
+          this.cd.detectChanges();
+        },
+      });
+    } else {
+      this.errorPago = 'El pago no se completó. Intenta nuevamente.';
+      this.procesandoPago = false;
+      this.cd.detectChanges();
+    }
   }
 
   // ── Helpers UI ───────────────────────────────────────────────────────
@@ -308,6 +384,7 @@ export class ContactoComponent implements OnInit, OnDestroy {
 
   siguientePaso(): void {
     if (this.pasoActual === 1 && (!this.reservaForm.valid || !this.slotSeleccionado)) return;
+    if (this.pasoActual === 2 && !this.contactoForm.valid) return;
     this.pasoActual++;
     if (this.pasoActual === 2) {
       this.habilitarCamposPaciente();
@@ -330,7 +407,6 @@ export class ContactoComponent implements OnInit, OnDestroy {
 
   nuevaReserva(): void {
     this.pasoActual = 1;
-    this.reservaExitosa = false;
     this.reservaForm.reset();
     this.contactoForm.reset();
     this.habilitarCamposPaciente();
@@ -339,5 +415,11 @@ export class ContactoComponent implements OnInit, OnDestroy {
     this.dniEncontrado = false;
     this.pacienteExistente = false;
     this.errorReserva = '';
+    this.clientSecret = '';
+    this.citaIdConfirmada = 0;
+    this.errorPago = '';
+    this.procesandoPago = false;
+    if (this.cardElement) { this.cardElement.destroy(); this.cardElement = null; }
+    this.stripe = null;
   }
 }

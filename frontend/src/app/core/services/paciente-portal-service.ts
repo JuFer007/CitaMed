@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 import { Testimonio, TestimonioPublico } from '../../model/Testimonio';
 
 export interface PortalPerfil {
@@ -81,6 +81,13 @@ export interface PortalPago {
 @Injectable({ providedIn: 'root' })
 export class PacientePortalService {
   private api = 'http://localhost:8080/api/portal';
+
+  private recargarCitasSubject = new Subject<void>();
+  recargarCitas$ = this.recargarCitasSubject.asObservable();
+
+  notificarRecargarCitas(): void {
+    this.recargarCitasSubject.next();
+  }
 
   constructor(private http: HttpClient) {}
 
@@ -182,5 +189,13 @@ export class PacientePortalService {
 
   obtenerTestimoniosPublicos(): Observable<TestimonioPublico[]> {
     return this.http.get<TestimonioPublico[]>('http://localhost:8080/api/lading/testimonios');
+  }
+
+  crearPagoIntent(citaId: number): Observable<{ clientSecret: string }> {
+    return this.http.post<{ clientSecret: string }>(`${this.api}/pagos/intent`, { citaId });
+  }
+
+  confirmarPago(citaId: number, paymentIntentId: string): Observable<any> {
+    return this.http.post(`${this.api}/pagos/confirmar`, { citaId, paymentIntentId });
   }
 }

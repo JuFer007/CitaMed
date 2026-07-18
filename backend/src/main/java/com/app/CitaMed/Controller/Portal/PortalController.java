@@ -1,4 +1,5 @@
 package com.app.CitaMed.Controller.Portal;
+import com.app.CitaMed.DTO.PagoRequestDTO;
 import com.app.CitaMed.DTO.PerfilRequest;
 import com.app.CitaMed.DTO.PortalPerfilDTO;
 import com.app.CitaMed.DTO.PortalReservaRequest;
@@ -6,7 +7,10 @@ import com.app.CitaMed.DTO.RecuperarPasswordDTO;
 import com.app.CitaMed.DTO.RestablecerPasswordDTO;
 import com.app.CitaMed.DTO.TestimonioDTO;
 import com.app.CitaMed.Model.Paciente.Paciente;
+import com.app.CitaMed.Repository.Administrativo.PagoRepository;
+import com.app.CitaMed.Repository.Agenda.CitaRepository;
 import com.app.CitaMed.Repository.Paciente.PacienteRepository;
+import com.app.CitaMed.Service.Administrativo.StripeService;
 import com.app.CitaMed.Service.Administrativo.UsuarioService;
 import com.app.CitaMed.Service.Portal.PortalAuthService;
 import com.app.CitaMed.Service.Portal.PortalCitaService;
@@ -33,6 +37,9 @@ public class PortalController {
     private final PortalTestimonioService portalTestimonioService;
     private final UsuarioService usuarioService;
     private final PacienteRepository pacienteRepository;
+    private final StripeService stripeService;
+    private final PagoRepository pagoRepository;
+    private final CitaRepository citaRepository;
 
     @GetMapping("/perfil")
     public ResponseEntity<?> obtenerPerfil(Authentication auth) {
@@ -267,6 +274,56 @@ public class PortalController {
         try {
             portalAuthService.restablecerPassword(dto.getToken(), dto.getNuevaPassword());
             return ResponseEntity.ok(Map.of("mensaje", "Contraseña actualizada correctamente"));
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
+        }
+    }
+
+    @PostMapping("/pagos/intent")
+    public ResponseEntity<?> crearPagoIntent(@RequestBody Map<String, Long> body, Authentication auth) {
+        try {
+            Long pacienteId = obtenerPacienteId(auth);
+            Long citaId = body.get("citaId");
+
+            var cita = citaRepository.findById(citaId)
+                    .orElseThrow(() -> new RuntimeException("Cita no encontrada"));
+            if (!cita.getPaciente().getId().equals(pacienteId))
+                throw new RuntimeException("La cita no pertenece al paciente");
+
+            var pago = pagoRepository.findByCitaId(citaId)
+                    .orElseThrow(() -> new RuntimeException("Pago no encontrado"));
+
+            long amountInCents = (long) (pago.getMonto() * 100);
+            String clientSecret = stripeService.createPaymentIntent(amountInCents, citaId.toString());
+            return ResponseEntity.ok(Map.of("clientSecret", clientSecret));
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(Map.of("error", "Error al procesar el pago"));
+        }
+    }
+
+    @PostMapping("/pagos/confirmar")
+    public ResponseEntity<?> confirmarPago(@Valid @RequestBody PagoRequestDTO dto, Authentication auth) {
+        try {
+            Long pacienteId = obtenerPacienteId(auth);
+
+            var cita = citaRepository.findById(dto.getCitaId())
+                    .orElseThrow(() -> new RuntimeException("Cita no encontrada"));
+            if (!cita.getPaciente().getId().equals(pacienteId))
+                throw new RuntimeException("La cita no pertenece al paciente");
+
+            boolean pagado = stripeService.verifyPaymentIntent(dto.getPaymentIntentId());
+            if (!pagado)
+                return ResponseEntity.badRequest().body(Map.of("error", "El pago no se ha completado"));
+
+            var pago = pagoRepository.findByCitaId(dto.getCitaId())
+                    .orElseThrow(() -> new RuntimeException("Pago no encontrado"));
+            pago.setEstado(com.app.CitaMed.Enums.EstadoPago.PAGADO);
+            pago.setFechaPago(java.time.LocalDateTime.now());
+            pagoRepository.save(pago);
+
+            return ResponseEntity.ok(Map.of("mensaje", "Pago confirmado exitosamente"));
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
         }

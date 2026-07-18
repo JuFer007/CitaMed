@@ -7,7 +7,7 @@
   <p class="text-sm text-[#4d6d6b] mt-2 mb-8">Elige especialidad, fecha, médico y confirma tu reserva.</p>
 
   <!-- Step indicator -->
-  <div class="flex items-center gap-2 mb-8">
+  <div *ngIf="paso < 5" class="flex items-center gap-2 mb-8">
     <div *ngFor="let s of [1,2,3,4]; let i = index" class="flex items-center gap-2">
       <div class="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold transition"
         [class.bg-[#36b1ae]]="paso >= s" [class.text-white]="paso >= s"
@@ -39,6 +39,13 @@
     <h3 class="text-lg font-bold text-[#083d3a] mb-4">Selecciona la fecha</h3>
     <input type="date" [min]="minDate" [(ngModel)]="fechaSeleccionada" (change)="cambiarFecha()"
       class="w-full sm:w-64 px-4 py-2.5 rounded-xl border border-[#d1d5db] text-sm focus:outline-none focus:ring-2 focus:ring-[#36b1ae]/40 focus:border-[#36b1ae]">
+    <div *ngIf="fechaSinHorarios" class="mt-4 flex items-start gap-3 bg-[#fef3c7] border border-[#fcd34d] rounded-xl px-4 py-3 sm:w-64">
+      <span class="mso text-[#f59e0b] !text-lg">warning</span>
+      <div>
+        <p class="text-sm font-semibold text-[#92400e]">Sin horarios disponibles</p>
+        <p class="text-xs text-[#a16207] mt-0.5">No hay horarios para esta fecha. Selecciona otro día.</p>
+      </div>
+    </div>
   </div>
 
   <!-- Paso 3: Horario -->
@@ -48,11 +55,6 @@
     </button>
     <h3 class="text-lg font-bold text-[#083d3a] mb-2">Selecciona médico y horario</h3>
     <p class="text-sm text-[#4d6d6b] mb-4">{{ especialidades.find(e => e.id === especialidadSeleccionada)?.nombre }} — {{ formatearFecha(fechaSeleccionada + 'T12:00:00') }}</p>
-
-    <div *ngIf="slots.length === 0" class="text-center py-12">
-      <span class="mso !text-5xl text-[#c8e8e6] block mb-4">event_busy</span>
-      <p class="text-sm text-[#6b8c89]">No hay horarios disponibles para esta fecha</p>
-    </div>
 
     <div *ngFor="let s of slots" class="bg-white rounded-3xl shadow-xl shadow-[#36b1ae]/10 ring-1 ring-[#36b1ae]/10 p-5 mb-4">
       <div class="flex items-center gap-3 mb-3">
@@ -107,7 +109,7 @@
           <span class="mso text-[#36b1ae] !text-[18px]">event</span>
           <div>
             <span class="text-xs text-[#6b8c89]">Fecha y hora</span>
-            <p class="font-semibold">{{ formatearFecha(slotSeleccionado!) }} — {{ formatearHora(slotSeleccionado!) }}</p>
+            <p class="font-semibold">{{ formatearFecha(slotSeleccionado ?? '') }} — {{ formatearHora(slotSeleccionado ?? '') }}</p>
           </div>
         </div>
         <div class="flex items-center gap-3 text-sm text-[#083d3a]">
@@ -131,6 +133,65 @@
       class="w-full sm:w-auto bg-[#36b2ac] text-white px-8 py-3 rounded-xl text-sm font-semibold hover:bg-[#2b9a95] shadow-lg shadow-[#36b2ac]/20 transition flex items-center justify-center gap-2 disabled:opacity-60 disabled:cursor-not-allowed">
       <span *ngIf="reservando" class="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
       {{ reservando ? 'Reservando...' : 'Confirmar y reservar' }}
+    </button>
+  </div>
+
+  <!-- Paso 5: Confirmación -->
+  <div *ngIf="paso === 5 && confirmacion" class="text-center">
+    <span class="mso !text-7xl text-[#36b1ae] block mb-4">check_circle</span>
+    <h3 class="text-2xl font-bold text-[#083d3a] mb-2">¡Cita reservada exitosamente!</h3>
+    <p class="text-sm text-[#4d6d6b] mb-8">Los detalles de tu cita han sido registrados.</p>
+
+    <div class="bg-white rounded-3xl shadow-xl shadow-[#36b1ae]/10 ring-1 ring-[#36b1ae]/10 p-6 sm:p-8 mb-8 max-w-lg mx-auto text-left">
+      <div class="space-y-4">
+        <div class="flex items-center gap-3 text-sm text-[#083d3a]">
+          <span class="mso text-[#36b1ae] !text-[18px]">medical_services</span>
+          <div>
+            <span class="text-xs text-[#6b8c89]">Especialidad</span>
+            <p class="font-semibold">{{ confirmacion.especialidad }}</p>
+          </div>
+        </div>
+        <div class="flex items-center gap-3 text-sm text-[#083d3a]">
+          <span class="mso text-[#36b1ae] !text-[18px]">person</span>
+          <div>
+            <span class="text-xs text-[#6b8c89]">Médico</span>
+            <p class="font-semibold">{{ confirmacion.medico }}</p>
+          </div>
+        </div>
+        <div class="flex items-center gap-3 text-sm text-[#083d3a]">
+          <span class="mso text-[#36b1ae] !text-[18px]">event</span>
+          <div>
+            <span class="text-xs text-[#6b8c89]">Fecha y hora</span>
+            <p class="font-semibold">{{ formatearFecha(confirmacion.fechaHora) }} — {{ formatearHora(confirmacion.fechaHora) }}</p>
+          </div>
+        </div>
+        <div class="flex items-center gap-3 text-sm text-[#083d3a]">
+          <span class="mso text-[#36b1ae] !text-[18px]">meeting_room</span>
+          <div>
+            <span class="text-xs text-[#6b8c89]">Consultorio</span>
+            <p class="font-semibold">{{ confirmacion.consultorio }}</p>
+          </div>
+        </div>
+        <div class="flex items-center gap-3 text-sm text-[#083d3a]">
+          <span class="mso text-[#36b1ae] !text-[18px]">payments</span>
+          <div>
+            <span class="text-xs text-[#6b8c89]">Costo</span>
+            <p class="font-semibold">S/ {{ confirmacion.precio.toFixed(2) }}</p>
+          </div>
+        </div>
+        <div class="flex items-start gap-3 text-sm text-[#083d3a]">
+          <span class="mso text-[#36b1ae] !text-[18px] mt-0.5">edit_note</span>
+          <div>
+            <span class="text-xs text-[#6b8c89]">Motivo de consulta</span>
+            <p class="font-semibold">{{ confirmacion.motivo }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <button (click)="reiniciar()"
+      class="bg-[#36b2ac] text-white px-8 py-3 rounded-xl text-sm font-semibold hover:bg-[#2b9a95] shadow-lg shadow-[#36b2ac]/20 transition">
+      Volver al inicio
     </button>
   </div>
 </div>

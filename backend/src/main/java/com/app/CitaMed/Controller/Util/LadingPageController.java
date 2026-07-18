@@ -1,7 +1,9 @@
 package com.app.CitaMed.Controller.Util;
 import com.app.CitaMed.DTO.DniLookupDTO;
 import com.app.CitaMed.DTO.MedicoPerfilDTO;
+import com.app.CitaMed.DTO.PagoRequestDTO;
 import com.app.CitaMed.DTO.ReservaDTO;
+import com.app.CitaMed.DTO.ReservaResponseDTO;
 import com.app.CitaMed.DTO.SlotDisponibleDTO;
 import com.app.CitaMed.DTO.ReniecDataDTO;
 import com.app.CitaMed.DTO.TestimonioPublicoDTO;
@@ -19,6 +21,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/lading")
@@ -65,12 +68,25 @@ public class LadingPageController {
     }
 
     @PostMapping("/reserva")
-    public ResponseEntity<String> procesarReserva(@RequestBody @Valid ReservaDTO dto) {
+    public ResponseEntity<?> procesarReserva(@RequestBody @Valid ReservaDTO dto) {
         try {
-            String resultado = reservaService.procesarReserva(dto);
+            ReservaResponseDTO resultado = reservaService.procesarReserva(dto);
             return ResponseEntity.ok(resultado);
         } catch (RuntimeException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
+            return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
+        }
+    }
+
+    @PostMapping("/reserva/confirmar")
+    public ResponseEntity<?> confirmarReserva(@RequestBody @Valid PagoRequestDTO dto) {
+        try {
+            boolean pagado = reservaService.confirmarPago(dto.getCitaId(), dto.getPaymentIntentId());
+            if (!pagado) {
+                return ResponseEntity.badRequest().body(Map.of("error", "El pago no se ha completado"));
+            }
+            return ResponseEntity.ok(Map.of("mensaje", "Reserva confirmada y pago exitoso"));
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
         }
     }
 

@@ -1,5 +1,6 @@
-import { Component, EventEmitter, Input, OnInit, Output, ChangeDetectorRef } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, OnDestroy, Output, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Subscription } from 'rxjs';
 import { PacientePortalService, PortalPerfil, PortalCita } from '../../../core/services/paciente-portal-service';
 
 @Component({
@@ -9,7 +10,7 @@ import { PacientePortalService, PortalPerfil, PortalCita } from '../../../core/s
   templateUrl: './inicio-paciente.html',
   styleUrl: './inicio-paciente.css',
 })
-export class InicioPacienteComponent implements OnInit {
+export class InicioPacienteComponent implements OnInit, OnDestroy {
   @Input() perfil: PortalPerfil | null = null;
   @Output() cambiarTab = new EventEmitter<string>();
 
@@ -19,6 +20,7 @@ export class InicioPacienteComponent implements OnInit {
   atendidasCount = 0;
   cargado = false;
   errorCarga = false;
+  private recargaSub?: Subscription;
 
   hoy = new Date();
   diasSemana = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
@@ -28,6 +30,11 @@ export class InicioPacienteComponent implements OnInit {
 
   ngOnInit(): void {
     this.cargarDatos();
+    this.recargaSub = this.portalService.recargarCitas$.subscribe(() => this.cargarDatos());
+  }
+
+  ngOnDestroy(): void {
+    this.recargaSub?.unsubscribe();
   }
 
   cargarDatos(): void {
@@ -37,7 +44,7 @@ export class InicioPacienteComponent implements OnInit {
         this.proximasCount = data.length;
         this.totalCitas = data.length + this.atendidasCount;
         this.cargado = true;
-        this.cdr.detectChanges();
+        this.cdr.markForCheck();
       },
     });
     this.portalService.obtenerHistorialCitas().subscribe({
@@ -45,12 +52,12 @@ export class InicioPacienteComponent implements OnInit {
         this.atendidasCount = data.length;
         this.totalCitas = this.proximasCount + data.length;
         this.cargado = true;
-        this.cdr.detectChanges();
+        this.cdr.markForCheck();
       },
       error: () => {
         this.cargado = true;
         this.errorCarga = true;
-        this.cdr.detectChanges();
+        this.cdr.markForCheck();
       },
     });
   }

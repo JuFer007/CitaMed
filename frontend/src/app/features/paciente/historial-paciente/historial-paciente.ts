@@ -41,23 +41,36 @@ export class HistorialPacienteComponent implements OnInit {
       next: (data: any) => {
         this.historialRaw = data;
         this.items = (data.citas || []).map((c: any) => ({
-          fecha: c.fechaHora ? new Date(c.fechaHora).toLocaleDateString('es-PE', { day: 'numeric', month: 'short', year: 'numeric' }) : '—',
-          hora: c.fechaHora ? new Date(c.fechaHora).toLocaleTimeString('es-PE', { hour: '2-digit', minute: '2-digit' }) : '',
+          fecha: c.fechaHora
+            ? new Date(c.fechaHora).toLocaleDateString('es-PE', {
+                day: 'numeric',
+                month: 'short',
+                year: 'numeric',
+              })
+            : '—',
+          hora: c.fechaHora
+            ? new Date(c.fechaHora).toLocaleTimeString('es-PE', {
+                hour: '2-digit',
+                minute: '2-digit',
+              })
+            : '',
           titulo: c.motivoConsulta || 'Consulta médica',
           descripcion: c.diagnostico?.enfermedad
             ? `Diagnóstico: ${c.diagnostico.enfermedad}${c.diagnostico.descripcion ? ' — ' + c.diagnostico.descripcion : ''}`
-            : c.estado === 'PROGRAMADA' ? 'Cita programada' : 'Sin diagnóstico registrado',
+            : c.estado === 'PROGRAMADA'
+              ? 'Cita programada'
+              : 'Sin diagnóstico registrado',
           medico: `${c.medicoNombre} ${c.medicoApellidoPaterno}`,
           tipo: c.medicoEspecialidad || 'General',
           estado: c.estado,
           rawFecha: c.fechaHora,
         }));
         this.cargado = true;
-        this.cdr.detectChanges();
+        this.cdr.markForCheck();
       },
       error: () => {
         this.cargado = true;
-        this.cdr.detectChanges();
+        this.cdr.markForCheck();
         this.errorCarga = true;
       },
     });

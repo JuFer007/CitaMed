@@ -187,9 +187,9 @@ public class PortalCitaService {
         Pago pago = new Pago();
         pago.setCita(cita);
         pago.setMonto(medico.getEspecialidad().getPrecio());
-        pago.setMetodoPago(MetodoPago.EFECTIVO);
+        pago.setMetodoPago(MetodoPago.STRIPE);
         pago.setEstado(EstadoPago.PENDIENTE);
-        pago.setFechaPago(LocalDateTime.now());
+        pago.setFechaPago(null);
         pagoRepository.save(pago);
 
         portalNotificacionService.crearNotificacion(

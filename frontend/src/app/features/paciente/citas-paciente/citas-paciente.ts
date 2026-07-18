@@ -1,7 +1,10 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Subscription } from 'rxjs';
+import { loadStripe, Stripe } from '@stripe/stripe-js';
 import { PacientePortalService, PortalCita, PortalDiagnostico } from '../../../core/services/paciente-portal-service';
 import { GlobalToast } from '../../../core/services/global-toast';
+import { STRIPE_PUBLISHABLE_KEY } from '../../../core/services/stripe-config';
 
 @Component({
   selector: 'app-citas-paciente',
@@ -10,7 +13,7 @@ import { GlobalToast } from '../../../core/services/global-toast';
   templateUrl: './citas-paciente.html',
   styleUrl: './citas-paciente.css',
 })
-export class CitasPacienteComponent implements OnInit {
+export class CitasPacienteComponent implements OnInit, OnDestroy {
   proximas: PortalCita[] = [];
   historial: PortalCita[] = [];
   vista = 'proximas';
@@ -22,6 +25,16 @@ export class CitasPacienteComponent implements OnInit {
   cargandoDiagnostico = false;
   cargandoPdf = false;
   sinDiagnostico = false;
+  private recargaSub?: Subscription;
+
+  // Stripe payment modal
+  modalPagoAbierto = false;
+  citaPago: PortalCita | null = null;
+  private stripe: Stripe | null = null;
+  private cardElement: any = null;
+  pagoClientSecret = '';
+  procesandoPago = false;
+  errorPago = '';
 
   constructor(
     private portalService: PacientePortalService,
@@ -30,11 +43,21 @@ export class CitasPacienteComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    this.cargarCitas();
+    this.recargaSub = this.portalService.recargarCitas$.subscribe(() => this.cargarCitas());
+  }
+
+  ngOnDestroy(): void {
+    this.recargaSub?.unsubscribe();
+    if (this.cardElement) { this.cardElement.destroy(); }
+  }
+
+  private cargarCitas(): void {
     this.portalService.obtenerProximasCitas().subscribe({
-      next: (data) => { this.proximas = data; this.cdr.detectChanges(); },
+      next: (data) => { this.proximas = data; this.cdr.markForCheck(); },
     });
     this.portalService.obtenerHistorialCitas().subscribe({
-      next: (data) => { this.historial = data; this.cdr.detectChanges(); },
+      next: (data) => { this.historial = data; this.cdr.markForCheck(); },
     });
   }
 
@@ -85,8 +108,89 @@ export class CitasPacienteComponent implements OnInit {
     });
   }
 
-  pagarAhora(): void {
-    this.toast.info('Redirigiendo a pasarela de pago...');
+  pagarAhora(cita: PortalCita): void {
+    this.citaPago = cita;
+    this.modalPagoAbierto = true;
+    this.errorPago = '';
+    this.procesandoPago = false;
+    this.cdr.detectChanges();
+    this.portalService.crearPagoIntent(cita.id).subscribe({
+      next: async (res) => {
+        this.pagoClientSecret = res.clientSecret;
+        this.cdr.detectChanges();
+        await this.iniciarStripePago();
+      },
+      error: () => {
+        this.toast.error('Error al iniciar el pago');
+        this.cerrarModalPago();
+      },
+    });
+  }
+
+  private async iniciarStripePago(): Promise<void> {
+    this.stripe = await loadStripe(STRIPE_PUBLISHABLE_KEY);
+    if (!this.stripe) return;
+    const elements = this.stripe.elements();
+    this.cardElement = elements.create('card', {
+      style: {
+        base: {
+          fontSize: '16px',
+          color: '#083d3a',
+          fontFamily: 'Inter, system-ui, sans-serif',
+          '::placeholder': { color: '#9ca3af' },
+        },
+        invalid: { color: '#dc2626' },
+      },
+    });
+    setTimeout(() => {
+      const container = document.getElementById('card-element-pago');
+      if (container) this.cardElement.mount(container);
+    }, 50);
+  }
+
+  async confirmarPagoStripe(): Promise<void> {
+    if (!this.stripe || !this.cardElement || !this.citaPago) return;
+    this.procesandoPago = true;
+    this.errorPago = '';
+
+    const { error, paymentIntent } = await this.stripe.confirmCardPayment(this.pagoClientSecret, {
+      payment_method: { card: this.cardElement },
+    });
+
+    if (error) {
+      this.errorPago = error.message || 'Error al procesar el pago';
+      this.procesandoPago = false;
+      this.cdr.detectChanges();
+      return;
+    }
+
+    if (paymentIntent?.status === 'succeeded') {
+      this.portalService.confirmarPago(this.citaPago.id, paymentIntent.id).subscribe({
+        next: () => {
+          this.toast.success('Pago realizado exitosamente');
+          this.cerrarModalPago();
+          this.cargarCitas();
+        },
+        error: () => {
+          this.toast.error('Error al confirmar el pago');
+          this.cerrarModalPago();
+        },
+      });
+    } else {
+      this.errorPago = 'El pago no se completó. Intenta nuevamente.';
+      this.procesandoPago = false;
+      this.cdr.detectChanges();
+    }
+  }
+
+  cerrarModalPago(): void {
+    this.modalPagoAbierto = false;
+    this.citaPago = null;
+    this.pagoClientSecret = '';
+    this.errorPago = '';
+    this.procesandoPago = false;
+    if (this.cardElement) { this.cardElement.destroy(); this.cardElement = null; }
+    this.stripe = null;
   }
 
   cancelarCita(id: number): void {

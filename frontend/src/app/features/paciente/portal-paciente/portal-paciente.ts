@@ -120,7 +120,7 @@ export class PortalPacienteComponent implements OnInit, OnDestroy {
         this.perfil = data;
         this.nombrePaciente = `${data.nombre} ${data.apellidoPaterno} ${data.apellidoMaterno}`;
         this.iniciales = (data.nombre.charAt(0) + data.apellidoPaterno.charAt(0)).toUpperCase();
-        this.cdr.markForCheck(); // en vez de detectChanges()
+        this.cdr.markForCheck();
       },
     });
   }
@@ -131,7 +131,7 @@ export class PortalPacienteComponent implements OnInit, OnDestroy {
       next: (data) => {
         this.notificaciones = data;
         this.noLeidas = data.filter(n => !n.leido).length;
-        this.cdr.markForCheck(); // en vez de detectChanges()
+        this.cdr.markForCheck();
       },
       error: (err) => {
         console.error('Error al cargar notificaciones', err);
