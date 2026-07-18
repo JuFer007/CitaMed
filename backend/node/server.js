@@ -10,6 +10,9 @@ app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ limit: '10mb', extended: true }));
 
 app.use('/recursos', express.static(path.join(__dirname, 'recursos')));
+
+app.get('/health', (req, res) => res.status(200).end());
+app.head('/health', (req, res) => res.status(200).end());
 app.use('/', express.static(path.join(__dirname, 'templates')));
 
 async function renderPdf(html, viewportWidth) {
