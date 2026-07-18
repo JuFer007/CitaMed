@@ -12,7 +12,7 @@ import lombok.Setter;
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "HistorialesMedicos")
+@Table(name = "historiales_medicos")
 
 public class HistorialMedico {
     @Id

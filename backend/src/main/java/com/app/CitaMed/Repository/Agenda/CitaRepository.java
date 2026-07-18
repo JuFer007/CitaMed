@@ -72,21 +72,21 @@ public interface CitaRepository extends JpaRepository<Cita, Long> {
             "c.medico.especialidad.nombre ORDER BY COUNT(c) DESC")
     List<EspecialidadDTO> citasPorEspecialidad();
 
-    @Query(value = "SELECT DATE_FORMAT(citas.fecha_hora,'%h:%i %p') AS hora, " +
+    @Query(value = "SELECT TO_CHAR(citas.fecha_hora, 'HH12:MI AM') AS hora, " +
             "CONCAT(pacientes.nombre,' ', pacientes.apellido_paterno,' ', pacientes.apellido_materno) AS paciente, " +
             "CONCAT(especialidades.nombre,' - ', medicos.nombre,' ', medicos.apellido_paterno) AS detalle " +
             "FROM citas " +
             "INNER JOIN medicos ON citas.medico_id = medicos.id " +
             "INNER JOIN pacientes ON citas.paciente_id = pacientes.id " +
             "INNER JOIN especialidades ON medicos.especialidad_id = especialidades.id " +
-            "WHERE YEAR(citas.fecha_hora) = :anio " +
-            "AND MONTH(citas.fecha_hora) = :mes " +
-            "AND DAY(citas.fecha_hora) = :dia " +
+            "WHERE EXTRACT(YEAR FROM citas.fecha_hora) = :anio " +
+            "AND EXTRACT(MONTH FROM citas.fecha_hora) = :mes " +
+            "AND EXTRACT(DAY FROM citas.fecha_hora) = :dia " +
             "AND citas.estado != 'CANCELADA' " +
             "ORDER BY citas.fecha_hora", nativeQuery = true)
     List<Object[]> agendaHoyNative(@Param("anio") int anio, @Param("mes") int mes, @Param("dia") int dia);
 
-    @Query(value = "SELECT DATE_FORMAT(citas.fecha_hora,'%h:%i %p') AS hora, " +
+    @Query(value = "SELECT TO_CHAR(citas.fecha_hora, 'HH12:MI AM') AS hora, " +
             "CONCAT(pacientes.nombre,' ', pacientes.apellido_paterno,' ', pacientes.apellido_materno) AS paciente, " +
             "CONCAT(especialidades.nombre,' - ', medicos.nombre,' ', medicos.apellido_paterno) AS detalle " +
             "FROM citas " +
@@ -94,25 +94,25 @@ public interface CitaRepository extends JpaRepository<Cita, Long> {
             "INNER JOIN pacientes ON citas.paciente_id = pacientes.id " +
             "INNER JOIN especialidades ON medicos.especialidad_id = especialidades.id " +
             "WHERE medicos.id = :medicoId " +
-            "AND YEAR(citas.fecha_hora) = :anio " +
-            "AND MONTH(citas.fecha_hora) = :mes " +
-            "AND DAY(citas.fecha_hora) = :dia " +
+            "AND EXTRACT(YEAR FROM citas.fecha_hora) = :anio " +
+            "AND EXTRACT(MONTH FROM citas.fecha_hora) = :mes " +
+            "AND EXTRACT(DAY FROM citas.fecha_hora) = :dia " +
             "AND citas.estado != 'CANCELADA' " +
             "ORDER BY citas.fecha_hora", nativeQuery = true)
     List<Object[]> agendaHoyNativePorMedico(@Param("medicoId") Long medicoId, @Param("anio") int anio, @Param("mes") int mes, @Param("dia") int dia);
 
-    @Query(value = "SELECT MONTH(fecha_hora) AS mes, COUNT(*) AS total " +
+    @Query(value = "SELECT EXTRACT(MONTH FROM fecha_hora) AS mes, COUNT(*) AS total " +
            "FROM citas " +
-           "WHERE YEAR(fecha_hora) = :anio AND estado <> 'CANCELADA' " +
-           "GROUP BY MONTH(fecha_hora) " +
-           "ORDER BY MONTH(fecha_hora)", nativeQuery = true)
+           "WHERE EXTRACT(YEAR FROM fecha_hora) = :anio AND estado <> 'CANCELADA' " +
+           "GROUP BY EXTRACT(MONTH FROM fecha_hora) " +
+           "ORDER BY EXTRACT(MONTH FROM fecha_hora)", nativeQuery = true)
     List<Object[]> citasPorMesNative(@Param("anio") int anio);
 
-    @Query(value = "SELECT MONTH(fecha_hora) AS mes, COUNT(*) AS total " +
+    @Query(value = "SELECT EXTRACT(MONTH FROM fecha_hora) AS mes, COUNT(*) AS total " +
            "FROM citas " +
            "WHERE fecha_hora BETWEEN :inicio AND :fin AND estado <> 'CANCELADA' " +
-           "GROUP BY MONTH(fecha_hora) " +
-           "ORDER BY MONTH(fecha_hora)", nativeQuery = true)
+           "GROUP BY EXTRACT(MONTH FROM fecha_hora) " +
+           "ORDER BY EXTRACT(MONTH FROM fecha_hora)", nativeQuery = true)
     List<Object[]> citasPorMesBetween(@Param("inicio") LocalDateTime inicio, @Param("fin") LocalDateTime fin);
 
     @Query("SELECT new com.app.CitaMed.DTO.CitaDetalleDTO(" +
@@ -157,7 +157,7 @@ public interface CitaRepository extends JpaRepository<Cita, Long> {
 
  
     @Query("SELECT new com.app.CitaMed.DTO.ReporteEstadoDTO(c.estado, COUNT(c)) FROM Cita c " +
-            "WHERE YEAR(c.fechaHora) = :anio GROUP BY c.estado")
+            "WHERE EXTRACT(YEAR FROM c.fechaHora) = :anio GROUP BY c.estado")
     List<ReporteEstadoDTO> citasPorEstadoPorAnio(@Param("anio") int anio);
 
     @Query("SELECT new com.app.CitaMed.DTO.ReporteEstadoDTO(c.estado, COUNT(c)) FROM Cita c " +
@@ -165,7 +165,7 @@ public interface CitaRepository extends JpaRepository<Cita, Long> {
     List<ReporteEstadoDTO> citasPorEstadoBetween(@Param("inicio") LocalDateTime inicio, @Param("fin") LocalDateTime fin);
 
     @Query("SELECT new com.app.CitaMed.DTO.EspecialidadDTO(c.medico.especialidad.nombre, COUNT(c)) FROM Cita c " +
-            "WHERE YEAR(c.fechaHora) = :anio " +
+            "WHERE EXTRACT(YEAR FROM c.fechaHora) = :anio " +
             "GROUP BY c.medico.especialidad.nombre ORDER BY COUNT(c) DESC")
     List<EspecialidadDTO> citasPorEspecialidadPorAnio(@Param("anio") int anio);
 

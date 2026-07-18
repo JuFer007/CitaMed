@@ -50,7 +50,7 @@ public interface MedicoRepository extends JpaRepository<Medico, Long> {
             COUNT(c)
             )
             FROM Cita c
-            WHERE YEAR(c.fechaHora) = :anio
+            WHERE EXTRACT(YEAR FROM c.fechaHora) = :anio
             GROUP BY c.medico.id,
             c.medico.nombre,
             c.medico.apellidoPaterno,

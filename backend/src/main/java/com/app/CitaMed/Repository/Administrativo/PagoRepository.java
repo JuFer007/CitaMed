@@ -24,7 +24,7 @@ public interface PagoRepository extends JpaRepository<Pago, Long> {
     Double ingresosPorMedico(@Param("medicoId") Long medicoId, @Param("inicio") LocalDateTime inicio, @Param("fin") LocalDateTime fin);
     @Query("SELECT new com.app.CitaMed.DTO.UltimoPagoDTO(CONCAT(p.cita.paciente.nombre,' '," +
     "p.cita.paciente.apellidoPaterno), p.metodoPago, p.cita.id, p.monto, p.estado) " +
-    "FROM Pago p ORDER BY p.fechaPago DESC limit 4")
+    "FROM Pago p ORDER BY p.fechaPago DESC")
     List<UltimoPagoDTO> ultimosPagos(Pageable pageable);
     @Query("SELECT new com.app.CitaMed.DTO.PagoDetalleDTO(p.id, " +
     "CONCAT(p.cita.paciente.nombre, ' ', p.cita.paciente.apellidoPaterno), " +
@@ -34,17 +34,17 @@ public interface PagoRepository extends JpaRepository<Pago, Long> {
     "p.metodoPago, p.monto, p.estado, p.fechaPago) " +
     "FROM Pago p ORDER BY p.fechaPago DESC")
     List<PagoDetalleDTO> findAllDetalle();
-    @Query(value = "SELECT MONTH(fecha_pago) AS mes, COALESCE(SUM(monto),0) AS total " +
+    @Query(value = "SELECT EXTRACT(MONTH FROM fecha_pago) AS mes, COALESCE(SUM(monto),0) AS total " +
     "FROM pagos " +
-    "WHERE YEAR(fecha_pago) = :anio " +
-    "GROUP BY MONTH(fecha_pago) " +
-    "ORDER BY MONTH(fecha_pago)", nativeQuery = true)
+    "WHERE EXTRACT(YEAR FROM fecha_pago) = :anio " +
+    "GROUP BY EXTRACT(MONTH FROM fecha_pago) " +
+    "ORDER BY EXTRACT(MONTH FROM fecha_pago)", nativeQuery = true)
     List<Object[]> ingresosPorMesNative(@Param("anio") int anio);
 
-    @Query(value = "SELECT MONTH(fecha_pago) AS mes, COALESCE(SUM(monto),0) AS total " +
+    @Query(value = "SELECT EXTRACT(MONTH FROM fecha_pago) AS mes, COALESCE(SUM(monto),0) AS total " +
     "FROM pagos " +
     "WHERE fecha_pago BETWEEN :inicio AND :fin " +
-    "GROUP BY MONTH(fecha_pago) " +
-    "ORDER BY MONTH(fecha_pago)", nativeQuery = true)
+    "GROUP BY EXTRACT(MONTH FROM fecha_pago) " +
+    "ORDER BY EXTRACT(MONTH FROM fecha_pago)", nativeQuery = true)
     List<Object[]> ingresosPorMesBetween(@Param("inicio") LocalDateTime inicio, @Param("fin") LocalDateTime fin);
 }
