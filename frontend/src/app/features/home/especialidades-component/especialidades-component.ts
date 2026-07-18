@@ -1,6 +1,7 @@
 import { Component, CUSTOM_ELEMENTS_SCHEMA, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { environment } from '../../../../environments/environment';
 import 'iconify-icon';
 
 @Component({
@@ -18,7 +19,7 @@ export class EspecialidadesComponent implements OnInit {
   constructor(private http: HttpClient) {}
 
   ngOnInit(): void {
-    this.http.get<any[]>('http://localhost:8080/api/lading/especialidades')
+    this.http.get<any[]>(`${environment.apiUrl}/api/lading/especialidades`)
       .subscribe({
         next: (data) => this.especialidades = data,
         error: (err) => console.error(err)

@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { environment } from '../../../../environments/environment';
 
 @Component({
   selector: 'app-consultas',
@@ -11,7 +12,7 @@ import { HttpClient, HttpClientModule } from '@angular/common/http';
   styleUrl: './consultas-component.css'
 })
 export class ConsultasComponent {
-  private apiUrl = 'http://localhost:8080/api/consultas';
+  private apiUrl = `${environment.apiUrl}/api/consultas`;
 
   form = { nombre: '', email: '', mensaje: '' };
   enviando = false;

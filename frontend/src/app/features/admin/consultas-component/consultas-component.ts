@@ -9,6 +9,7 @@ import { TextareaModule } from 'primeng/textarea';
 import { HttpClient } from '@angular/common/http';
 import { SortEvent } from 'primeng/api';
 import { GlobalToast } from '../../../core/services/global-toast';
+import { environment } from '../../../../environments/environment';
 
 interface Consulta {
   id: number;
@@ -45,7 +46,7 @@ export class ConsultasComponent implements OnInit {
   isSorted: boolean | null = null;
   private resetting = false;
 
-  private apiUrl = 'http://localhost:8080/api/consultas';
+  private apiUrl = `${environment.apiUrl}/api/consultas`;
 
   consultas: Consulta[] = [];
   consultasFiltradas: Consulta[] = [];

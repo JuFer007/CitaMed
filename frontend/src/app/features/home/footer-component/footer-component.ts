@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
+import { environment } from '../../../../environments/environment';
 
 interface Especialidad {
   id: number;
@@ -21,7 +22,7 @@ export class FooterComponent implements OnInit {
   constructor(private http: HttpClient, private router: Router) {}
 
   ngOnInit(): void {
-    this.http.get<Especialidad[]>('http://localhost:8080/api/lading/especialidades')
+    this.http.get<Especialidad[]>(`${environment.apiUrl}/api/lading/especialidades`)
       .subscribe({
         next: (data) => { this.especialidades = data; },
         error: (err) => { console.error('FooterComponent: error', err); }

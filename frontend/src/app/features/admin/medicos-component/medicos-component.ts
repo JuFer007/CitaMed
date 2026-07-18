@@ -10,6 +10,7 @@ import { Especialidad } from '../../../model/Especialidad';
 import { Consultorio } from '../../../model/Consultorio';
 import { Usuario, Rol } from '../../../model/Usuario';
 import { GlobalToast } from '../../../core/services/global-toast';
+import { environment } from '../../../../environments/environment';
 import {
   LucideAngularModule,
   Stethoscope,
@@ -253,7 +254,7 @@ export class MedicosComponent implements OnInit {
       activo: medico.activo ?? true,
     };
 
-    this.fotoPreview = medico.fotoUrl ? `http://localhost:8080${medico.fotoUrl}` : null;
+    this.fotoPreview = medico.fotoUrl ? `${environment.apiUrl}${medico.fotoUrl}` : null;
     this.archivoSeleccionado = null;
 
     this.cargarConsultoriosParaEditar(medico.especialidad.id, medico.consultorio?.id);

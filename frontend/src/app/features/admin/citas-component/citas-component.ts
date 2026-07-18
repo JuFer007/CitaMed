@@ -24,6 +24,7 @@ import { GlobalToast } from '../../../core/services/global-toast';
 import { HttpClient } from '@angular/common/http';
 import { SortEvent } from 'primeng/api';
 import { HorarioMedicoService, HorarioMedico } from '../../../core/services/horario-medico-service';
+import { environment } from '../../../../environments/environment';
 
 interface FiltroEstado {
   label: string;
@@ -183,7 +184,7 @@ export class CitasComponent implements OnInit {
   }
 
   cargarEspecialidades(): void {
-    this.http.get<Especialidad[]>('http://localhost:8080/api/especialidad').subscribe({
+    this.http.get<Especialidad[]>(`${environment.apiUrl}/api/especialidad`).subscribe({
       next: (data) => {
         this.especialidades = data;
         this.cdr.markForCheck();

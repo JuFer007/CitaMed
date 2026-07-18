@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, Subject } from 'rxjs';
 import { Testimonio, TestimonioPublico } from '../../model/Testimonio';
+import { environment } from '../../../environments/environment';
 
 export interface PortalPerfil {
   id: number;
@@ -80,7 +81,7 @@ export interface PortalPago {
 
 @Injectable({ providedIn: 'root' })
 export class PacientePortalService {
-  private api = 'http://localhost:8080/api/portal';
+  private api = `${environment.apiUrl}/api/portal`;
 
   private recargarCitasSubject = new Subject<void>();
   recargarCitas$ = this.recargarCitasSubject.asObservable();
@@ -144,15 +145,15 @@ export class PacientePortalService {
   }
 
   descargarRecetaPdf(citaId: number): Observable<Blob> {
-    return this.http.get(`http://localhost:8080/api/pdf/receta/cita/${citaId}`, { responseType: 'blob' });
+    return this.http.get(`${environment.apiUrl}/api/pdf/receta/cita/${citaId}`, { responseType: 'blob' });
   }
 
   descargarTicketPdf(data: any): Observable<Blob> {
-    return this.http.post(`http://localhost:8080/api/pdf/ticket`, data, { responseType: 'blob' });
+    return this.http.post(`${environment.apiUrl}/api/pdf/ticket`, data, { responseType: 'blob' });
   }
 
   descargarHistorialPdf(data: any): Observable<Blob> {
-    return this.http.post(`http://localhost:8080/api/pdf/historial`, data, { responseType: 'blob' });
+    return this.http.post(`${environment.apiUrl}/api/pdf/historial`, data, { responseType: 'blob' });
   }
 
   obtenerEspecialidades(): Observable<any[]> {
@@ -188,7 +189,7 @@ export class PacientePortalService {
   }
 
   obtenerTestimoniosPublicos(): Observable<TestimonioPublico[]> {
-    return this.http.get<TestimonioPublico[]>('http://localhost:8080/api/lading/testimonios');
+    return this.http.get<TestimonioPublico[]>(`${environment.apiUrl}/api/lading/testimonios`);
   }
 
   crearPagoIntent(citaId: number): Observable<{ clientSecret: string }> {

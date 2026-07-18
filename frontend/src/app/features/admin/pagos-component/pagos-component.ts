@@ -6,6 +6,7 @@ import { Table, TableModule } from 'primeng/table';
 import { InputTextModule } from 'primeng/inputtext';
 import { GlobalToast } from '../../../core/services/global-toast';
 import { SortEvent } from 'primeng/api';
+import { environment } from '../../../../environments/environment';
 
 interface PagoDetalle {
   id: number;
@@ -46,7 +47,7 @@ export class PagosComponent implements OnInit {
   filtroFechaInicio = '';
   filtroFechaFin = '';
 
-  private apiUrl = 'http://localhost:8080/api';
+  private apiUrl = `${environment.apiUrl}/api`;
 
   constructor(
     private http: HttpClient,
