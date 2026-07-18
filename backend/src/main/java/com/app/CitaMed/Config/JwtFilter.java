@@ -41,6 +41,7 @@ public class JwtFilter extends OncePerRequestFilter {
                 || path.startsWith("/api/portal/registro")
                 || path.startsWith("/api/portal/recuperar-password")
                 || path.startsWith("/api/portal/restablecer-password")
+                || path.startsWith("/api/health")
                 || (path.equals("/api/consultas") && "POST".equalsIgnoreCase(request.getMethod()))) {
             filterChain.doFilter(request, response);
             return;
