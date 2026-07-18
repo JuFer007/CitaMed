@@ -321,6 +321,9 @@ public class PortalController {
                     .orElseThrow(() -> new RuntimeException("Pago no encontrado"));
             pago.setEstado(com.app.CitaMed.Enums.EstadoPago.PAGADO);
             pago.setFechaPago(java.time.LocalDateTime.now());
+            if (pago.getMetodoPago() == null) {
+                pago.setMetodoPago(com.app.CitaMed.Enums.MetodoPago.STRIPE);
+            }
             pagoRepository.save(pago);
 
             return ResponseEntity.ok(Map.of("mensaje", "Pago confirmado exitosamente"));

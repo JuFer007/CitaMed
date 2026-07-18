@@ -10,7 +10,7 @@
 
   <div *ngIf="pagos.length > 0" class="bg-white rounded-3xl shadow-xl shadow-[#36b1ae]/10 ring-1 ring-[#36b1ae]/10 overflow-hidden">
     <div class="hidden sm:grid grid-cols-[2fr_1fr_1fr_1fr_1.4fr] gap-4 px-6 py-3 text-[11px] font-semibold uppercase tracking-wide text-[#6b7280] border-b border-[#e5e7eb]">
-      <div>Concepto</div><div>Fecha</div><div>Monto</div><div>Estado</div><div class="text-right">Acciones</div>
+      <div>Concepto</div><div>Fecha de pago</div><div>Monto</div><div>Estado</div><div class="text-right">Acciones</div>
     </div>
 
     <div *ngFor="let p of pagos" class="grid sm:grid-cols-[2fr_1fr_1fr_1fr_1.4fr] gap-2 sm:gap-4 items-center px-6 py-4 border-b border-[#e5e7eb] last:border-0">

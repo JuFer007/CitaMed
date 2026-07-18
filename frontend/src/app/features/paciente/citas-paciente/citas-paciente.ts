@@ -233,4 +233,10 @@ export class CitasPacienteComponent implements OnInit, OnDestroy {
     const d = new Date(fecha);
     return d.toLocaleDateString('es-PE', { day: 'numeric', month: 'short', year: 'numeric' });
   }
+
+  formatearFechaPago(fecha: string): string {
+    if (!fecha) return '—';
+    const d = new Date(fecha);
+    return d.toLocaleDateString('es-PE', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+  }
 }

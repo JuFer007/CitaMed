@@ -69,6 +69,7 @@ app.post("/generar-ticket-cita", async (req, res) => {
       medico,
       especialidad,
       metodoPago,
+      fechaPago,
       monto,
       subtotal,
       descuento
@@ -94,6 +95,7 @@ app.post("/generar-ticket-cita", async (req, res) => {
         .replace("{{medico}}", medico)
         .replace("{{especialidad}}", especialidad)
         .replace("{{metodoPago}}", metodoPago)
+        .replace("{{fechaPago}}", fechaPago || '—')
         .replace("{{monto}}", montoStr)
         .replace("{{servicios}}", serviciosHtml)
         .replace("{{subtotal}}", subtotalStr)

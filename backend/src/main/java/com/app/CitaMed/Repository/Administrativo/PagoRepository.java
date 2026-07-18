@@ -31,7 +31,7 @@ public interface PagoRepository extends JpaRepository<Pago, Long> {
     "p.cita.paciente.dni, p.cita.fechaHora, p.cita.id, " +
     "CONCAT('DR. ', p.cita.medico.nombre, ' ', p.cita.medico.apellidoPaterno), " +
     "p.cita.medico.especialidad.nombre, " +
-    "p.metodoPago, p.monto, p.estado) " +
+    "p.metodoPago, p.monto, p.estado, p.fechaPago) " +
     "FROM Pago p ORDER BY p.fechaPago DESC")
     List<PagoDetalleDTO> findAllDetalle();
     @Query(value = "SELECT MONTH(fecha_pago) AS mes, COALESCE(SUM(monto),0) AS total " +

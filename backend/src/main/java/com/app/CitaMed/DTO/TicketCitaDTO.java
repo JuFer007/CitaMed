@@ -16,5 +16,6 @@ public class TicketCitaDTO {
     public String medico;
     public String especialidad;
     public String metodoPago;
+    public String fechaPago;
     public Double monto;
 }

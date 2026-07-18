@@ -94,9 +94,13 @@
         <span>Estado:</span>
         <span class="font-semibold" [class.text-[#3b6d11]]="citaModal!.pago!.estado === 'PAGADO'" [class.text-[#ba7517]]="citaModal!.pago!.estado !== 'PAGADO'">{{ citaModal!.pago!.estado }}</span>
       </div>
-      <div *ngIf="citaModal!.pago!.metodoPago" class="flex justify-between text-sm text-[#083d3a]">
+      <div class="flex justify-between text-sm text-[#083d3a]">
         <span>Método:</span>
-        <span>{{ citaModal!.pago!.metodoPago }}</span>
+        <span>{{ citaModal!.pago!.metodoPago || '—' }}</span>
+      </div>
+      <div *ngIf="citaModal!.pago!.fechaPago" class="flex justify-between text-sm text-[#083d3a]">
+        <span>Fecha de pago:</span>
+        <span>{{ formatearFechaPago(citaModal!.pago!.fechaPago) }}</span>
       </div>
       <button *ngIf="citaModal!.pago!.estado !== 'PAGADO'" (click)="pagarAhora(citaModal!); cerrarModal()" class="w-full mt-2 bg-[#36b2ac] text-white px-4 py-2.5 rounded-md text-sm font-medium hover:bg-[#2b9a95] transition">
         Pagar ahora

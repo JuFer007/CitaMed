@@ -44,6 +44,7 @@
           <option value="TARJETA">Tarjeta</option>
           <option value="TRANSFERENCIA">Transferencia</option>
           <option value="SEGURO">Seguro</option>
+          <option value="STRIPE">Stripe</option>
         </select>
       </div>
 
@@ -122,6 +123,13 @@
                 <p-sortIcon field="especialidad" />
               </div>
             </th>
+            <th pSortableColumn="fechaPago"
+                class="text-center px-6 py-4 text-xs font-black uppercase tracking-wider text-[#329791]">
+              <div class="flex items-center justify-center gap-2">
+                Fecha de pago
+                <p-sortIcon field="fechaPago" />
+              </div>
+            </th>
             <th pSortableColumn="metodoPago"
                 class="text-center px-6 py-4 text-xs font-black uppercase tracking-wider text-[#329791]">
               <div class="flex items-center justify-center gap-2">
@@ -165,6 +173,9 @@
                 {{ pago.especialidad }}
               </span>
             </td>
+            <td class="px-6 py-5 text-center whitespace-nowrap">
+              <span class="text-sm text-gray-600">{{ formatearFecha(pago.fechaPago) }}</span>
+            </td>
             <td class="px-6 py-5 text-center">
               <span class="text-sm text-gray-700">{{ metodoPagoLabel(pago.metodoPago) }}</span>
             </td>
@@ -190,7 +201,7 @@
 
         <ng-template pTemplate="emptymessage">
           <tr>
-            <td colspan="8" class="!text-center !align-middle py-20 text-gray-400">
+            <td colspan="9" class="!text-center !align-middle py-20 text-gray-400">
               <i class="pi pi-inbox !text-6xl mb-4 block"></i>
               <p class="font-semibold text-lg">No se encontraron pagos registrados</p>
               <p class="text-sm mt-2">Los pagos aparecerán aquí cuando se registren citas con pago</p>

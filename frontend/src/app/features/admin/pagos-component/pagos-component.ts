@@ -18,6 +18,7 @@ interface PagoDetalle {
   metodoPago: string;
   monto: number;
   estado: string;
+  fechaPago?: string;
 }
 
 @Component({
@@ -125,17 +126,19 @@ export class PagosComponent implements OnInit {
     this.generandoTicketPdf = true;
     this.cdr.markForCheck();
 
-    const fecha = new Date(pago.fechaHora);
+    const fechaCita = new Date(pago.fechaHora);
+    const fechaPago = pago.fechaPago ? new Date(pago.fechaPago) : null;
     const ticketData = {
       cliente: pago.paciente,
       dni: pago.dni,
-      fecha: fecha.toLocaleDateString('es-PE', { year: 'numeric', month: 'long', day: 'numeric' }),
-      hora: fecha.toLocaleTimeString('es-PE', { hour: '2-digit', minute: '2-digit' }),
+      fecha: fechaCita.toLocaleDateString('es-PE', { year: 'numeric', month: 'long', day: 'numeric' }),
+      hora: fechaCita.toLocaleTimeString('es-PE', { hour: '2-digit', minute: '2-digit' }),
       numeroCita: pago.citaId.toString(),
       medico: pago.medico,
       especialidad: pago.especialidad,
       metodoPago: pago.metodoPago,
       monto: pago.monto,
+      fechaPago: fechaPago ? fechaPago.toLocaleDateString('es-PE', { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' }) : null,
     };
 
     this.http.post(`${this.apiUrl}/pdf/ticket`, ticketData, { responseType: 'blob' }).subscribe({
@@ -205,5 +208,11 @@ export class PagosComponent implements OnInit {
       REEMBOLSADO: 'pg-badge-reembolsado',
     };
     return map[estado] ?? '';
+  }
+
+  formatearFecha(fecha: string): string {
+    if (!fecha) return '—';
+    const d = new Date(fecha);
+    return d.toLocaleDateString('es-PE', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' });
   }
 }

@@ -40,6 +40,7 @@ export class PagosPacienteComponent implements OnInit {
       dni: item.dniPaciente,
       fecha: fecha.toLocaleDateString('es-PE', { year: 'numeric', month: 'long', day: 'numeric' }),
       hora: fecha.toLocaleTimeString('es-PE', { hour: '2-digit', minute: '2-digit' }),
+      fechaPago: fecha.toLocaleDateString('es-PE', { year: 'numeric', month: 'long', day: 'numeric' }) + ' ' + fecha.toLocaleTimeString('es-PE', { hour: '2-digit', minute: '2-digit' }),
       medico: item.medico,
       especialidad: item.especialidad,
       metodoPago: item.metodoPago || '—',

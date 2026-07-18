@@ -220,6 +220,9 @@ public class ReservaService {
 
         pago.setEstado(EstadoPago.PAGADO);
         pago.setFechaPago(LocalDateTime.now());
+        if (pago.getMetodoPago() == null) {
+            pago.setMetodoPago(MetodoPago.STRIPE);
+        }
         pagoRepository.save(pago);
 
         Paciente paciente = cita.getPaciente();
