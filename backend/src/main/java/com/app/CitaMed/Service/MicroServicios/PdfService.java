@@ -3,6 +3,7 @@ import com.app.CitaMed.DTO.HistorialPdfDTO;
 import com.app.CitaMed.DTO.RecetaDTO;
 import com.app.CitaMed.DTO.TicketCitaDTO;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -14,9 +15,12 @@ import org.springframework.web.client.RestTemplate;
 public class PdfService {
     private final RestTemplate rest = new RestTemplate();
 
+    @Value("${pdf.service.url:http://localhost:3005}")
+    private String pdfServiceUrl;
+
     public byte[] ticketCita(TicketCitaDTO dto) {
         return rest.postForObject(
-                "http://localhost:3005/generar-ticket-cita",
+                pdfServiceUrl + "/generar-ticket-cita",
                 dto,
                 byte[].class
         );
@@ -24,7 +28,7 @@ public class PdfService {
 
     public byte[] receta(RecetaDTO dto) {
         return rest.postForObject(
-                "http://localhost:3005/generar-receta",
+                pdfServiceUrl + "/generar-receta",
                 dto,
                 byte[].class
         );
@@ -32,7 +36,7 @@ public class PdfService {
 
     public byte[] historial(HistorialPdfDTO dto) {
         return rest.postForObject(
-                "http://localhost:3005/generar-historial",
+                pdfServiceUrl + "/generar-historial",
                 dto,
                 byte[].class
         );
