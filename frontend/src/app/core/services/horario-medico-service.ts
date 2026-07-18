@@ -1,6 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { environment } from '../../../environments/environment';
 export interface HorarioMedico {
   id: number;
   dia: DiaSemana;
@@ -20,7 +21,7 @@ export interface HorarioMedicoDTO {
 
 export type DiaSemana =
   | 'LUNES' | 'MARTES' | 'MIERCOLES' | 'JUEVES'
-  | 'VIERNES' | 'SABADO' | 'DOMINGO';
+  | 'VIERNES';
 
 export interface Medico {
   id: number;
@@ -43,7 +44,7 @@ export interface Consultorio {
 @Injectable({ providedIn: 'root' })
 export class HorarioMedicoService {
   private http = inject(HttpClient);
-  private base = 'http://localhost:8080/api';
+  private base = `${environment.apiUrl}/api`;
 
   // ── MÉDICOS ──────────────────────────────────────────
   getMedicos(): Observable<Medico[]> {

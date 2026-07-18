@@ -2,10 +2,11 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Consultorio, ConsultorioPayload } from '../../model/Consultorio';
+import { environment } from '../../../environments/environment';
 
 @Injectable({ providedIn: 'root' })
 export class ConsultorioService {
-  private api = 'http://localhost:8080/api/consultorio';
+  private api = `${environment.apiUrl}/api/consultorio`;
 
   constructor(private http: HttpClient) {}
 
@@ -36,6 +37,6 @@ export class ConsultorioService {
   }
 
   toggleDisponible(id: number): Observable<string> {
-    return this.http.patch(`${this.api}/${id}/disponible`, {}, { responseType: 'text' });
+    return this.http.patch(`${this.api}/${id}/disponibilidad`, {}, { responseType: 'text' });
   }
 }

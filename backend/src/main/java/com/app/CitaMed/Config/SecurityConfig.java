@@ -21,7 +21,6 @@ import java.util.List;
 @EnableMethodSecurity(prePostEnabled = true)
 
 public class SecurityConfig {
-
     private final JwtFilter jwtFilter;
 
     public SecurityConfig(JwtFilter jwtFilter) {
@@ -48,6 +47,9 @@ public class SecurityConfig {
                         .requestMatchers("/api/lading/**").permitAll()
                         .requestMatchers("/api/landing/**").permitAll()
                         .requestMatchers("/uploads/**").permitAll()
+                        .requestMatchers("/api/portal/registro").permitAll()
+                        .requestMatchers("/api/portal/recuperar-password").permitAll()
+                        .requestMatchers("/api/portal/restablecer-password").permitAll()
                         .requestMatchers("/api/especialidad/**").hasRole("ADMIN")
                         .requestMatchers("/api/medico/**").hasAnyRole("ADMIN","MEDICO")
                         .requestMatchers("/api/horarioMedico/**").hasRole("ADMIN")
@@ -58,11 +60,12 @@ public class SecurityConfig {
                         .requestMatchers("/api/pago/**").hasAnyRole("ADMIN","RECEPCIONISTA")
                         .requestMatchers("/api/historialMedico/**").hasAnyRole("ADMIN","MEDICO","RECEPCIONISTA")
                         .requestMatchers("/api/email/**").hasRole("ADMIN")
-                        .requestMatchers("/api/pdf/**").hasAnyRole("ADMIN","MEDICO","RECEPCIONISTA")
+                        .requestMatchers("/api/pdf/**").hasAnyRole("ADMIN","MEDICO","RECEPCIONISTA","PACIENTE")
                         .requestMatchers("/api/dashboard/**").hasRole("ADMIN")
                         .requestMatchers("/api/cita/**").hasAnyRole("ADMIN","MEDICO","RECEPCIONISTA")
                         .requestMatchers("/api/usuario/**").hasRole("ADMIN")
                         .requestMatchers("/api/reportes/**").hasRole("ADMIN")
+                        .requestMatchers("/api/portal/**").hasRole("PACIENTE")
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);

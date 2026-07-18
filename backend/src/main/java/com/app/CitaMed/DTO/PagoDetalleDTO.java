@@ -21,4 +21,5 @@ public class PagoDetalleDTO {
     private MetodoPago metodoPago;
     private Double monto;
     private EstadoPago estado;
+    private LocalDateTime fechaPago;
 }

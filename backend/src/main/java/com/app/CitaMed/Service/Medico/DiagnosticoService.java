@@ -12,6 +12,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+
 public class DiagnosticoService {
     private final DiagnosticoRepository diagnosticoRepository;
     private final CitaRepository citaRepository;

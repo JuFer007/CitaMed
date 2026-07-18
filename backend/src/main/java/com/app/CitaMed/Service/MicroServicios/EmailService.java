@@ -8,13 +8,13 @@ import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
-
 import java.time.format.DateTimeFormatter;
 import java.util.logging.Logger;
 import org.springframework.scheduling.annotation.Async;
 
 @Service
 @RequiredArgsConstructor
+
 public class EmailService {
     private static final Logger LOG = Logger.getLogger(EmailService.class.getName());
 
@@ -89,6 +89,22 @@ public class EmailService {
     }
 
     @Async
+    public void enviarRegistro(String nombre, String usuario, String email) {
+        try {
+            Context context = new Context();
+            context.setVariable("nombre", nombre);
+            context.setVariable("usuario", usuario);
+            context.setVariable("email", email);
+            context.setVariable("portalUrl", "http://localhost:4200/login");
+
+            String html = templateEngine.process("email/registro", context);
+            enviarCorreo(email, "Bienvenido a CitaMed - Tu cuenta ha sido creada", html);
+        } catch (Exception e) {
+            LOG.warning("Error enviando correo de registro: " + e.getMessage());
+        }
+    }
+
+    @Async
     public void enviarRespuestaConsulta(String nombre, String email, String mensajeOriginal, String respuesta) {
         try {
             Context context = new Context();
@@ -100,6 +116,20 @@ public class EmailService {
             enviarCorreo(email, "Respuesta a tu consulta - CitaMed", html);
         } catch (Exception e) {
             LOG.warning("Error enviando respuesta de consulta: " + e.getMessage());
+        }
+    }
+
+    @Async
+    public void enviarCodigoRecuperacion(String nombre, String email, String codigo) {
+        try {
+            Context context = new Context();
+            context.setVariable("nombre", nombre);
+            context.setVariable("codigo", codigo);
+
+            String html = templateEngine.process("email/recuperar-password", context);
+            enviarCorreo(email, "Código de recuperación de contraseña - CitaMed", html);
+        } catch (Exception e) {
+            LOG.warning("Error enviando código de recuperación: " + e.getMessage());
         }
     }
 

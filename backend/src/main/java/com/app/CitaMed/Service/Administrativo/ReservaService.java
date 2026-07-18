@@ -1,5 +1,6 @@
 package com.app.CitaMed.Service.Administrativo;
 import com.app.CitaMed.DTO.ReservaDTO;
+import com.app.CitaMed.DTO.ReservaResponseDTO;
 import com.app.CitaMed.DTO.SlotDisponibleDTO;
 import com.app.CitaMed.Enums.*;
 import com.app.CitaMed.Model.Administrativo.Consultorio;
@@ -40,6 +41,7 @@ public class ReservaService {
     private final ConsultorioRepository consultorioRepository;
     private final HorarioMedicoRepository horarioMedicoRepository;
     private final EmailService emailService;
+    private final StripeService stripeService;
 
     public List<SlotDisponibleDTO> obtenerSlotsDisponibles(Long especialidadId, String fechaStr) {
         LocalDateTime fechaBase = LocalDateTime.parse(fechaStr + "T12:00:00");
@@ -79,14 +81,18 @@ public class ReservaService {
 
             List<Cita> citasDelDia = citasPorMedico.getOrDefault(medico.getId(), Collections.emptyList());
 
-            Set<String> horasOcupadas = citasDelDia.stream()
-                    .map(c -> c.getFechaHora().format(fmt))
-                    .collect(Collectors.toSet());
-
             for (HorarioMedico horario : horarios) {
                 List<String> slots = generarSlots(horario.getHoraInicio(), horario.getHoraFin(), fechaStr);
                 List<String> slotsLibres = slots.stream()
-                        .filter(s -> !horasOcupadas.contains(s.substring(0, 16)))
+                        .filter(s -> {
+                            LocalDateTime slotStart = LocalDateTime.parse(s.substring(0, 16), fmt);
+                            LocalDateTime slotEnd = slotStart.plusHours(1);
+                            return citasDelDia.stream().noneMatch(c -> {
+                                LocalDateTime citaStart = c.getFechaHora();
+                                LocalDateTime citaEnd = citaStart.plusHours(1);
+                                return slotStart.isBefore(citaEnd) && citaStart.isBefore(slotEnd);
+                            });
+                        })
                         .collect(Collectors.toList());
 
                 if (!slotsLibres.isEmpty()) {
@@ -106,7 +112,7 @@ public class ReservaService {
     }
 
     @Transactional
-    public String procesarReserva(ReservaDTO dto) {
+    public ReservaResponseDTO procesarReserva(ReservaDTO dto) {
         DniValidator.validar(dto.getDni());
         NombreValidator.validar(dto.getNombre(), "nombre");
         NombreValidator.validar(dto.getApellidoPaterno(), "apellido paterno");
@@ -179,22 +185,63 @@ public class ReservaService {
         Pago pago = new Pago();
         pago.setCita(cita);
         pago.setMonto(medico.getEspecialidad().getPrecio());
-        pago.setMetodoPago(MetodoPago.EFECTIVO);
-        pago.setEstado(EstadoPago.PAGADO);
-        pago.setFechaPago(LocalDateTime.now());
+        pago.setMetodoPago(MetodoPago.STRIPE);
+        pago.setEstado(EstadoPago.PENDIENTE);
+        pago.setFechaPago(null);
         pagoRepository.save(pago);
 
-        String nombrePaciente = paciente.getNombre();
-        String nombreDoctor = medico.getNombre() + " " + medico.getApellidoPaterno();
-        String especialidadNombre = medico.getEspecialidad().getNombre();
-        String emailPaciente = paciente.getEmail();
+        try {
+            long amountInCents = (long) (medico.getEspecialidad().getPrecio() * 100);
+            String clientSecret = stripeService.createPaymentIntent(amountInCents, cita.getId().toString());
+            return ReservaResponseDTO.builder()
+                    .citaId(cita.getId())
+                    .clientSecret(clientSecret)
+                    .build();
+        } catch (Exception e) {
+            throw new RuntimeException("Error al procesar el pago con Stripe: " + e.getMessage());
+        }
+    }
+
+    @Transactional
+    public boolean confirmarPago(Long citaId, String paymentIntentId) {
+        boolean pagado = stripeService.verifyPaymentIntent(paymentIntentId);
+        if (!pagado) return false;
+        confirmarPago(citaId);
+        return true;
+    }
+
+    @Transactional
+    public void confirmarPago(Long citaId) {
+        Cita cita = citaRepository.findById(citaId)
+                .orElseThrow(() -> new RuntimeException("Cita no encontrada"));
+
+        Pago pago = pagoRepository.findByCitaId(citaId)
+                .orElseThrow(() -> new RuntimeException("Pago no encontrado"));
+
+        pago.setEstado(EstadoPago.PAGADO);
+        pago.setFechaPago(LocalDateTime.now());
+        if (pago.getMetodoPago() == null) {
+            pago.setMetodoPago(MetodoPago.STRIPE);
+        }
+        pagoRepository.save(pago);
+
+        Paciente paciente = cita.getPaciente();
+        Medico medico = cita.getMedico();
+        LocalDateTime fechaHora = cita.getFechaHora();
+
         String fechaStr = fechaHora.format(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
         String horaStr = fechaHora.format(DateTimeFormatter.ofPattern("hh:mm a"));
 
         CompletableFuture.runAsync(() ->
-            emailService.enviarConfirmacion(nombrePaciente, nombreDoctor, especialidadNombre, emailPaciente, fechaStr, horaStr)
+            emailService.enviarConfirmacion(
+                paciente.getNombre(),
+                medico.getNombre() + " " + medico.getApellidoPaterno(),
+                medico.getEspecialidad().getNombre(),
+                paciente.getEmail(),
+                fechaStr,
+                horaStr
+            )
         );
-        return "Reserva registrada correctamente";
     }
 
     private DiaSemana mapearDia(int dayOfWeek) {

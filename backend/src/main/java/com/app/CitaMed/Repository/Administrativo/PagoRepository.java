@@ -16,6 +16,8 @@ import java.util.Optional;
 public interface PagoRepository extends JpaRepository<Pago, Long> {
     boolean existsByCitaId(Long citaId);
     Optional<Pago> findByCitaId(Long citaId);
+    @Query("SELECT p FROM Pago p WHERE p.cita.paciente.id = :pacienteId ORDER BY p.fechaPago DESC")
+    List<Pago> findByPacienteId(@Param("pacienteId") Long pacienteId);
     @Query("SELECT COALESCE(SUM(p.monto),0) FROM Pago p WHERE p.fechaPago BETWEEN :inicio AND :fin")
     Double ingresos(@Param("inicio") LocalDateTime inicio, @Param("fin") LocalDateTime fin);
     @Query("SELECT COALESCE(SUM(p.monto),0) FROM Pago p WHERE p.cita.medico.id = :medicoId AND p.fechaPago BETWEEN :inicio AND :fin")
@@ -29,7 +31,7 @@ public interface PagoRepository extends JpaRepository<Pago, Long> {
     "p.cita.paciente.dni, p.cita.fechaHora, p.cita.id, " +
     "CONCAT('DR. ', p.cita.medico.nombre, ' ', p.cita.medico.apellidoPaterno), " +
     "p.cita.medico.especialidad.nombre, " +
-    "p.metodoPago, p.monto, p.estado) " +
+    "p.metodoPago, p.monto, p.estado, p.fechaPago) " +
     "FROM Pago p ORDER BY p.fechaPago DESC")
     List<PagoDetalleDTO> findAllDetalle();
     @Query(value = "SELECT MONTH(fecha_pago) AS mes, COALESCE(SUM(monto),0) AS total " +
@@ -38,4 +40,11 @@ public interface PagoRepository extends JpaRepository<Pago, Long> {
     "GROUP BY MONTH(fecha_pago) " +
     "ORDER BY MONTH(fecha_pago)", nativeQuery = true)
     List<Object[]> ingresosPorMesNative(@Param("anio") int anio);
+
+    @Query(value = "SELECT MONTH(fecha_pago) AS mes, COALESCE(SUM(monto),0) AS total " +
+    "FROM pagos " +
+    "WHERE fecha_pago BETWEEN :inicio AND :fin " +
+    "GROUP BY MONTH(fecha_pago) " +
+    "ORDER BY MONTH(fecha_pago)", nativeQuery = true)
+    List<Object[]> ingresosPorMesBetween(@Param("inicio") LocalDateTime inicio, @Param("fin") LocalDateTime fin);
 }

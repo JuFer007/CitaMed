@@ -3,6 +3,7 @@ import com.app.CitaMed.Enums.Rol;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.*;
+import java.time.LocalDateTime;
 
 @Table(name = "usuarios")
 @Getter
@@ -17,7 +18,7 @@ public class Usuario {
     private Long id;
 
     @NotBlank(message = "El nombre de usuario es obligatorio")
-    @Size(min = 4, max = 20, message = "El username debe tener entre 4 y 20 caracteres")
+    @Size(min = 4, max = 100, message = "El username debe tener entre 4 y 100 caracteres")
     @Column(unique = true)
     private String userName;
 
@@ -30,4 +31,8 @@ public class Usuario {
     private Rol rol;
 
     private boolean activo;
+
+    private String resetToken;
+
+    private LocalDateTime resetTokenExpiry;
 }

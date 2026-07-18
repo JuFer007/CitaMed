@@ -3,10 +3,11 @@ import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { Observable, tap } from 'rxjs';
 import { LoginResponse } from '../../model/Perfil';
+import { environment } from '../../../environments/environment';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
-  private apiUrl = 'http://localhost:8080/api/auth';
+  private apiUrl = `${environment.apiUrl}/api/auth`;
 
   constructor(
     private http: HttpClient,
@@ -15,11 +16,12 @@ export class AuthService {
 
   login(usuario: string, clave: string): Observable<LoginResponse> {
     return this.http.post<LoginResponse>(`${this.apiUrl}/login`, { usuario, clave }).pipe(
-      tap((response) => {
+      tap((response: any) => {
         localStorage.setItem('token', response.token);
         localStorage.setItem('nombreUsuario', response.nombre);
         localStorage.setItem('usuario', response.usuario);
         localStorage.setItem('rol', response.perfil);
+        if (response.pacienteId) localStorage.setItem('pacienteId', response.pacienteId);
       }),
     );
   }

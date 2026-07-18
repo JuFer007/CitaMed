@@ -7,6 +7,7 @@ import { NavbarComponent } from '../navbar-component/navbar-component';
 import { FooterComponent } from '../footer-component/footer-component';
 import { Medico } from '../../../model/Medico';
 import { Especialidad } from '../../../model/Especialidad';
+import { environment } from '../../../../environments/environment';
 import 'iconify-icon';
 
 @Component({
@@ -25,7 +26,7 @@ import 'iconify-icon';
 })
 export class DoctoresPage implements OnInit, OnDestroy {
 
-  private baseUrl = 'http://localhost:8080/api/lading';
+  private baseUrl = `${environment.apiUrl}/api/lading`;
   private destroy$ = new Subject<void>();
   private search$ = new Subject<string>();
 
@@ -123,6 +124,9 @@ export class DoctoresPage implements OnInit, OnDestroy {
   }
 
   obtenerFoto(medico: Medico): string {
+    if (medico.fotoUrl) {
+      return `${environment.apiUrl}${medico.fotoUrl}`;
+    }
     const lista = medico.genero === 'FEMENINO' ? this.fotosMujeres : this.fotosHombres;
     const index = medico.id ? medico.id % lista.length : 0;
     const url = lista[index];

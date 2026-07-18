@@ -19,7 +19,7 @@
       <div class="lg:col-span-3">
         <div class="bg-white rounded-3xl shadow-xl shadow-[#36b1ae]/10 ring-1 ring-[#36b1ae]/10 overflow-hidden">
           <!-- Barra de progreso -->
-          <div class="bg-[#083d3a] px-8 py-5">
+          <div *ngIf="pasoActual <= 2" class="bg-[#083d3a] px-8 py-5">
             <div class="flex items-center">
               @for (p of [1, 2]; track p) {
                 <div class="flex items-center gap-2">
@@ -44,7 +44,7 @@
           </div>
 
           <!-- ── PASO 1 ── -->
-          @if (pasoActual === 1 && !reservaExitosa) {
+          @if (pasoActual === 1) {
             <form [formGroup]="reservaForm" class="p-8 space-y-6">
               <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
                 <!-- Especialidad -->
@@ -175,7 +175,7 @@
           }
 
           <!-- ── PASO 2 ── -->
-          @if (pasoActual === 2 && !reservaExitosa) {
+          @if (pasoActual === 2) {
             <form [formGroup]="contactoForm" class="p-8 space-y-5">
               <div>
                 <h3 class="text-lg font-bold text-[#083d3a] mb-1">Tus datos personales</h3>
@@ -310,29 +310,138 @@
                   Atrás
                 </button>
                 <button type="button"
-                  (click)="confirmarReserva()"
-                  [disabled]="contactoForm.invalid || reservando"
+                  (click)="siguientePaso()"
+                  [disabled]="contactoForm.invalid"
                   class="flex-grow py-4 rounded-xl font-bold text-white bg-[#36b1ae] hover:bg-[#2d9694] shadow-lg shadow-[#36b1ae]/30 transition-all duration-300 disabled:opacity-40 disabled:cursor-not-allowed flex items-center justify-center gap-2">
-                  @if (reservando) {
-                    <div class="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                    Procesando...
-                  } @else {
-                    <span class="material-symbols-outlined">event_available</span>
-                    Confirmar Cita
-                  }
+                  <span class="material-symbols-outlined">arrow_forward</span>
+                  Continuar
                 </button>
               </div>
             </form>
           }
 
-          <!-- ── PASO 3: Éxito ── -->
+          <!-- ── PASO 3: Revisar ── -->
           @if (pasoActual === 3) {
+            <div class="p-8 space-y-6">
+              <div>
+                <h3 class="text-lg font-bold text-[#083d3a]">Revisa tu reserva</h3>
+                <p class="text-sm text-[#4d6d6b] mt-1">Confirma los datos antes de pagar.</p>
+              </div>
+
+              @if (slotSeleccionado && contactoForm.valid) {
+                <div class="bg-[#f0fafa] rounded-2xl p-5 ring-1 ring-[#36b1ae]/20 space-y-3">
+                  <div class="flex items-center gap-3">
+                    <span class="material-symbols-outlined text-[#36b1ae]">person</span>
+                    <div>
+                      <p class="text-xs text-[#6b8c89]">Médico</p>
+                      <p class="font-semibold text-[#083d3a]">{{ slotSeleccionado.medicoGenero === 'FEMENINO' ? 'Dra.' : 'Dr.' }} {{ slotSeleccionado.medicoNombre }} {{ slotSeleccionado.medicoApellidoPaterno }}</p>
+                    </div>
+                  </div>
+                  <div class="flex items-center gap-3">
+                    <span class="material-symbols-outlined text-[#36b1ae]">medical_services</span>
+                    <div>
+                      <p class="text-xs text-[#6b8c89]">Especialidad</p>
+                      <p class="font-semibold text-[#083d3a]">{{ slotSeleccionado.especialidadNombre }}</p>
+                    </div>
+                  </div>
+                  <div class="flex items-center gap-3">
+                    <span class="material-symbols-outlined text-[#36b1ae]">calendar_month</span>
+                    <div>
+                      <p class="text-xs text-[#6b8c89]">Fecha y hora</p>
+                      <p class="font-semibold text-[#083d3a]">
+                        {{ formatearDia(reservaForm.get('fecha')?.value) }} —
+                        {{ formatearHora(slotSeleccionado.hora) }}
+                      </p>
+                    </div>
+                  </div>
+                  <div class="flex items-center gap-3">
+                    <span class="material-symbols-outlined text-[#36b1ae]">payments</span>
+                    <div>
+                      <p class="text-xs text-[#6b8c89]">Total a pagar</p>
+                      <p class="font-semibold text-[#083d3a]">S/ {{ (slotSeleccionado?.precio || 0).toFixed(2) }}</p>
+                    </div>
+                  </div>
+                </div>
+              }
+
+              @if (errorReserva) {
+                <div class="p-4 bg-red-50 rounded-xl ring-1 ring-red-200 flex gap-3 items-start">
+                  <span class="material-symbols-outlined text-red-500 mt-0.5">error</span>
+                  <p class="text-sm text-red-700">{{ errorReserva }}</p>
+                </div>
+              }
+
+              <div class="flex gap-4">
+                <button type="button" (click)="anteriorPaso()"
+                  class="flex-1 py-4 rounded-xl font-semibold text-[#083d3a] bg-slate-100 hover:bg-slate-200 transition-colors flex items-center justify-center gap-2">
+                  <span class="material-symbols-outlined">arrow_back</span>
+                  Atrás
+                </button>
+                <button type="button"
+                  (click)="confirmarReserva()"
+                  [disabled]="reservando"
+                  class="flex-grow py-4 rounded-xl font-bold text-white bg-[#36b1ae] hover:bg-[#2d9694] shadow-lg shadow-[#36b1ae]/30 transition-all duration-300 disabled:opacity-40 disabled:cursor-not-allowed flex items-center justify-center gap-2">
+                  @if (reservando) {
+                    <div class="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                    Procesando...
+                  } @else {
+                    <span class="material-symbols-outlined">credit_card</span>
+                    Pagar S/ {{ (slotSeleccionado?.precio || 0).toFixed(2) }}
+                  }
+                </button>
+              </div>
+            </div>
+          }
+
+          <!-- ── PASO 4: Pago Stripe ── -->
+          @if (pasoActual === 4) {
+            <div class="p-8 space-y-6">
+              <div>
+                <h3 class="text-lg font-bold text-[#083d3a]">Pago con tarjeta</h3>
+                <p class="text-sm text-[#4d6d6b] mt-1">Ingresa los datos de tu tarjeta para completar el pago.</p>
+              </div>
+
+              <div class="bg-white rounded-2xl ring-1 ring-slate-200 p-5">
+                <div id="card-element" class="py-3"></div>
+              </div>
+
+              @if (errorPago) {
+                <div class="p-4 bg-red-50 rounded-xl ring-1 ring-red-200 flex gap-3 items-start">
+                  <span class="material-symbols-outlined text-red-500 mt-0.5">error</span>
+                  <p class="text-sm text-red-700">{{ errorPago }}</p>
+                </div>
+              }
+
+              <div class="flex gap-4">
+                <button type="button" (click)="pasoActual = 3; errorPago = ''"
+                  class="flex-1 py-4 rounded-xl font-semibold text-[#083d3a] bg-slate-100 hover:bg-slate-200 transition-colors flex items-center justify-center gap-2">
+                  <span class="material-symbols-outlined">arrow_back</span>
+                  Atrás
+                </button>
+                <button type="button"
+                  (click)="procesarPago()"
+                  [disabled]="procesandoPago"
+                  class="flex-grow py-4 rounded-xl font-bold text-white bg-[#36b1ae] hover:bg-[#2d9694] shadow-lg shadow-[#36b1ae]/30 transition-all duration-300 disabled:opacity-40 disabled:cursor-not-allowed flex items-center justify-center gap-2">
+                  @if (procesandoPago) {
+                    <div class="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                    Procesando pago...
+                  } @else {
+                    <span class="material-symbols-outlined">lock</span>
+                    Pagar S/ {{ (slotSeleccionado?.precio || 0).toFixed(2) }}
+                  }
+                </button>
+              </div>
+            </div>
+          }
+
+          <!-- ── PASO 5: Éxito ── -->
+          @if (pasoActual === 5) {
             <div class="p-10 text-center space-y-6">
               <div class="w-20 h-20 bg-emerald-100 rounded-full flex items-center justify-center mx-auto">
                 <span class="material-symbols-outlined text-emerald-500 text-5xl">check_circle</span>
               </div>
               <div>
-                <h3 class="text-2xl font-bold text-[#083d3a]">¡Cita confirmada!</h3>
+                <h3 class="text-2xl font-bold text-[#083d3a]">¡Cita reservada y pagada!</h3>
                 <p class="text-[#4d6d6b] mt-2">
                   Tu cita ha sido registrada exitosamente. Recibirás un correo de confirmación.
                 </p>
@@ -368,7 +477,7 @@
                     <span class="material-symbols-outlined text-[#36b1ae]">payments</span>
                     <div>
                       <p class="text-xs text-[#6b8c89]">Pago</p>
-                      <p class="font-semibold text-[#083d3a]">S/ 80.00 — Efectivo al llegar</p>
+                      <p class="font-semibold text-[#083d3a]">S/ {{ (slotSeleccionado?.precio || 0).toFixed(2) }} — Pagado con tarjeta</p>
                     </div>
                   </div>
                 </div>

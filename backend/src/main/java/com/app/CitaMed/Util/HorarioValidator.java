@@ -2,7 +2,6 @@ package com.app.CitaMed.Util;
 import java.time.DayOfWeek;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-
 public class HorarioValidator {
     private static final LocalTime HORA_INICIO = LocalTime.of(8, 0);
     private static final LocalTime HORA_FIN = LocalTime.of(18, 0);

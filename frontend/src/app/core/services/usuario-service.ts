@@ -1,11 +1,12 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { Usuario, UsuarioDTO, Rol } from '../../model/Usuario';
+import { Usuario, UsuarioDTO, UsuarioUpdateDTO, Rol } from '../../model/Usuario';
+import { environment } from '../../../environments/environment';
 
 @Injectable({ providedIn: 'root' })
 export class UsuarioService {
-  private apiUrl = 'http://localhost:8080/api/usuario';
+  private apiUrl = `${environment.apiUrl}/api/usuario`;
 
   constructor(private http: HttpClient) {}
 
@@ -26,5 +27,13 @@ export class UsuarioService {
       params: { nuevoRol },
       responseType: 'text',
     });
+  }
+
+  actualizar(id: number, data: UsuarioUpdateDTO): Observable<string> {
+    return this.http.put(`${this.apiUrl}/${id}`, data, { responseType: 'text' });
+  }
+
+  eliminar(id: number): Observable<string> {
+    return this.http.delete(`${this.apiUrl}/${id}`, { responseType: 'text' });
   }
 }

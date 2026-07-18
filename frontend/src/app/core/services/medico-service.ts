@@ -3,14 +3,15 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Medico, MedicoDTO } from '../../model/Medico';
 import { Especialidad } from '../../model/Especialidad';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class MedicoService {
 
-  private api = 'http://localhost:8080/api/medico';
-  private apiEspecialidad = 'http://localhost:8080/api/especialidad';
+  private api = `${environment.apiUrl}/api/medico`;
+  private apiEspecialidad = `${environment.apiUrl}/api/especialidad`;
 
   constructor(private http: HttpClient) {}
 

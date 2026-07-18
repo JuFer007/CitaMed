@@ -1,13 +1,60 @@
 <div class="flex-1 overflow-y-auto p-1">
   <!-- Header -->
-  <div class="flex items-center justify-between mb-5">
+  <div class="flex items-center justify-between mb-4">
     <div class="text-[18px] font-semibold text-navy">Reportes</div>
-    <select
-      class="text-[13px] border border-border rounded-lg px-3 py-1.5 bg-white text-navy"
+  </div>
+
+  <!-- Filtros -->
+  <div class="flex items-center gap-2 mb-5 flex-wrap">
+    <p-select
       [(ngModel)]="anioSeleccionado"
-      (ngModelChange)="cambiarAnio($event)">
-      <option *ngFor="let anio of aniosDisponibles" [ngValue]="anio">{{ anio }}</option>
-    </select>
+      [options]="aniosDisponibles"
+      optionLabel="label"
+      optionValue="value"
+      placeholder="Año"
+      (onChange)="onFilterChange()"
+      [style]="{'width': '110px', 'height': '36px'}"
+      styleClass="text-[13px]">
+    </p-select>
+
+    <p-select
+      [(ngModel)]="mesSeleccionado"
+      [options]="mesesDisponibles"
+      optionLabel="label"
+      optionValue="value"
+      placeholder="Mes"
+      (onChange)="onFilterChange()"
+      [style]="{'width': '140px', 'height': '36px'}"
+      styleClass="text-[13px]">
+    </p-select>
+
+    <p-datepicker
+      [(ngModel)]="fechaDesde"
+      placeholder="Fecha desde"
+      dateFormat="dd/mm/yy"
+      (onSelect)="onFilterChange()"
+      (onClear)="onFilterChange()"
+      [showIcon]="true"
+      [style]="{'width': '155px', 'height': '36px'}"
+      styleClass="text-[13px]">
+    </p-datepicker>
+
+    <p-datepicker
+      [(ngModel)]="fechaHasta"
+      placeholder="Fecha hasta"
+      dateFormat="dd/mm/yy"
+      (onSelect)="onFilterChange()"
+      (onClear)="onFilterChange()"
+      [showIcon]="true"
+      [style]="{'width': '155px', 'height': '36px'}"
+      styleClass="text-[13px]">
+    </p-datepicker>
+
+    <button
+      class="text-[12px] border border-border rounded-lg px-3 py-1.5 bg-white text-muted hover:text-navy hover:border-navy transition-colors"
+      (click)="limpiarFiltros()">
+      Limpiar
+    </button>
   </div>
 
   <!-- Loading State -->
@@ -35,13 +82,21 @@
     <div class="grid grid-cols-2 gap-3 mb-4">
       <div class="bg-white rounded-[10px] border border-border p-4 flex flex-col gap-1.5">
         <div class="text-[11px] text-muted uppercase tracking-[0.07em] font-medium">
-          Total de citas ({{ anioSeleccionado }})
+          @if (filtroLabel) {
+            Total de citas ({{ filtroLabel }})
+          } @else {
+            Total de citas
+          }
         </div>
         <div class="text-[26px] font-semibold text-navy leading-none">{{ totalCitasAnio }}</div>
       </div>
       <div class="bg-white rounded-[10px] border border-border p-4 flex flex-col gap-1.5">
         <div class="text-[11px] text-muted uppercase tracking-[0.07em] font-medium">
-          Ingresos totales ({{ anioSeleccionado }})
+          @if (filtroLabel) {
+            Ingresos totales ({{ filtroLabel }})
+          } @else {
+            Ingresos totales
+          }
         </div>
         <div class="text-[26px] font-semibold text-navy leading-none">
           S/ {{ totalIngresosAnio | number:'1.0-2' }}

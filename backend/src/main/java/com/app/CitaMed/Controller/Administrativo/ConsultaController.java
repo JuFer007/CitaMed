@@ -14,6 +14,7 @@ import java.util.Map;
 @RequestMapping("/api/consultas")
 @CrossOrigin(origins = "*")
 @RequiredArgsConstructor
+
 public class ConsultaController {
 
     private final ConsultaService consultaService;

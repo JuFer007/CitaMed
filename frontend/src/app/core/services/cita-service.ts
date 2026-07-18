@@ -5,10 +5,11 @@ import { CitaDetalle, CitaDTO } from '../../model/Cita';
 import { Medico } from '../../model/Medico';
 import { Paciente } from '../../model/Paciente';
 import { Consultorio } from '../../model/Consultorio';
+import { environment } from '../../../environments/environment';
 
 @Injectable({ providedIn: 'root' })
 export class CitaService {
-  private apiUrl = 'http://localhost:8080/api';
+  private apiUrl = `${environment.apiUrl}/api`;
 
   constructor(private http: HttpClient) {}
 

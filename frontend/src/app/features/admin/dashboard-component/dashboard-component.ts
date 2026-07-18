@@ -4,6 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import { RouterLink } from '@angular/router';
 import { ChangeDetectorRef } from '@angular/core';
 import { AuthService } from '../../../core/services/auth-service';
+import { environment } from '../../../../environments/environment';
 
 interface DashboardDTO {
   citasHoy: number;
@@ -100,7 +101,7 @@ export class DashboardComponent implements OnInit {
 
   cargarMedicos() {
     this.http
-      .get<MedicoActivoDTO[]>('http://localhost:8080/api/dashboard/medicos')
+      .get<MedicoActivoDTO[]>(`${environment.apiUrl}/api/dashboard/medicos`)
       .subscribe({
         next: (data) => {
           this.medicos = data;
@@ -111,7 +112,7 @@ export class DashboardComponent implements OnInit {
   }
 
   cargarDashboard(): void {
-    this.http.get<DashboardDTO>('http://localhost:8080/api/dashboard')
+    this.http.get<DashboardDTO>(`${environment.apiUrl}/api/dashboard`)
       .subscribe({
         next: (data) => {
           this.stats = data;
@@ -140,7 +141,7 @@ export class DashboardComponent implements OnInit {
 
   cargarAgendaHoy() {
     this.http
-      .get<AgendaHoyDTO[]>('http://localhost:8080/api/dashboard/agenda')
+      .get<AgendaHoyDTO[]>(`${environment.apiUrl}/api/dashboard/agenda`)
       .subscribe({
         next: (data) => {
           this.agendaHoy = data;
@@ -152,7 +153,7 @@ export class DashboardComponent implements OnInit {
 
   cargarEspecialidades() {
     this.http
-      .get<EspecialidadDTO[]>('http://localhost:8080/api/dashboard/especialidades')
+      .get<EspecialidadDTO[]>(`${environment.apiUrl}/api/dashboard/especialidades`)
       .subscribe({
         next: (data) => {
           this.especialidades = data;
@@ -163,7 +164,7 @@ export class DashboardComponent implements OnInit {
   }
 
   cargarUltimasCitas(): void {
-    this.http.get<UltimaCitaDTO[]>('http://localhost:8080/api/dashboard/ultimas-citas')
+    this.http.get<UltimaCitaDTO[]>(`${environment.apiUrl}/api/dashboard/ultimas-citas`)
       .subscribe({
         next: (data) => {
           this.ultimasCitas = data;
@@ -199,7 +200,7 @@ export class DashboardComponent implements OnInit {
   }
 
   cargarPagos(): void {
-    this.http.get<any[]>('http://localhost:8080/api/dashboard/pagos')
+    this.http.get<any[]>(`${environment.apiUrl}/api/dashboard/pagos`)
       .subscribe({
         next: (data) => {
           this.pagos = data;

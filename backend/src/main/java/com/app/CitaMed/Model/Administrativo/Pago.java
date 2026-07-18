@@ -34,7 +34,6 @@ public class Pago {
     @Positive(message = "El monto debe ser mayor que 0")
     private double monto;
 
-    @NotNull(message = "Debe seleccionar un método de pago")
     @Enumerated(EnumType.STRING)
     private MetodoPago metodoPago;
 

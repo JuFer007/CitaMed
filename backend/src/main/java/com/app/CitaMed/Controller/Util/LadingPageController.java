@@ -1,9 +1,12 @@
 package com.app.CitaMed.Controller.Util;
 import com.app.CitaMed.DTO.DniLookupDTO;
 import com.app.CitaMed.DTO.MedicoPerfilDTO;
+import com.app.CitaMed.DTO.PagoRequestDTO;
 import com.app.CitaMed.DTO.ReservaDTO;
+import com.app.CitaMed.DTO.ReservaResponseDTO;
 import com.app.CitaMed.DTO.SlotDisponibleDTO;
 import com.app.CitaMed.DTO.ReniecDataDTO;
+import com.app.CitaMed.DTO.TestimonioPublicoDTO;
 import com.app.CitaMed.Model.Medico.Especialidad;
 import com.app.CitaMed.Model.Medico.Medico;
 import com.app.CitaMed.Model.Paciente.Paciente;
@@ -12,16 +15,19 @@ import com.app.CitaMed.Service.Administrativo.ReservaService;
 import com.app.CitaMed.Service.Medico.EspecialidadService;
 import com.app.CitaMed.Service.Medico.MedicoService;
 import com.app.CitaMed.Service.MicroServicios.ReniecService;
+import com.app.CitaMed.Service.Portal.PortalTestimonioService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/lading")
 @CrossOrigin(origins = "*")
 @AllArgsConstructor
+
 public class LadingPageController {
 
     private final MedicoService medicoService;
@@ -29,6 +35,7 @@ public class LadingPageController {
     private final ReservaService reservaService;
     private final PacienteRepository pacienteRepository;
     private final ReniecService reniecService;
+    private final PortalTestimonioService portalTestimonioService;
 
     @GetMapping("/random")
     public ResponseEntity<?> obtenerMedicoRandom() {
@@ -36,6 +43,11 @@ public class LadingPageController {
         if (medico == null)
             return ResponseEntity.status(404).body("No hay médicos disponibles");
         return ResponseEntity.ok(medico);
+    }
+
+    @GetMapping("/testimonios")
+    public ResponseEntity<List<TestimonioPublicoDTO>> listarTestimonios() {
+        return ResponseEntity.ok(portalTestimonioService.obtenerTestimoniosPublicos());
     }
 
     @GetMapping("/medicos")
@@ -56,12 +68,25 @@ public class LadingPageController {
     }
 
     @PostMapping("/reserva")
-    public ResponseEntity<String> procesarReserva(@RequestBody @Valid ReservaDTO dto) {
+    public ResponseEntity<?> procesarReserva(@RequestBody @Valid ReservaDTO dto) {
         try {
-            String resultado = reservaService.procesarReserva(dto);
+            ReservaResponseDTO resultado = reservaService.procesarReserva(dto);
             return ResponseEntity.ok(resultado);
         } catch (RuntimeException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
+            return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
+        }
+    }
+
+    @PostMapping("/reserva/confirmar")
+    public ResponseEntity<?> confirmarReserva(@RequestBody @Valid PagoRequestDTO dto) {
+        try {
+            boolean pagado = reservaService.confirmarPago(dto.getCitaId(), dto.getPaymentIntentId());
+            if (!pagado) {
+                return ResponseEntity.badRequest().body(Map.of("error", "El pago no se ha completado"));
+            }
+            return ResponseEntity.ok(Map.of("mensaje", "Reserva confirmada y pago exitoso"));
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
         }
     }
 
