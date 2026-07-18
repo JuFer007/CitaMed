@@ -1,4 +1,4 @@
 export const environment = {
   production: true,
-  apiUrl: 'https://citamed-api.onrender.com'
+  apiUrl: 'https://citamed-iowm.onrender.com'
 };
