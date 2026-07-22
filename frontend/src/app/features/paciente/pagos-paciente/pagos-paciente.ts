@@ -1,7 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { GlobalToast } from '../../../core/services/global-toast';
 import { PacientePortalService, PortalPago } from '../../../core/services/paciente-portal-service';
+import { loadStripe, Stripe } from '@stripe/stripe-js';
+import { STRIPE_PUBLISHABLE_KEY } from '../../../core/services/stripe-config';
 
 @Component({
   selector: 'app-pagos-paciente',
@@ -10,13 +12,22 @@ import { PacientePortalService, PortalPago } from '../../../core/services/pacien
   templateUrl: './pagos-paciente.html',
   styleUrl: './pagos-paciente.css',
 })
-export class PagosPacienteComponent implements OnInit {
+export class PagosPacienteComponent implements OnInit, OnDestroy {
   pagos: PortalPago[] = [];
   descargandoId: number | null = null;
 
+  modalPagoAbierto = false;
+  pagoSeleccionado: PortalPago | null = null;
+  private stripe: Stripe | null = null;
+  private cardElement: any = null;
+  pagoClientSecret = '';
+  procesandoPago = false;
+  errorPago = '';
+
   constructor(
     private portalService: PacientePortalService,
-    private toast: GlobalToast
+    private toast: GlobalToast,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
@@ -25,8 +36,95 @@ export class PagosPacienteComponent implements OnInit {
     });
   }
 
+  ngOnDestroy(): void {
+    if (this.cardElement) { this.cardElement.destroy(); }
+  }
+
   pagarAhora(item: PortalPago): void {
-    this.toast.info('Redirigiendo a pasarela de pago...');
+    this.pagoSeleccionado = item;
+    this.modalPagoAbierto = true;
+    this.errorPago = '';
+    this.procesandoPago = false;
+    this.cdr.detectChanges();
+    this.portalService.crearPagoIntent(item.citaId).subscribe({
+      next: async (res) => {
+        this.pagoClientSecret = res.clientSecret;
+        this.cdr.detectChanges();
+        await this.iniciarStripePago();
+      },
+      error: () => {
+        this.toast.error('Error al iniciar el pago');
+        this.cerrarModalPago();
+      },
+    });
+  }
+
+  private async iniciarStripePago(): Promise<void> {
+    this.stripe = await loadStripe(STRIPE_PUBLISHABLE_KEY);
+    if (!this.stripe) return;
+    const elements = this.stripe.elements();
+    this.cardElement = elements.create('card', {
+      style: {
+        base: {
+          fontSize: '16px',
+          color: '#083d3a',
+          fontFamily: 'Inter, system-ui, sans-serif',
+          '::placeholder': { color: '#9ca3af' },
+        },
+        invalid: { color: '#dc2626' },
+      },
+    });
+    setTimeout(() => {
+      const container = document.getElementById('card-element-pago-pagos');
+      if (container) this.cardElement.mount(container);
+    }, 50);
+  }
+
+  async confirmarPagoStripe(): Promise<void> {
+    if (!this.stripe || !this.cardElement || !this.pagoSeleccionado) return;
+    this.procesandoPago = true;
+    this.errorPago = '';
+
+    const { error, paymentIntent } = await this.stripe.confirmCardPayment(this.pagoClientSecret, {
+      payment_method: { card: this.cardElement },
+    });
+
+    if (error) {
+      this.errorPago = error.message || 'Error al procesar el pago';
+      this.procesandoPago = false;
+      this.cdr.detectChanges();
+      return;
+    }
+
+    if (paymentIntent?.status === 'succeeded') {
+      this.portalService.confirmarPago(this.pagoSeleccionado.citaId, paymentIntent.id).subscribe({
+        next: () => {
+          this.toast.success('Pago realizado exitosamente');
+          this.cerrarModalPago();
+          this.portalService.obtenerPagos().subscribe({
+            next: (data) => { this.pagos = data; this.cdr.detectChanges(); },
+          });
+        },
+        error: () => {
+          this.toast.error('Error al confirmar el pago');
+          this.cerrarModalPago();
+        },
+      });
+    } else {
+      this.errorPago = 'El pago no se completó. Intenta nuevamente.';
+      this.procesandoPago = false;
+      this.cdr.detectChanges();
+    }
+  }
+
+  cerrarModalPago(): void {
+    this.modalPagoAbierto = false;
+    this.pagoSeleccionado = null;
+    this.pagoClientSecret = '';
+    this.errorPago = '';
+    this.procesandoPago = false;
+    if (this.cardElement) { this.cardElement.destroy(); this.cardElement = null; }
+    this.stripe = null;
   }
 
   descargarTicket(item: PortalPago): void {

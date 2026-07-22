@@ -38,7 +38,10 @@ node_modules/
 dist/
 .env
 
-#backend
+# backend
 backend/.env
+
+# docker
+docker.env
 
 AGENTS.md

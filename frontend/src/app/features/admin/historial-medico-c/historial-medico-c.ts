@@ -37,7 +37,7 @@ export class HistorialMedicoC implements OnInit {
   Math = Math;
 
   get totalPages(): number {
-    return Math.ceil(this.totalRecords / this.size);
+    return Math.max(0, Math.ceil((this.totalRecords || 0) / (this.size || 15)));
   }
 
   generandoHistorialPdf = false;
@@ -63,13 +63,20 @@ export class HistorialMedicoC implements OnInit {
     this.loading = true;
     this.page = page;
     this.pacienteService.listar(page, this.size, this.terminoBusqueda).subscribe({
-      next: (res: PageResponse<Paciente>) => {
-        this.pacientes = res.content;
-        this.totalRecords = res.totalElements;
+      next: (res: any) => {
+        if (Array.isArray(res)) {
+          this.pacientes = res;
+          this.totalRecords = res.length;
+        } else {
+          this.pacientes = res.content ?? [];
+          this.totalRecords = res.totalElements ?? 0;
+        }
         this.loading = false;
         this.cdr.markForCheck();
       },
       error: () => {
+        this.pacientes = [];
+        this.totalRecords = 0;
         this.toast.error('No se pudieron cargar los pacientes');
         this.loading = false;
         this.cdr.markForCheck();

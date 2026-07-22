@@ -31,3 +31,62 @@
     </div>
   </div>
 </div>
+
+<!-- ── STRIPE PAYMENT MODAL ── -->
+@if (modalPagoAbierto && pagoSeleccionado) {
+  <div class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm">
+    <div class="bg-white w-full max-w-sm rounded-3xl shadow-2xl overflow-hidden">
+      <div class="p-6 space-y-5">
+        <div class="flex items-center justify-between">
+          <h3 class="text-lg font-bold text-[#083d3a]">Pago con tarjeta</h3>
+          <button (click)="cerrarModalPago()" class="text-slate-400 hover:text-slate-600 transition-colors">
+            <span class="material-symbols-outlined">close</span>
+          </button>
+        </div>
+
+        <div class="bg-slate-50 rounded-2xl p-4 ring-1 ring-slate-200 space-y-3">
+          <div class="flex items-start gap-3">
+            <span class="material-symbols-outlined text-[#36b2ac] text-xl mt-0.5">calendar_today</span>
+            <div>
+              <p class="text-sm font-semibold text-[#083d3a]">{{ pagoSeleccionado.especialidad }}</p>
+              <p class="text-xs text-[#6b8c89] mt-0.5">{{ pagoSeleccionado.fecha }}</p>
+            </div>
+          </div>
+          <div class="flex items-start gap-3">
+            <span class="material-symbols-outlined text-[#36b2ac] text-xl mt-0.5">person</span>
+            <div>
+              <p class="text-sm font-semibold text-[#083d3a]">{{ pagoSeleccionado.medico }}</p>
+              <p class="text-xs text-[#6b8c89] mt-0.5">{{ pagoSeleccionado.concepto }}</p>
+            </div>
+          </div>
+          <div class="border-t border-slate-200 pt-3 flex justify-between items-center">
+            <span class="font-semibold text-[#083d3a]">Total a pagar</span>
+            <span class="text-lg font-bold text-[#36b2ac]">S/ {{ pagoSeleccionado.monto.toFixed(2) }}</span>
+          </div>
+        </div>
+
+        <div class="bg-white rounded-2xl ring-1 ring-slate-200 p-4">
+          <div id="card-element-pago-pagos" class="py-3"></div>
+        </div>
+
+        @if (errorPago) {
+          <div class="p-3 bg-red-50 rounded-xl ring-1 ring-red-200 flex gap-2 items-start">
+            <span class="material-symbols-outlined text-red-500 text-sm mt-0.5">error</span>
+            <p class="text-sm text-red-700">{{ errorPago }}</p>
+          </div>
+        }
+
+        <button (click)="confirmarPagoStripe()" [disabled]="procesandoPago"
+          class="w-full py-3.5 rounded-xl font-bold text-white bg-[#36b1ae] hover:bg-[#2d9694] shadow-lg shadow-[#36b1ae]/30 transition-all duration-300 disabled:opacity-40 disabled:cursor-not-allowed flex items-center justify-center gap-2">
+          @if (procesandoPago) {
+            <div class="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+            Procesando pago...
+          } @else {
+            <span class="material-symbols-outlined">lock</span>
+            Pagar S/ {{ pagoSeleccionado.monto.toFixed(2) }}
+          }
+        </button>
+      </div>
+    </div>
+  </div>
+}

@@ -99,7 +99,7 @@
         <button class="page-btn" (click)="onPage({first: (page-1)*size, rows: size})" [disabled]="page === 0">
           <i class="pi pi-chevron-left" style="font-size:12px"></i>
         </button>
-        @for (n of [].constructor(totalPages); track $index) {
+        @for (n of [].constructor(totalPages > 0 ? totalPages : 0); track $index) {
           <button class="page-btn" [class.active]="$index === page" (click)="onPage({first: $index*size, rows: size})">{{ $index + 1 }}</button>
         }
         <button class="page-btn" (click)="onPage({first: (page+1)*size, rows: size})" [disabled]="(page+1)*size >= totalRecords">
