@@ -45,6 +45,8 @@ export class ReservarCitaPacienteComponent implements OnInit {
   fechaSeleccionada = '';
   motivoConsulta = '';
   minDate = '';
+  cargando = true;
+  cargandoSlots = false;
   reservando = false;
   fechaSinHorarios = false;
   confirmacion?: ConfirmacionData;
@@ -63,9 +65,13 @@ export class ReservarCitaPacienteComponent implements OnInit {
     this.portalService.obtenerEspecialidades().subscribe({
       next: (data) => {
         this.especialidades = data;
+        this.cargando = false;
         this.cdr.markForCheck();
       },
-      error: () => this.toast.error('Error al cargar especialidades'),
+      error: () => {
+        this.cargando = false;
+        this.toast.error('Error al cargar especialidades');
+      },
     });
   }
 
@@ -86,14 +92,19 @@ export class ReservarCitaPacienteComponent implements OnInit {
 
   cargarSlots(): void {
     if (!this.especialidadSeleccionada || !this.fechaSeleccionada) return;
+    this.cargandoSlots = true;
     this.portalService.obtenerSlots(this.especialidadSeleccionada, this.fechaSeleccionada).subscribe({
       next: (data) => {
         this.slots = data;
         this.fechaSinHorarios = this.slots.length === 0;
+        this.cargandoSlots = false;
         if (this.slots.length > 0) this.paso = 3;
         this.cdr.detectChanges();
       },
-      error: () => this.toast.error('Error al cargar horarios'),
+      error: () => {
+        this.cargandoSlots = false;
+        this.toast.error('Error al cargar horarios');
+      },
     });
   }
 

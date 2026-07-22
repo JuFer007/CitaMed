@@ -22,7 +22,12 @@
   <!-- Paso 1: Especialidad -->
   <div *ngIf="paso === 1">
     <h3 class="text-lg font-bold text-[#083d3a] mb-4">Selecciona una especialidad</h3>
-    <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+    <!-- Loading -->
+    <div *ngIf="cargando" class="flex flex-col items-center justify-center py-16">
+      <div class="w-10 h-10 border-4 border-[#36b1ae] border-t-transparent rounded-full animate-spin"></div>
+      <p class="text-sm text-[#6b8c89] mt-4 font-medium">Cargando...</p>
+    </div>
+    <div *ngIf="!cargando" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
       <button *ngFor="let e of especialidades" (click)="seleccionarEspecialidad(e.id)"
         class="bg-white rounded-2xl ring-1 ring-gray-100 p-5 text-left hover:ring-[#36b1ae]/30 hover:shadow-lg hover:shadow-[#36b1ae]/5 transition-all group">
         <span class="text-base font-bold text-[#083d3a] group-hover:text-[#0f8b86]">{{ e.nombre }}</span>
@@ -45,6 +50,11 @@
         <p class="text-sm font-semibold text-[#92400e]">Sin horarios disponibles</p>
         <p class="text-xs text-[#a16207] mt-0.5">No hay horarios para esta fecha. Selecciona otro día.</p>
       </div>
+    </div>
+    <!-- Loading slots -->
+    <div *ngIf="cargandoSlots" class="flex flex-col items-center justify-center py-16">
+      <div class="w-10 h-10 border-4 border-[#36b1ae] border-t-transparent rounded-full animate-spin"></div>
+      <p class="text-sm text-[#6b8c89] mt-4 font-medium">Cargando horarios...</p>
     </div>
   </div>
 

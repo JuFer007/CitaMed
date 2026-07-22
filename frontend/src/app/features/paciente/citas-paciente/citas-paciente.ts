@@ -22,6 +22,7 @@ export class CitasPacienteComponent implements OnInit, OnDestroy {
   diagnosticoModal: PortalDiagnostico | null = null;
   modalDiagnosticoAbierto = false;
   citaDiagnostico: PortalCita | null = null;
+  cargando = true;
   cargandoDiagnostico = false;
   cargandoPdf = false;
   sinDiagnostico = false;
@@ -53,11 +54,23 @@ export class CitasPacienteComponent implements OnInit, OnDestroy {
   }
 
   private cargarCitas(): void {
+    this.cargando = true;
+    let completadas = 0;
+    const total = 2;
+    const checkCompleto = () => {
+      completadas++;
+      if (completadas >= total) {
+        this.cargando = false;
+        this.cdr.markForCheck();
+      }
+    };
     this.portalService.obtenerProximasCitas().subscribe({
-      next: (data) => { this.proximas = data; this.cdr.markForCheck(); },
+      next: (data) => { this.proximas = data; checkCompleto(); },
+      error: () => checkCompleto(),
     });
     this.portalService.obtenerHistorialCitas().subscribe({
-      next: (data) => { this.historial = data; this.cdr.markForCheck(); },
+      next: (data) => { this.historial = data; checkCompleto(); },
+      error: () => checkCompleto(),
     });
   }
 

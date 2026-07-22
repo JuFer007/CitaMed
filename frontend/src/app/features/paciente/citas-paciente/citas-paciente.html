@@ -11,8 +11,14 @@
   <h2 class="text-3xl font-bold text-[#083d3a] leading-tight" *ngIf="vista==='historial'">Todas tus citas</h2>
   <p class="text-sm text-[#4d6d6b] mt-2 mb-8">Consulta el estado, reprograma o descarga el comprobante de cada consulta.</p>
 
+  <!-- Loading -->
+  <div *ngIf="cargando" class="flex flex-col items-center justify-center py-16">
+    <div class="w-10 h-10 border-4 border-[#36b1ae] border-t-transparent rounded-full animate-spin"></div>
+    <p class="text-sm text-[#6b8c89] mt-4 font-medium">Cargando...</p>
+  </div>
+
   <!-- Próximas -->
-  <div *ngIf="vista==='proximas'" class="flex flex-col gap-4">
+  <div *ngIf="!cargando && vista==='proximas'" class="flex flex-col gap-4">
     <div *ngFor="let c of proximas" class="bg-white rounded-3xl shadow-xl shadow-[#36b1ae]/10 ring-1 ring-[#36b1ae]/10 p-5 flex flex-col sm:flex-row sm:items-center gap-4">
       <div class="w-14 text-center bg-[#e0f9f8] rounded-lg py-2 flex-shrink-0">
         <div class="text-lg font-bold text-[#0f8b86] leading-none">{{ c.fecha ? (c.fecha | slice:8:10) : '--' }}</div>
@@ -29,14 +35,14 @@
         <button (click)="cancelarCita(c.id)" class="bg-white text-[#36b2ac] ring-1 ring-inset ring-[#36b2ac]/20 px-4 py-2 rounded-md text-xs font-semibold hover:bg-[#f5ffff] transition">Cancelar</button>
       </div>
     </div>
-    <div *ngIf="proximas.length === 0" class="text-center py-16">
+    <div *ngIf="!cargando && proximas.length === 0" class="text-center py-16">
       <span class="mso !text-5xl text-[#c8e8e6] block mb-4">calendar_month</span>
       <p class="text-sm text-[#6b8c89]">No tienes citas programadas</p>
     </div>
   </div>
 
   <!-- Historial -->
-  <div *ngIf="vista==='historial'" class="flex flex-col gap-4">
+  <div *ngIf="!cargando && vista==='historial'" class="flex flex-col gap-4">
     <div *ngFor="let c of historial" class="bg-white rounded-3xl shadow-xl shadow-[#36b1ae]/10 ring-1 ring-[#36b1ae]/10 p-5 flex flex-col sm:flex-row sm:items-center gap-4">
       <div class="w-14 text-center rounded-lg py-2 flex-shrink-0" [class.bg-[#eaf3de]]="c.estado==='ATENDIDA'" [class.bg-[#e0f9f8]]="c.estado!=='ATENDIDA'">
         <div class="text-lg font-bold leading-none" [class.text-[#3b6d11]]="c.estado==='ATENDIDA'" [class.text-[#0f8b86]]="c.estado!=='ATENDIDA'">{{ c.fecha ? (c.fecha | slice:8:10) : '--' }}</div>
@@ -52,7 +58,7 @@
         <button *ngIf="c.estado==='ATENDIDA'" (click)="verDiagnostico(c)" class="bg-[#36b2ac] text-white px-4 py-2 rounded-md text-xs font-semibold hover:bg-[#2b9a95] shadow-lg shadow-[#36b2ac]/20 transition">Diagnóstico</button>
       </div>
     </div>
-    <div *ngIf="historial.length === 0" class="text-center py-16">
+    <div *ngIf="!cargando && historial.length === 0" class="text-center py-16">
       <span class="mso !text-5xl text-[#c8e8e6] block mb-4">history</span>
       <p class="text-sm text-[#6b8c89]">No hay historial de citas</p>
     </div>

@@ -4,12 +4,9 @@
 </div>
 
 <!-- Loading -->
-<div *ngIf="!cargado" class="grid sm:grid-cols-3 gap-5 mb-10">
-  <div *ngFor="let _ of [1,2,3]" class="bg-white rounded-2xl ring-1 ring-gray-100 p-6 animate-pulse">
-    <div class="h-4 w-24 bg-[#e5e7eb] rounded-full mb-4"></div>
-    <div class="h-6 w-32 bg-[#e5e7eb] rounded mb-2"></div>
-    <div class="h-4 w-48 bg-[#e5e7eb] rounded"></div>
-  </div>
+<div *ngIf="!cargado" class="flex flex-col items-center justify-center py-16">
+  <div class="w-10 h-10 border-4 border-[#36b1ae] border-t-transparent rounded-full animate-spin"></div>
+  <p class="text-sm text-[#6b8c89] mt-4 font-medium">Cargando...</p>
 </div>
 
 <!-- Error -->

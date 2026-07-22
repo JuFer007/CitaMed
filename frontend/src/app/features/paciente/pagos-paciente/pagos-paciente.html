@@ -3,12 +3,18 @@
   <h2 class="text-3xl font-bold text-[#083d3a] leading-tight">Facturas y comprobantes</h2>
   <p class="text-sm text-[#4d6d6b] mt-2 mb-8">Revisa y paga tus consultas directamente desde el portal.</p>
 
-  <div *ngIf="pagos.length === 0" class="text-center py-16">
+  <!-- Loading -->
+  <div *ngIf="cargando" class="flex flex-col items-center justify-center py-16">
+    <div class="w-10 h-10 border-4 border-[#36b1ae] border-t-transparent rounded-full animate-spin"></div>
+    <p class="text-sm text-[#6b8c89] mt-4 font-medium">Cargando...</p>
+  </div>
+
+  <div *ngIf="!cargando && pagos.length === 0" class="text-center py-16">
     <span class="mso !text-5xl text-[#c8e8e6] block mb-4">payments</span>
     <p class="text-sm text-[#6b8c89]">No tienes facturas pendientes</p>
   </div>
 
-  <div *ngIf="pagos.length > 0" class="bg-white rounded-3xl shadow-xl shadow-[#36b1ae]/10 ring-1 ring-[#36b1ae]/10 overflow-hidden">
+  <div *ngIf="!cargando && pagos.length > 0" class="bg-white rounded-3xl shadow-xl shadow-[#36b1ae]/10 ring-1 ring-[#36b1ae]/10 overflow-hidden">
     <div class="hidden sm:grid grid-cols-[2fr_1fr_1fr_1fr_1.4fr] gap-4 px-6 py-3 text-[11px] font-semibold uppercase tracking-wide text-[#6b7280] border-b border-[#e5e7eb]">
       <div>Concepto</div><div>Fecha de pago</div><div>Monto</div><div>Estado</div><div class="text-right">Acciones</div>
     </div>

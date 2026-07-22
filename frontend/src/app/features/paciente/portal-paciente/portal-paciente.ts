@@ -41,6 +41,7 @@ export class PortalPacienteComponent implements OnInit, OnDestroy {
   iniciales = '';
   pacienteId: number | null = null;
   isScrolled = false;
+  cargando = true;
 
   notificaciones: PortalNotificacion[] = [];
   noLeidas = 0;
@@ -120,6 +121,11 @@ export class PortalPacienteComponent implements OnInit, OnDestroy {
         this.perfil = data;
         this.nombrePaciente = `${data.nombre} ${data.apellidoPaterno} ${data.apellidoMaterno}`;
         this.iniciales = (data.nombre.charAt(0) + data.apellidoPaterno.charAt(0)).toUpperCase();
+        this.cargando = false;
+        this.cdr.markForCheck();
+      },
+      error: () => {
+        this.cargando = false;
         this.cdr.markForCheck();
       },
     });

@@ -12,6 +12,7 @@ import { PacientePortalService, PortalPago } from '../../../core/services/pacien
 })
 export class PagosPacienteComponent implements OnInit {
   pagos: PortalPago[] = [];
+  cargando = true;
   descargandoId: number | null = null;
 
   constructor(
@@ -21,7 +22,8 @@ export class PagosPacienteComponent implements OnInit {
 
   ngOnInit(): void {
     this.portalService.obtenerPagos().subscribe({
-      next: (data) => { this.pagos = data; },
+      next: (data) => { this.pagos = data; this.cargando = false; },
+      error: () => { this.cargando = false; },
     });
   }
 
