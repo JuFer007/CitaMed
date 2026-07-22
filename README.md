@@ -11,6 +11,8 @@
   ![Node.js](https://img.shields.io/badge/Node.js-339933?logo=node.js&logoColor=white)
   ![MySQL](https://img.shields.io/badge/MySQL-4479A1?logo=mysql&logoColor=white)
   ![Spring Boot](https://img.shields.io/badge/Spring_Boot-6DB33F?logo=springboot&logoColor=white)
+  ![Docker](https://img.shields.io/badge/Docker-2496ED?logo=docker&logoColor=white)
+  ![Stripe](https://img.shields.io/badge/Stripe-635BFF?logo=stripe&logoColor=white)
 </div>
 
 ---
@@ -290,6 +292,82 @@ Funcionalidades:
 
 ---
 
+## 14. Portal del Paciente
+
+Acceso seguro desde el login con credenciales del paciente. Panel personalizado con sidebar, headers y footer dedicados.
+
+### Header y Hero
+
+Header personalizado del portal con navegación y sección de bienvenida.
+
+![header hero](frontend/public/capturas/portalPaciente/header%20y%20hero.png)
+
+### Home del Portal
+
+Dashboard del paciente con accesos rápidos a las principales funcionalidades.
+
+![home](frontend/public/capturas/portalPaciente/home.png)
+
+### Reservar Cita
+
+Formulario de reservación de citas con selección de especialidad, médico y horario disponible.
+
+![reservar cita](frontend/public/capturas/portalPaciente/reservar%20cita.png)
+
+### Mis Citas
+
+Listado de citas del paciente con filtros por estado (Pendiente, Confirmada, Completada, Cancelada) y detalle de cada cita.
+
+![mis citas](frontend/public/capturas/portalPaciente/mis%20citas.png)
+
+### Detalle de Cita
+
+Vista detallada de una cita específica con toda la información: médico, especialidad, consultorio, fecha, hora y estado.
+
+![detalle cita](frontend/public/capturas/portalPaciente/detalle%20cita.png)
+
+### Pagos
+
+Historial de pagos del paciente con estados (Pendiente, Pagado, Vencido, Anulado), montos y opción de descarga de ticket PDF.
+
+![pagos](frontend/public/capturas/portalPaciente/pagos.png)
+
+### Pasarela de Pago (Stripe)
+
+Modal de pago con tarjeta de crédito/débito integrado a Stripe. Resumen de la cita y campo de tarjeta para confirmar el pago.
+
+![modal pago](frontend/public/capturas/portalPaciente/modal%20pasarela%20de%20pago.png)
+
+### Editar Perfil
+
+Formulario para que el paciente actualice sus datos personales: nombre, apellido, DNI, teléfono, email y contraseña.
+
+![editar perfil](frontend/public/capturas/portalPaciente/editar%20perfil.png)
+
+### Testimonios / Reseñas
+
+Sección donde el paciente puede dejar una reseña sobre su experiencia con el médico y la consulta.
+
+![reseña](frontend/public/capturas/portalPaciente/rese%C3%B1a.png)
+
+### Footer
+
+Footer del portal del paciente con información de contacto y enlaces de navegación.
+
+![footer](frontend/public/capturas/portalPaciente/footer.png)
+
+Funcionalidades del Portal:
+- Acceso seguro con credenciales de paciente
+- Reservar citas con selección de especialidad, médico y horario
+- Ver y gestionar todas las citas (pendientes, confirmadas, completadas, canceladas)
+- Pago en línea con tarjeta vía Stripe
+- Descargar ticket PDF de pagos realizados
+- Editar perfil personal y cambiar contraseña
+- Dejar testimonios / reseñas de médicos
+- Historial de pagos con estados y montos
+
+---
+
 ## Resumen de Funcionalidades
 
 | Modulo | Estado |
@@ -307,6 +385,9 @@ Funcionalidades:
 | Diagnosticos CRUD | Completo (+ Receta PDF) |
 | Pagos CRUD | Completo (+ Ticket PDF) |
 | Consultas | Completo (+ respuesta por email) |
-| Seguridad | Roles ADMIN / MEDICO / RECEPCIONISTA |
+| Portal Paciente | Completo (reservar, citas, pagos Stripe, perfil, testimonios) |
+| Seguridad | Roles ADMIN / MEDICO / RECEPCIONISTA / PACIENTE |
 | Backend API | Spring Boot + JPA + MySQL |
-| Frontend | Angular + PrimeNG + Tailwind |
+| Frontend | Angular + Tailwind CSS |
+| Pagos | Stripe (tarjeta de crédito/débito) |
+| Docker | docker-compose (4 servicios: MySQL, Backend, PDF, Frontend) |
