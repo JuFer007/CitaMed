@@ -1,0 +1,38 @@
+export const notifications = [
+  {
+    id: 'n1',
+    title: 'Cita confirmada',
+    message: 'Tu cita con el Dr. Carlos Pérez fue confirmada para el 15 de octubre a las 09:00 a. m.',
+    time: 'Hace 2 horas',
+    icon: 'check-circle',
+    color: '#1E8E4F',
+    read: false,
+  },
+  {
+    id: 'n2',
+    title: 'Recordatorio de cita',
+    message: 'Recuerda tu cita con el Dr. Miguel Ruiz el 20 de octubre a las 11:00 a. m.',
+    time: 'Ayer',
+    icon: 'calendar',
+    color: '#C77700',
+    read: false,
+  },
+  {
+    id: 'n3',
+    title: 'Cita cancelada',
+    message: 'Tu cita con la Dra. Laura Gómez fue cancelada correctamente.',
+    time: 'Hace 3 días',
+    icon: 'x-circle',
+    color: '#C0392B',
+    read: true,
+  },
+  {
+    id: 'n4',
+    title: 'Bienvenido a CitaMed',
+    message: 'Gracias por registrarte. Agenda tu primera cita desde la app.',
+    time: 'Hace 1 semana',
+    icon: 'gift',
+    color: '#0F8B8D',
+    read: true,
+  },
+];

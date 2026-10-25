@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, OnDestroy, ChangeDetectorRef, EventEmitter, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Subscription } from 'rxjs';
 import { loadStripe, Stripe } from '@stripe/stripe-js';
@@ -35,6 +35,7 @@ export class CitasPacienteComponent implements OnInit, OnDestroy {
   pagoClientSecret = '';
   procesandoPago = false;
   errorPago = '';
+  @Output() pagoRealizado = new EventEmitter<void>();
 
   constructor(
     private portalService: PacientePortalService,
@@ -170,6 +171,7 @@ export class CitasPacienteComponent implements OnInit, OnDestroy {
           this.toast.success('Pago realizado exitosamente');
           this.cerrarModalPago();
           this.cargarCitas();
+          this.pagoRealizado.emit();
         },
         error: () => {
           this.toast.error('Error al confirmar el pago');

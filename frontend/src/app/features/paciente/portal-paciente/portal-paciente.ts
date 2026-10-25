@@ -34,6 +34,7 @@ import { switchMap } from 'rxjs/operators';
 })
 export class PortalPacienteComponent implements OnInit, OnDestroy {
   @ViewChild('notificacionPanel') notificacionPanel!: ElementRef;
+  @ViewChild(PagosPacienteComponent) pagosComponent!: PagosPacienteComponent;
 
   tabActivo = 'inicio';
   perfil: PortalPerfil | null = null;
@@ -194,6 +195,10 @@ export class PortalPacienteComponent implements OnInit, OnDestroy {
 
   cambiarTab(tab: string): void {
     this.tabActivo = tab;
+  }
+
+  onPagoRealizado(): void {
+    this.pagosComponent?.cargarPagos();
   }
 
   cerrarSesion(): void {

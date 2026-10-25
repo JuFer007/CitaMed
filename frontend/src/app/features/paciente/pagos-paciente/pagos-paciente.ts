@@ -31,8 +31,12 @@ export class PagosPacienteComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
+    this.cargarPagos();
+  }
+
+  cargarPagos(): void {
     this.portalService.obtenerPagos().subscribe({
-      next: (data) => { this.pagos = data; },
+      next: (data) => { this.pagos = data; this.cdr.detectChanges(); },
     });
   }
 
@@ -101,9 +105,7 @@ export class PagosPacienteComponent implements OnInit, OnDestroy {
         next: () => {
           this.toast.success('Pago realizado exitosamente');
           this.cerrarModalPago();
-          this.portalService.obtenerPagos().subscribe({
-            next: (data) => { this.pagos = data; this.cdr.detectChanges(); },
-          });
+          this.cargarPagos();
         },
         error: () => {
           this.toast.error('Error al confirmar el pago');
